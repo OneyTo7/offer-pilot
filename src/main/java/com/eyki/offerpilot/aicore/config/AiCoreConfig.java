@@ -12,12 +12,6 @@ public class AiCoreConfig {
 
     @Bean
     public ChatClient chatClient(ChatClient.Builder builder) {
-        return builder
-                .defaultAdvisors(
-                        new SafeValidAdvisor(),
-                        new ReReadingAdvisor(),
-                        new MyLogAdvisor()
-                )
-                .build();
+        return builder.defaultAdvisors(new SafeValidAdvisor(), new ReReadingAdvisor(), new MyLogAdvisor()).build();
     }
 }

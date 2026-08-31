@@ -1,16 +1,14 @@
 package com.eyki.offerpilot.common.service;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
- * Simple rate limiter using in-memory ConcurrentHashMap.
- * Resets daily via @Scheduled.
+ * Simple rate limiter using in-memory ConcurrentHashMap. Resets daily via @Scheduled.
  * TODO: Phase 8 — migrate to Redis when needed.
  */
 @Slf4j

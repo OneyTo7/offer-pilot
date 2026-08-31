@@ -7,9 +7,7 @@ package com.eyki.offerpilot.knowledge.domain;
  */
 public enum ContentType {
 
-    TEXT("text"),
-    FILE("file"),
-    URL("url");
+    TEXT("text"), FILE("file"), URL("url");
 
     private final String value;
 

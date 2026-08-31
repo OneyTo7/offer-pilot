@@ -1,11 +1,22 @@
 package com.eyki.offerpilot.auth.controller;
 
-import com.eyki.offerpilot.auth.dto.*;
+import com.eyki.offerpilot.auth.dto.LoginRequest;
+import com.eyki.offerpilot.auth.dto.RefreshRequest;
+import com.eyki.offerpilot.auth.dto.RegisterRequest;
+import com.eyki.offerpilot.auth.dto.TokenResponse;
+import com.eyki.offerpilot.auth.dto.UpdateApiKeyRequest;
+import com.eyki.offerpilot.auth.dto.UpdateProfileRequest;
+import com.eyki.offerpilot.auth.dto.UserVO;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.model.ApiResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")

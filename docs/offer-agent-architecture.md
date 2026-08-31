@@ -13,16 +13,16 @@ AI 简历智能平台，面向技术研发岗位求职者，提供简历评估�
 
 ### 1.1 项目信息
 
-| 项目 | 值 |
-|------|-----|
-| 项目名 | 面壁（OfferPilot） |
-| 包名 | com.eyki.offeragent |
-| 语言 | Java 21 |
-| 框架 | Spring Boot 4.1.1 + Spring AI 2.0.1 |
-| LLM | DeepSeek（OpenAI 兼容 API） |
-| 向量模型 | BGE bge-small-zh-v1.5（512维） |
-| 构建工具 | Maven |
-| 前端 | Vue 3 + TypeScript + Vite + Element Plus |
+| 项目   | 值                                        |
+|------|------------------------------------------|
+| 项目名  | 面壁（OfferPilot）                           |
+| 包名   | com.eyki.offeragent                      |
+| 语言   | Java 21                                  |
+| 框架   | Spring Boot 4.1.1 + Spring AI 2.0.1      |
+| LLM  | DeepSeek（OpenAI 兼容 API）                  |
+| 向量模型 | BGE bge-small-zh-v1.5（512维）              |
+| 构建工具 | Maven                                    |
+| 前端   | Vue 3 + TypeScript + Vite + Element Plus |
 
 ### 1.2 MVP 功能范围
 
@@ -46,46 +46,46 @@ AI 简历智能平台，面向技术研发岗位求职者，提供简历评估�
 
 ### 2.1 后端
 
-| 组件 | 技术 | 版本 | 用途 |
-|------|------|------|------|
-| 语言 | Java | 21 | |
-| 框架 | Spring Boot | 4.1.1 | |
-| AI 框架 | Spring AI | 2.0.1 | ChatClient、Advisor、RAG |
-| 数据库 | MySQL | 8.0 | 业务数据 |
-| 向量库 | PostgreSQL + pgvector | 16 | 简历/职位知识库 |
-| 缓存 | Redis | 7 | 可选，后续优化用 |
-| 对象存储 | MinIO | latest | 简历文件存储 |
-| 认证 | Sa-Token + JWT | 最新 | 登录鉴权 |
-| 数据库迁移 | Liquibase | 内置 | DDL 版本管理 |
-| LLM | DeepSeek | API | 对话生成 |
-| 文档解析 | 阿里云百炼 | API | PDF 文本提取 |
-| 日志 | Logback + SLF4j | 内置 | |
-| 工具 | Lombok | 最新 | 减少样板代码 |
+| 组件    | 技术                    | 版本     | 用途                     |
+|-------|-----------------------|--------|------------------------|
+| 语言    | Java                  | 21     |                        |
+| 框架    | Spring Boot           | 4.1.1  |                        |
+| AI 框架 | Spring AI             | 2.0.1  | ChatClient、Advisor、RAG |
+| 数据库   | MySQL                 | 8.0    | 业务数据                   |
+| 向量库   | PostgreSQL + pgvector | 16     | 简历/职位知识库               |
+| 缓存    | Redis                 | 7      | 可选，后续优化用               |
+| 对象存储  | MinIO                 | latest | 简历文件存储                 |
+| 认证    | Sa-Token + JWT        | 最新     | 登录鉴权                   |
+| 数据库迁移 | Liquibase             | 内置     | DDL 版本管理               |
+| LLM   | DeepSeek              | API    | 对话生成                   |
+| 文档解析  | 阿里云百炼                 | API    | PDF 文本提取               |
+| 日志    | Logback + SLF4j       | 内置     |                        |
+| 工具    | Lombok                | 最新     | 减少样板代码                 |
 
 ### 2.2 前端
 
-| 组件 | 技术 | 用途 |
-|------|------|------|
-| 框架 | Vue 3 | |
-| 语言 | TypeScript | |
-| 构建 | Vite | |
+| 组件     | 技术           | 用途          |
+|--------|--------------|-------------|
+| 框架     | Vue 3        |             |
+| 语言     | TypeScript   |             |
+| 构建     | Vite         |             |
 | UI 组件库 | Element Plus | 表单/表格/弹窗/上传 |
-| 状态管理 | Pinia | |
-| 路由 | Vue Router | |
-| HTTP | Axios | 调用后端 API |
-| SSE | EventSource | 流式接收面试对话 |
+| 状态管理   | Pinia        |             |
+| 路由     | Vue Router   |             |
+| HTTP   | Axios        | 调用后端 API    |
+| SSE    | EventSource  | 流式接收面试对话    |
 
 ### 2.3 部署
 
-| 组件 | 技术 | 用途 |
-|------|------|------|
-| 服务器 | 火山引擎 2C4G (已有) | 运行所有服务 |
-| 容器化 | Docker + Docker Compose | 服务编排 |
-| 对象存储 | MinIO 容器 | 简历文件 |
-| 数据库 | MySQL 8 容器 | 业务数据 |
-| 向量库 | pgvector 容器 | 向量数据 |
-| 反向代理 | Nginx 容器 | 前端静态文件 + API 代理 |
-| CI/CD | GitHub Actions | 自动构建部署 |
+| 组件    | 技术                      | 用途              |
+|-------|-------------------------|-----------------|
+| 服务器   | 火山引擎 2C4G (已有)          | 运行所有服务          |
+| 容器化   | Docker + Docker Compose | 服务编排            |
+| 对象存储  | MinIO 容器                | 简历文件            |
+| 数据库   | MySQL 8 容器              | 业务数据            |
+| 向量库   | pgvector 容器             | 向量数据            |
+| 反向代理  | Nginx 容器                | 前端静态文件 + API 代理 |
+| CI/CD | GitHub Actions          | 自动构建部署          |
 
 ---
 
@@ -324,142 +324,148 @@ User (1) ──→ Resume (N) ──→ TargetPosition (N)
 #### 4.2.1 users（用户表）
 
 ```sql
-CREATE TABLE users (
-    id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
-    email           VARCHAR(100)    NOT NULL UNIQUE COMMENT '邮箱，唯一',
-    password_hash   VARCHAR(255)    NOT NULL COMMENT 'BCrypt 加密密码',
-    nickname        VARCHAR(50)     DEFAULT NULL COMMENT '昵称',
-    status          TINYINT         DEFAULT 1 COMMENT '0-禁用 1-正常',
-    last_login_at   DATETIME        DEFAULT NULL COMMENT '最后登录时间',
-    created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_email (email),
-    INDEX idx_status (status)
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email         VARCHAR(100) NOT NULL UNIQUE COMMENT '邮箱，唯一',
+    password_hash VARCHAR(255) NOT NULL COMMENT 'BCrypt 加密密码',
+    nickname      VARCHAR(50)           DEFAULT NULL COMMENT '昵称',
+    status        TINYINT               DEFAULT 1 COMMENT '0-禁用 1-正常',
+    last_login_at DATETIME              DEFAULT NULL COMMENT '最后登录时间',
+    created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX         idx_email (email),
+    INDEX         idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 ```
 
 #### 4.2.2 resumes（简历表）
 
 ```sql
-CREATE TABLE resumes (
-    id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
-    user_id         BIGINT          NOT NULL COMMENT '所属用户',
-    name            VARCHAR(100)    NOT NULL COMMENT '简历名称，如 2026-08-31 版本',
-    file_url        VARCHAR(500)    NOT NULL COMMENT 'MinIO 文件路径',
-    file_size       INT             DEFAULT 0 COMMENT '文件大小(字节)',
-    page_count      INT             DEFAULT 0 COMMENT 'PDF 页数',
-    parsed_text     LONGTEXT        DEFAULT NULL COMMENT '百炼解析后的纯文本',
-    tech_stack      JSON            DEFAULT NULL COMMENT '提取的技术栈列表',
-    work_years      DECIMAL(3,1)    DEFAULT NULL COMMENT '工作年限',
-    education       VARCHAR(50)     DEFAULT NULL COMMENT '最高学历',
-    summary         TEXT            DEFAULT NULL COMMENT 'AI 提取的简历摘要',
-    is_default      TINYINT         DEFAULT 0 COMMENT '0-否 1-默认简历',
-    status          TINYINT         DEFAULT 0 COMMENT '0-解析中 1-解析完成 2-解析失败',
-    fail_reason     VARCHAR(500)    DEFAULT NULL COMMENT '解析失败原因',
-    created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_user_id (user_id),
-    INDEX idx_status (status),
-    FOREIGN KEY (user_id) REFERENCES users(id)
+CREATE TABLE resumes
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id     BIGINT       NOT NULL COMMENT '所属用户',
+    name        VARCHAR(100) NOT NULL COMMENT '简历名称，如 2026-08-31 版本',
+    file_url    VARCHAR(500) NOT NULL COMMENT 'MinIO 文件路径',
+    file_size   INT                   DEFAULT 0 COMMENT '文件大小(字节)',
+    page_count  INT                   DEFAULT 0 COMMENT 'PDF 页数',
+    parsed_text LONGTEXT              DEFAULT NULL COMMENT '百炼解析后的纯文本',
+    tech_stack  JSON                  DEFAULT NULL COMMENT '提取的技术栈列表',
+    work_years  DECIMAL(3, 1)         DEFAULT NULL COMMENT '工作年限',
+    education   VARCHAR(50)           DEFAULT NULL COMMENT '最高学历',
+    summary     TEXT                  DEFAULT NULL COMMENT 'AI 提取的简历摘要',
+    is_default  TINYINT               DEFAULT 0 COMMENT '0-否 1-默认简历',
+    status      TINYINT               DEFAULT 0 COMMENT '0-解析中 1-解析完成 2-解析失败',
+    fail_reason VARCHAR(500)          DEFAULT NULL COMMENT '解析失败原因',
+    created_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX       idx_user_id (user_id),
+    INDEX       idx_status (status),
+    FOREIGN KEY (user_id) REFERENCES users (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='简历表';
 ```
 
 #### 4.2.3 target_positions（目标职位表）
 
 ```sql
-CREATE TABLE target_positions (
-    id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
-    user_id         BIGINT          NOT NULL COMMENT '所属用户',
-    resume_id       BIGINT          NOT NULL COMMENT '关联简历',
-    title           VARCHAR(200)    NOT NULL COMMENT '职位名称，如 Java高级开发工程师',
-    company         VARCHAR(200)    DEFAULT NULL COMMENT '公司名称',
-    jd_text         TEXT            NOT NULL COMMENT '职位描述全文',
-    location        VARCHAR(100)    DEFAULT NULL COMMENT '工作地点',
-    salary_range    VARCHAR(50)     DEFAULT NULL COMMENT '薪资范围',
-    is_default      TINYINT         DEFAULT 0 COMMENT '0-否 1-默认职位',
-    created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_user_id (user_id),
-    INDEX idx_resume_id (resume_id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (resume_id) REFERENCES resumes(id)
+CREATE TABLE target_positions
+(
+    id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id      BIGINT       NOT NULL COMMENT '所属用户',
+    resume_id    BIGINT       NOT NULL COMMENT '关联简历',
+    title        VARCHAR(200) NOT NULL COMMENT '职位名称，如 Java高级开发工程师',
+    company      VARCHAR(200)          DEFAULT NULL COMMENT '公司名称',
+    jd_text      TEXT         NOT NULL COMMENT '职位描述全文',
+    location     VARCHAR(100)          DEFAULT NULL COMMENT '工作地点',
+    salary_range VARCHAR(50)           DEFAULT NULL COMMENT '薪资范围',
+    is_default   TINYINT               DEFAULT 0 COMMENT '0-否 1-默认职位',
+    created_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX        idx_user_id (user_id),
+    INDEX        idx_resume_id (resume_id),
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (resume_id) REFERENCES resumes (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='目标职位表';
 ```
 
 #### 4.2.4 reports（评估报告表）
 
 ```sql
-CREATE TABLE reports (
-    id                      BIGINT          AUTO_INCREMENT PRIMARY KEY,
-    user_id                 BIGINT          NOT NULL,
-    resume_id               BIGINT          NOT NULL,
-    position_id             BIGINT          NOT NULL,
-    match_score             DECIMAL(5,2)    DEFAULT NULL COMMENT '匹配度百分比，如 72.00',
-    tech_stack_analysis     JSON            DEFAULT NULL COMMENT '技术栈分析 JSON',
-    highlights              JSON            DEFAULT NULL COMMENT '亮点提炼 JSON 数组',
-    weaknesses              JSON            DEFAULT NULL COMMENT '短板提醒 JSON 数组',
-    full_report             LONGTEXT        DEFAULT NULL COMMENT '报告原始文本',
-    status                  TINYINT         DEFAULT 0 COMMENT '0-生成中 1-完成 2-失败',
-    error_message           VARCHAR(500)    DEFAULT NULL COMMENT '失败原因',
-    created_at              DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at              DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_user_id (user_id),
-    INDEX idx_resume_id (resume_id),
-    INDEX idx_position_id (position_id),
-    INDEX idx_status (status),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (resume_id) REFERENCES resumes(id),
-    FOREIGN KEY (position_id) REFERENCES target_positions(id)
+CREATE TABLE reports
+(
+    id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id             BIGINT   NOT NULL,
+    resume_id           BIGINT   NOT NULL,
+    position_id         BIGINT   NOT NULL,
+    match_score         DECIMAL(5, 2)     DEFAULT NULL COMMENT '匹配度百分比，如 72.00',
+    tech_stack_analysis JSON              DEFAULT NULL COMMENT '技术栈分析 JSON',
+    highlights          JSON              DEFAULT NULL COMMENT '亮点提炼 JSON 数组',
+    weaknesses          JSON              DEFAULT NULL COMMENT '短板提醒 JSON 数组',
+    full_report         LONGTEXT          DEFAULT NULL COMMENT '报告原始文本',
+    status              TINYINT           DEFAULT 0 COMMENT '0-生成中 1-完成 2-失败',
+    error_message       VARCHAR(500)      DEFAULT NULL COMMENT '失败原因',
+    created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX               idx_user_id (user_id),
+    INDEX               idx_resume_id (resume_id),
+    INDEX               idx_position_id (position_id),
+    INDEX               idx_status (status),
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (resume_id) REFERENCES resumes (id),
+    FOREIGN KEY (position_id) REFERENCES target_positions (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='评估报告表';
 ```
 
 #### 4.2.5 interview_sessions（面试会话表）
 
 ```sql
-CREATE TABLE interview_sessions (
-    id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
-    user_id         BIGINT          NOT NULL,
-    resume_id       BIGINT          NOT NULL,
-    position_id     BIGINT          NOT NULL,
-    current_round   TINYINT         DEFAULT 1 COMMENT '当前轮次：1-一面 2-二面 3-三面',
-    current_question INT            DEFAULT 0 COMMENT '当前题目序号 0-10',
-    total_questions  INT            DEFAULT 0 COMMENT '总回答题数',
-    score           JSON            DEFAULT NULL COMMENT '各维度评分 JSON',
-    summary         TEXT            DEFAULT NULL COMMENT '面试总结文本',
-    duration_seconds INT            DEFAULT 0 COMMENT '面试时长(秒)',
-    status          TINYINT         DEFAULT 0 COMMENT '0-进行中 1-已完成 2-已过期 3-已中断',
-    expired_at      DATETIME        DEFAULT NULL COMMENT '过期时间(中断后+1小时)',
-    started_at      DATETIME        DEFAULT NULL COMMENT '面试开始时间',
-    finished_at     DATETIME        DEFAULT NULL COMMENT '面试结束时间',
-    created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_user_id (user_id),
-    INDEX idx_status (status),
-    INDEX idx_expired_at (expired_at),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (resume_id) REFERENCES resumes(id),
-    FOREIGN KEY (position_id) REFERENCES target_positions(id)
+CREATE TABLE interview_sessions
+(
+    id               BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id          BIGINT   NOT NULL,
+    resume_id        BIGINT   NOT NULL,
+    position_id      BIGINT   NOT NULL,
+    current_round    TINYINT           DEFAULT 1 COMMENT '当前轮次：1-一面 2-二面 3-三面',
+    current_question INT               DEFAULT 0 COMMENT '当前题目序号 0-10',
+    total_questions  INT               DEFAULT 0 COMMENT '总回答题数',
+    score            JSON              DEFAULT NULL COMMENT '各维度评分 JSON',
+    summary          TEXT              DEFAULT NULL COMMENT '面试总结文本',
+    duration_seconds INT               DEFAULT 0 COMMENT '面试时长(秒)',
+    status           TINYINT           DEFAULT 0 COMMENT '0-进行中 1-已完成 2-已过期 3-已中断',
+    expired_at       DATETIME          DEFAULT NULL COMMENT '过期时间(中断后+1小时)',
+    started_at       DATETIME          DEFAULT NULL COMMENT '面试开始时间',
+    finished_at      DATETIME          DEFAULT NULL COMMENT '面试结束时间',
+    created_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX            idx_user_id (user_id),
+    INDEX            idx_status (status),
+    INDEX            idx_expired_at (expired_at),
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (resume_id) REFERENCES resumes (id),
+    FOREIGN KEY (position_id) REFERENCES target_positions (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='面试会话表';
 ```
 
 #### 4.2.6 interview_questions（面试题目表）
 
 ```sql
-CREATE TABLE interview_questions (
-    id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
-    session_id      BIGINT          NOT NULL COMMENT '所属面试会话',
-    round           TINYINT         NOT NULL COMMENT '轮次：1-一面 2-二面 3-三面',
-    question_index  INT             NOT NULL COMMENT '题号 1-10',
-    question_text   TEXT            NOT NULL COMMENT 'AI 提出的问题',
-    user_answer     LONGTEXT        DEFAULT NULL COMMENT '用户回答',
-    feedback        LONGTEXT        DEFAULT NULL COMMENT 'AI 反馈',
-    score           DECIMAL(3,1)    DEFAULT NULL COMMENT '本题评分 1-10',
-    status          TINYINT         DEFAULT 0 COMMENT '0-待答 1-已答 2-已跳过',
-    created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_session_id (session_id),
-    INDEX idx_round (round),
-    FOREIGN KEY (session_id) REFERENCES interview_sessions(id)
+CREATE TABLE interview_questions
+(
+    id             BIGINT AUTO_INCREMENT PRIMARY KEY,
+    session_id     BIGINT   NOT NULL COMMENT '所属面试会话',
+    round          TINYINT  NOT NULL COMMENT '轮次：1-一面 2-二面 3-三面',
+    question_index INT      NOT NULL COMMENT '题号 1-10',
+    question_text  TEXT     NOT NULL COMMENT 'AI 提出的问题',
+    user_answer    LONGTEXT          DEFAULT NULL COMMENT '用户回答',
+    feedback       LONGTEXT          DEFAULT NULL COMMENT 'AI 反馈',
+    score          DECIMAL(3, 1)     DEFAULT NULL COMMENT '本题评分 1-10',
+    status         TINYINT           DEFAULT 0 COMMENT '0-待答 1-已答 2-已跳过',
+    created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX          idx_session_id (session_id),
+    INDEX          idx_round (round),
+    FOREIGN KEY (session_id) REFERENCES interview_sessions (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='面试题目表';
 ```
 
@@ -469,8 +475,10 @@ CREATE TABLE interview_questions (
 
 ```sql
 -- 在 PostgreSQL 中执行（由 Docker 镜像自动初始化）
-CREATE EXTENSION IF NOT EXISTS vector;
-CREATE EXTENSION IF NOT EXISTS hstore;
+CREATE
+EXTENSION IF NOT EXISTS vector;
+CREATE
+EXTENSION IF NOT EXISTS hstore;
 ```
 
 ### 4.4 Liquibase 配置
@@ -478,11 +486,11 @@ CREATE EXTENSION IF NOT EXISTS hstore;
 ```xml
 <!-- db/changelog/db.changelog-master.xml -->
 <databaseChangeLog>
-    <include file="db/changelog/001-create-users.sql"/>
-    <include file="db/changelog/002-create-resumes.sql"/>
-    <include file="db/changelog/003-create-positions.sql"/>
-    <include file="db/changelog/004-create-reports.sql"/>
-    <include file="db/changelog/005-create-interviews.sql"/>
+  <include file="db/changelog/001-create-users.sql"/>
+  <include file="db/changelog/002-create-resumes.sql"/>
+  <include file="db/changelog/003-create-positions.sql"/>
+  <include file="db/changelog/004-create-reports.sql"/>
+  <include file="db/changelog/005-create-interviews.sql"/>
 </databaseChangeLog>
 ```
 
@@ -494,91 +502,95 @@ CREATE EXTENSION IF NOT EXISTS hstore;
 
 ### 5.1 统一规范
 
-| 规范 | 说明 |
-|------|------|
-| 基础路径 | `/api/v1` |
-| 响应格式 | 统一 `ApiResult<T>` |
-| 分页格式 | 统一 `PageResult<T>` |
-| 认证方式 | Header: `Authorization: Bearer <token>` |
-| 内容类型 | 请求: `application/json`，文件上传: `multipart/form-data` |
-| SSE 路径 | 单独端点，`text/event-stream` |
+| 规范     | 说明                                                 |
+|--------|----------------------------------------------------|
+| 基础路径   | `/api/v1`                                          |
+| 响应格式   | 统一 `ApiResult<T>`                                  |
+| 分页格式   | 统一 `PageResult<T>`                                 |
+| 认证方式   | Header: `Authorization: Bearer <token>`            |
+| 内容类型   | 请求: `application/json`，文件上传: `multipart/form-data` |
+| SSE 路径 | 单独端点，`text/event-stream`                           |
 
 ### 5.2 统一响应体
 
 ```java
 // 成功
 {
-    "code": 200,
-    "message": "success",
-    "data": { ... },
-    "traceId": "a1b2c3d4"
-}
+    "code":200,
+    "message":"success",
+    "data":{...},
+    "traceId":"a1b2c3d4"
+    }
 
-// 失败
-{
-    "code": 400,
-    "message": "邮箱已被注册",
-    "data": null,
-    "traceId": "a1b2c3d4"
-}
+    // 失败
+    {
+    "code":400,
+    "message":"邮箱已被注册",
+    "data":null,
+    "traceId":"a1b2c3d4"
+    }
 
-// 分页
-{
-    "code": 200,
-    "message": "success",
-    "data": {
-        "records": [ ... ],
-        "total": 100,
-        "page": 1,
-        "size": 10
+    // 分页
+    {
+    "code":200,
+    "message":"success",
+    "data":{
+    "records":[...],
+    "total":100,
+    "page":1,
+    "size":10
     },
-    "traceId": "a1b2c3d4"
-}
+    "traceId":"a1b2c3d4"
+    }
 ```
 
 ### 5.3 完整 API 列表
 
 #### 5.3.1 认证模块
 
-| 方法 | 路径 | 说明 | 认证 |
-|------|------|------|------|
-| POST | `/api/v1/auth/register` | 注册 | 否 |
-| POST | `/api/v1/auth/login` | 登录 | 否 |
-| POST | `/api/v1/auth/refresh` | 刷新 Token | 否 |
-| POST | `/api/v1/auth/logout` | 退出 | 是 |
-| GET | `/api/v1/auth/me` | 获取当前用户信息 | 是 |
-| PUT | `/api/v1/auth/profile` | 修改个人信息 | 是 |
-| PUT | `/api/v1/auth/api-key` | 配置/更新 DeepSeek API Key | 是 |
-| DELETE | `/api/v1/auth/api-key` | 删除 API Key（恢复免费层） | 是 |
+| 方法     | 路径                      | 说明                     | 认证 |
+|--------|-------------------------|------------------------|----|
+| POST   | `/api/v1/auth/register` | 注册                     | 否  |
+| POST   | `/api/v1/auth/login`    | 登录                     | 否  |
+| POST   | `/api/v1/auth/refresh`  | 刷新 Token               | 否  |
+| POST   | `/api/v1/auth/logout`   | 退出                     | 是  |
+| GET    | `/api/v1/auth/me`       | 获取当前用户信息               | 是  |
+| PUT    | `/api/v1/auth/profile`  | 修改个人信息                 | 是  |
+| PUT    | `/api/v1/auth/api-key`  | 配置/更新 DeepSeek API Key | 是  |
+| DELETE | `/api/v1/auth/api-key`  | 删除 API Key（恢复免费层）      | 是  |
 
 **注册请求：**
+
 ```json
 {
-    "email": "user@example.com",
-    "password": "abc12345",
-    "nickname": "小明"  // 可选
+  "email": "user@example.com",
+  "password": "abc12345",
+  "nickname": "小明"
+  // 可选
 }
 ```
 
 **注册响应：**
+
 ```json
 {
-    "accessToken": "eyJ...",
-    "refreshToken": "eyJ...",
-    "expiresIn": 7200,
-    "user": {
-        "id": 1,
-        "email": "user@example.com",
-        "nickname": "小明"
-    }
+  "accessToken": "eyJ...",
+  "refreshToken": "eyJ...",
+  "expiresIn": 7200,
+  "user": {
+    "id": 1,
+    "email": "user@example.com",
+    "nickname": "小明"
+  }
 }
 ```
 
 **登录请求：**
+
 ```json
 {
-    "email": "user@example.com",
-    "password": "abc12345"
+  "email": "user@example.com",
+  "password": "abc12345"
 }
 ```
 
@@ -586,189 +598,227 @@ CREATE EXTENSION IF NOT EXISTS hstore;
 
 #### 5.3.2 简历模块
 
-| 方法 | 路径 | 说明 | 认证 |
-|------|------|------|------|
-| POST | `/api/v1/resumes` | 上传简历 | 是 |
-| GET | `/api/v1/resumes` | 简历列表 | 是 |
-| GET | `/api/v1/resumes/{id}` | 简历详情 | 是 |
-| DELETE | `/api/v1/resumes/{id}` | 删除简历 | 是 |
-| PUT | `/api/v1/resumes/{id}/default` | 设为默认简历 | 是 |
+| 方法     | 路径                             | 说明     | 认证 |
+|--------|--------------------------------|--------|----|
+| POST   | `/api/v1/resumes`              | 上传简历   | 是  |
+| GET    | `/api/v1/resumes`              | 简历列表   | 是  |
+| GET    | `/api/v1/resumes/{id}`         | 简历详情   | 是  |
+| DELETE | `/api/v1/resumes/{id}`         | 删除简历   | 是  |
+| PUT    | `/api/v1/resumes/{id}/default` | 设为默认简历 | 是  |
 
 **上传简历请求：** `multipart/form-data`
+
 ```
 file: (PDF 文件)
 name: "2026-08-31 版本"
 ```
 
 **上传简历响应：**
+
 ```json
 {
-    "id": 1,
-    "name": "2026-08-31 版本",
-    "fileUrl": "/api/v1/files/xxx.pdf",
-    "fileSize": 102400,
-    "pageCount": 2,
-    "status": 0,       // 0-解析中
-    "createdAt": "2026-08-31T10:00:00"
+  "id": 1,
+  "name": "2026-08-31 版本",
+  "fileUrl": "/api/v1/files/xxx.pdf",
+  "fileSize": 102400,
+  "pageCount": 2,
+  "status": 0,
+  // 0-解析中
+  "createdAt": "2026-08-31T10:00:00"
 }
 ```
 
 **简历列表响应：**
+
 ```json
 {
-    "records": [
-        {
-            "id": 1,
-            "name": "2026-08-31 版本",
-            "status": 1,       // 1-解析完成
-            "workYears": 7.0,
-            "education": "本科",
-            "techStack": ["Java", "Spring Boot", "MySQL"],
-            "isDefault": 1,
-            "createdAt": "2026-08-31T10:00:00"
-        }
-    ],
-    "total": 5,
-    "page": 1,
-    "size": 10
+  "records": [
+    {
+      "id": 1,
+      "name": "2026-08-31 版本",
+      "status": 1,
+      // 1-解析完成
+      "workYears": 7.0,
+      "education": "本科",
+      "techStack": [
+        "Java",
+        "Spring Boot",
+        "MySQL"
+      ],
+      "isDefault": 1,
+      "createdAt": "2026-08-31T10:00:00"
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "size": 10
 }
 ```
 
 **简历详情响应：**
+
 ```json
 {
-    "id": 1,
-    "name": "2026-08-31 版本",
-    "fileUrl": "/api/v1/files/xxx.pdf",
-    "status": 1,
-    "workYears": 7.0,
-    "education": "本科",
-    "techStack": ["Java", "Spring Boot", "MySQL", "Redis"],
-    "summary": "7年Java开发经验...",
-    "projects": [
-        {"name": "智能工枢系统", "role": "技术负责人", "techStack": [...]}
-    ],
-    "isDefault": 1,
-    "createdAt": "2026-08-31T10:00:00"
+  "id": 1,
+  "name": "2026-08-31 版本",
+  "fileUrl": "/api/v1/files/xxx.pdf",
+  "status": 1,
+  "workYears": 7.0,
+  "education": "本科",
+  "techStack": [
+    "Java",
+    "Spring Boot",
+    "MySQL",
+    "Redis"
+  ],
+  "summary": "7年Java开发经验...",
+  "projects": [
+    {
+      "name": "智能工枢系统",
+      "role": "技术负责人",
+      "techStack": [
+        ...
+      ]
+    }
+  ],
+  "isDefault": 1,
+  "createdAt": "2026-08-31T10:00:00"
 }
 ```
 
 #### 5.3.3 目标职位模块
 
-| 方法 | 路径 | 说明 | 认证 |
-|------|------|------|------|
-| POST | `/api/v1/positions` | 添加目标职位 | 是 |
-| GET | `/api/v1/positions` | 职位列表（按简历筛选） | 是 |
-| GET | `/api/v1/positions/{id}` | 职位详情 | 是 |
-| DELETE | `/api/v1/positions/{id}` | 删除职位 | 是 |
-| PUT | `/api/v1/positions/{id}/default` | 设为默认职位 | 是 |
+| 方法     | 路径                               | 说明          | 认证 |
+|--------|----------------------------------|-------------|----|
+| POST   | `/api/v1/positions`              | 添加目标职位      | 是  |
+| GET    | `/api/v1/positions`              | 职位列表（按简历筛选） | 是  |
+| GET    | `/api/v1/positions/{id}`         | 职位详情        | 是  |
+| DELETE | `/api/v1/positions/{id}`         | 删除职位        | 是  |
+| PUT    | `/api/v1/positions/{id}/default` | 设为默认职位      | 是  |
 
 **添加职位请求：**
+
 ```json
 {
-    "resumeId": 1,
-    "title": "Java高级开发工程师",
-    "company": "字节跳动",
-    "jdText": "职位描述：负责核心业务系统设计开发...",
-    "location": "上海",
-    "salaryRange": "30-50K"
+  "resumeId": 1,
+  "title": "Java高级开发工程师",
+  "company": "字节跳动",
+  "jdText": "职位描述：负责核心业务系统设计开发...",
+  "location": "上海",
+  "salaryRange": "30-50K"
 }
 ```
 
 #### 5.3.4 评估报告模块
 
-| 方法 | 路径 | 说明 | 认证 |
-|------|------|------|------|
-| POST | `/api/v1/reports` | 生成评估报告 | 是 |
-| GET | `/api/v1/reports` | 报告列表 | 是 |
-| GET | `/api/v1/reports/{id}` | 报告详情 | 是 |
-| DELETE | `/api/v1/reports/{id}` | 删除报告 | 是 |
+| 方法     | 路径                     | 说明     | 认证 |
+|--------|------------------------|--------|----|
+| POST   | `/api/v1/reports`      | 生成评估报告 | 是  |
+| GET    | `/api/v1/reports`      | 报告列表   | 是  |
+| GET    | `/api/v1/reports/{id}` | 报告详情   | 是  |
+| DELETE | `/api/v1/reports/{id}` | 删除报告   | 是  |
 
 **生成报告请求：**
+
 ```json
 {
-    "resumeId": 1,
-    "positionId": 1
+  "resumeId": 1,
+  "positionId": 1
 }
 ```
 
 **生成报告响应（SSE 流式或轮询，建议先返回 reportId 异步生成）：**
+
 ```json
 {
-    "id": 1,
-    "status": 0,   // 0-生成中
-    "createdAt": "2026-08-31T10:00:00"
+  "id": 1,
+  "status": 0,
+  // 0-生成中
+  "createdAt": "2026-08-31T10:00:00"
 }
 ```
 
 **前端轮询：** 前端每隔 3 秒 GET `/api/v1/reports/{id}`，直到 `status=1`。
 
 **报告详情响应：**
+
 ```json
 {
-    "id": 1,
-    "resumeId": 1,
-    "positionId": 1,
-    "matchScore": 72.00,
-    "techStackAnalysis": {
-        "matched": ["Java", "Spring Boot", "MySQL"],
-        "partial": ["微服务"],
-        "missing": ["高并发", "分布式事务"],
-        "suggestion": "补充高并发项目经验"
-    },
-    "highlights": [
-        "7年Java研发经验，项目经验丰富",
-        "主导过AI招聘系统从0到1交付",
-        "具备微服务架构设计与团队管理能力"
+  "id": 1,
+  "resumeId": 1,
+  "positionId": 1,
+  "matchScore": 72.00,
+  "techStackAnalysis": {
+    "matched": [
+      "Java",
+      "Spring Boot",
+      "MySQL"
     ],
-    "weaknesses": [
-        "缺少系统设计方面的项目描述",
-        "高并发场景未涉及",
-        "技术栈描述偏旧，缺少AI相关能力展示"
+    "partial": [
+      "微服务"
     ],
-    "fullReport": "完整报告文本...",
-    "status": 1,
-    "createdAt": "2026-08-31T10:00:00"
+    "missing": [
+      "高并发",
+      "分布式事务"
+    ],
+    "suggestion": "补充高并发项目经验"
+  },
+  "highlights": [
+    "7年Java研发经验，项目经验丰富",
+    "主导过AI招聘系统从0到1交付",
+    "具备微服务架构设计与团队管理能力"
+  ],
+  "weaknesses": [
+    "缺少系统设计方面的项目描述",
+    "高并发场景未涉及",
+    "技术栈描述偏旧，缺少AI相关能力展示"
+  ],
+  "fullReport": "完整报告文本...",
+  "status": 1,
+  "createdAt": "2026-08-31T10:00:00"
 }
 ```
 
 #### 5.3.5 面试模块
 
-| 方法 | 路径 | 说明 | 认证 |
-|------|------|------|------|
-| POST | `/api/v1/interviews` | 开始面试 | 是 |
-| GET | `/api/v1/interviews` | 面试列表 | 是 |
-| GET | `/api/v1/interviews/{id}` | 面试详情 | 是 |
-| POST | `/api/v1/interviews/{id}/start-round` | 开始下一轮 | 是 |
-| POST | `/api/v1/interviews/{id}/answer` | 回答当前题目（SSE 流式返回） | 是 |
-| POST | `/api/v1/interviews/{id}/skip` | 跳过当前题 | 是 |
-| POST | `/api/v1/interviews/{id}/end` | 结束面试 | 是 |
-| GET | `/api/v1/interviews/{id}/summary` | 面试总结 | 是 |
+| 方法   | 路径                                    | 说明               | 认证 |
+|------|---------------------------------------|------------------|----|
+| POST | `/api/v1/interviews`                  | 开始面试             | 是  |
+| GET  | `/api/v1/interviews`                  | 面试列表             | 是  |
+| GET  | `/api/v1/interviews/{id}`             | 面试详情             | 是  |
+| POST | `/api/v1/interviews/{id}/start-round` | 开始下一轮            | 是  |
+| POST | `/api/v1/interviews/{id}/answer`      | 回答当前题目（SSE 流式返回） | 是  |
+| POST | `/api/v1/interviews/{id}/skip`        | 跳过当前题            | 是  |
+| POST | `/api/v1/interviews/{id}/end`         | 结束面试             | 是  |
+| GET  | `/api/v1/interviews/{id}/summary`     | 面试总结             | 是  |
 
 **开始面试请求：**
+
 ```json
 {
-    "resumeId": 1,
-    "positionId": 1
+  "resumeId": 1,
+  "positionId": 1
 }
 ```
 
 **开始面试响应：**
+
 ```json
 {
-    "id": 1,
-    "currentRound": 1,
-    "currentQuestion": 0,
-    "status": 0,   // 进行中
-    "rounds": [
-        {
-            "round": 1,
-            "name": "技术一面",
-            "description": "基础技术能力考察",
-            "totalQuestions": 10,
-            "questions": []
-        }
-    ]
+  "id": 1,
+  "currentRound": 1,
+  "currentQuestion": 0,
+  "status": 0,
+  // 进行中
+  "rounds": [
+    {
+      "round": 1,
+      "name": "技术一面",
+      "description": "基础技术能力考察",
+      "totalQuestions": 10,
+      "questions": []
+    }
+  ]
 }
 ```
 
@@ -777,10 +827,11 @@ name: "2026-08-31 版本"
 `POST /api/v1/interviews/{id}/answer`
 
 请求体：
+
 ```json
 {
-    "questionId": 1,
-    "answer": "我做的智能工枢系统是一个面向人力资源行业的招聘管理系统..."
+  "questionId": 1,
+  "answer": "我做的智能工枢系统是一个面向人力资源行业的招聘管理系统..."
 }
 ```
 
@@ -801,55 +852,65 @@ data: {"type":"complete","sessionId":1}
 ```
 
 **面试总结响应：**
+
 ```json
 {
-    "id": 1,
-    "resumeTitle": "李道奇-2026",
-    "positionTitle": "Java高级开发工程师",
-    "rounds": [
-        {
-            "round": 1,
-            "name": "技术一面",
-            "score": 8.0,
-            "totalQuestions": 10,
-            "answeredQuestions": 10,
-            "summary": "基础技术能力扎实，Spring框架掌握良好"
-        },
-        {
-            "round": 2,
-            "name": "技术二面",
-            "score": 7.5,
-            "totalQuestions": 10,
-            "answeredQuestions": 8,
-            "summary": "深入理解微服务架构，但高并发优化需加强"
-        }
-    ],
-    "overallScore": 7.8,
-    "dimensions": {
-        "techDepth": 8.0,
-        "projectUnderstanding": 7.5,
-        "expressionClarity": 8.0
+  "id": 1,
+  "resumeTitle": "李道奇-2026",
+  "positionTitle": "Java高级开发工程师",
+  "rounds": [
+    {
+      "round": 1,
+      "name": "技术一面",
+      "score": 8.0,
+      "totalQuestions": 10,
+      "answeredQuestions": 10,
+      "summary": "基础技术能力扎实，Spring框架掌握良好"
     },
-    "strengths": ["项目经验丰富", "架构理解深入"],
-    "weaknesses": ["高并发经验不足", "系统设计需加强"],
-    "suggestions": ["重点复习分布式事务", "准备系统设计案例"],
-    "durationSeconds": 1800,
-    "status": 1,
-    "finishedAt": "2026-08-31T11:30:00"
+    {
+      "round": 2,
+      "name": "技术二面",
+      "score": 7.5,
+      "totalQuestions": 10,
+      "answeredQuestions": 8,
+      "summary": "深入理解微服务架构，但高并发优化需加强"
+    }
+  ],
+  "overallScore": 7.8,
+  "dimensions": {
+    "techDepth": 8.0,
+    "projectUnderstanding": 7.5,
+    "expressionClarity": 8.0
+  },
+  "strengths": [
+    "项目经验丰富",
+    "架构理解深入"
+  ],
+  "weaknesses": [
+    "高并发经验不足",
+    "系统设计需加强"
+  ],
+  "suggestions": [
+    "重点复习分布式事务",
+    "准备系统设计案例"
+  ],
+  "durationSeconds": 1800,
+  "status": 1,
+  "finishedAt": "2026-08-31T11:30:00"
 }
 ```
 
 #### 5.3.6 文件模块
 
-| 方法 | 路径 | 说明 | 认证 |
-|------|------|------|------|
-| GET | `/api/v1/files/{filePath}` | 获取文件（MinIO 代理） | 是 |
+| 方法  | 路径                         | 说明             | 认证 |
+|-----|----------------------------|----------------|----|
+| GET | `/api/v1/files/{filePath}` | 获取文件（MinIO 代理） | 是  |
 
 #### 5.3.7 健康检查
 
-| 方法 | 路径 | 说明 | 认证 |
-|------|------|------|------|
-| GET | `/api/health` | 健康检查 | 否 |
+| 方法  | 路径            | 说明   | 认证 |
+|-----|---------------|------|----|
+| GET | `/api/health` | 健康检查 | 否  |
 
 ---
 
@@ -880,19 +941,15 @@ SSE 流式输出到前端
 ```java
 // AiCoreConfig.java
 @Bean
-public ChatClient.Builder chatClientBuilder(
-        ChatModel chatModel,
-        SafeValidAdvisor safeValidAdvisor,
-        ReReadingAdvisor reReadingAdvisor,
-        MessageChatMemoryAdvisor chatMemoryAdvisor) {
-    
+public ChatClient.Builder chatClientBuilder(ChatModel chatModel, SafeValidAdvisor safeValidAdvisor,
+    ReReadingAdvisor reReadingAdvisor, MessageChatMemoryAdvisor chatMemoryAdvisor) {
+
     return ChatClient.builder(chatModel)
-            .defaultAdvisors(
-                    safeValidAdvisor,                   // 最高优先级
-                    reReadingAdvisor,                   // 第二
-                    chatMemoryAdvisor,                  // 第三
-                    new MyLogAdvisor()                  // 日志
-            );
+        .defaultAdvisors(safeValidAdvisor,                   // 最高优先级
+            reReadingAdvisor,                   // 第二
+            chatMemoryAdvisor,                  // 第三
+            new MyLogAdvisor()                  // 日志
+        );
 }
 
 // 注意：RetrievalAugmentationAdvisor 不在默认链中，
@@ -909,17 +966,17 @@ public ChatClient.Builder chatClientBuilder(
 void indexResumeToVectorStore(Resume resume) {
     // 1. 获取解析后的纯文本
     String text = resume.getParsedText();
-    
+
     // 2. 切片
     List<Document> chunks = tokenTextSplitter.split(text);
-    
+
     // 3. 添加元数据（用于检索过滤）
     chunks.forEach(doc -> {
         doc.getMetadata().put("user_id", resume.getUserId());
         doc.getMetadata().put("resume_id", resume.getId());
         doc.getMetadata().put("type", "resume");
     });
-    
+
     // 4. 向量化存储
     vectorStore.add(chunks);
 }
@@ -931,13 +988,10 @@ void indexResumeToVectorStore(Resume resume) {
 // RagService.java
 List<Document> searchResumeKnowledge(Long userId, String query) {
     // 构建检索请求，按 user_id 过滤
-    var searchRequest = SearchRequest.builder()
-            .query(query)
-            .topK(5)
-            .similarityThreshold(0.6)
-            .filterExpression("user_id == " + userId)  // 数据隔离
-            .build();
-    
+    var searchRequest = SearchRequest.builder().query(query).topK(5).similarityThreshold(0.6)
+        .filterExpression("user_id == " + userId)  // 数据隔离
+        .build();
+
     return vectorStore.similaritySearch(searchRequest);
 }
 ```
@@ -953,11 +1007,9 @@ QueryAugmenter queryAugmenter() {
         
         如果检索到的文档中没有相关信息，你必须直接回答"找不到相关文档，无法回答问题，你可以联系管理员。"，不要自己编造答案。
         """);
-    
-    return ContextualQueryAugmenter.builder()
-            .allowEmptyContext(true)
-            .emptyContextPromptTemplate(emptyContextPrompt)
-            .build();
+
+    return ContextualQueryAugmenter.builder().allowEmptyContext(true)
+        .emptyContextPromptTemplate(emptyContextPrompt).build();
 }
 ```
 
@@ -1076,24 +1128,25 @@ QueryAugmenter queryAugmenter() {
 ```java
 // InterviewSessionManager.java
 public enum SessionStatus {
-    IN_PROGRESS(0, "进行中"),
-    COMPLETED(1, "已完成"),
-    EXPIRED(2, "已过期"),
-    ABANDONED(3, "已中断");
+    IN_PROGRESS(0, "进行中"), COMPLETED(1, "已完成"), EXPIRED(2, "已过期"), ABANDONED(3, "已中断");
 }
 
 public enum InterviewRound {
-    ROUND_1(1, "技术一面", "基础技术能力考察"),
-    ROUND_2(2, "技术二面", "深入技术能力考察"),
+    ROUND_1(1, "技术一面", "基础技术能力考察"), ROUND_2(2, "技术二面", "深入技术能力考察"),
     ROUND_3(3, "技术三面", "综合技术能力考察");
 }
 
 // 关键方法
 public InterviewSession startSession(Long userId, Long resumeId, Long positionId);
+
 public InterviewQuestion nextQuestion(Long sessionId);  // 获取下一题
+
 public void answerQuestion(Long questionId, String answer);  // 保存回答
+
 public String generateNextQuestion(Long sessionId);  // LLM 生成下一题
+
 public InterviewSession endSession(Long sessionId);  // 结束面试，生成总结
+
 public InterviewSession resumeSession(Long sessionId);  // 恢复中断的面试
 ```
 
@@ -1140,10 +1193,14 @@ public PasswordEncoder passwordEncoder() {
 }
 
 // 注册时加密
-user.setPasswordHash(passwordEncoder.encode(rawPassword));
+user.
 
-// 登录时验证
-passwordEncoder.matches(rawPassword, user.getPasswordHash())
+setPasswordHash(passwordEncoder.encode(rawPassword));
+
+    // 登录时验证
+    passwordEncoder.
+
+matches(rawPassword, user.getPasswordHash())
 ```
 
 ### 7.4 AI 安全
@@ -1152,12 +1209,11 @@ passwordEncoder.matches(rawPassword, user.getPasswordHash())
 // SafeValidAdvisor.java
 // 前置检测：输入文本
 public class SafeValidAdvisor implements AroundAdvisor {
-    
-    private static final List<String> SENSITIVE_KEYWORDS = List.of(
-            "忽略指令", "忽略系统提示", "忘记之前的", "扮演", "黑客", "攻击", 
-            "<script>", "javascript:", "onerror=", "onclick="
-    );
-    
+
+    private static final List<String> SENSITIVE_KEYWORDS =
+        List.of("忽略指令", "忽略系统提示", "忘记之前的", "扮演", "黑客", "攻击", "<script>",
+            "javascript:", "onerror=", "onclick=");
+
     @Override
     public AdvisedResponse around(AdvisedRequest request) {
         // 前置：检查输入
@@ -1165,22 +1221,22 @@ public class SafeValidAdvisor implements AroundAdvisor {
         if (containsSensitiveContent(userText)) {
             throw new BusinessException("输入内容包含敏感信息，请重新提问");
         }
-        
+
         // 调用下游
         AdvisedResponse response = proceed(request);
-        
+
         // 后置：检查输出
         String output = response.response();
         if (containsSensitiveContent(output)) {
-            return new AdvisedResponse("生成内容包含敏感信息，已拦截", 
-                    response.adviseContext());
+            return new AdvisedResponse("生成内容包含敏感信息，已拦截", response.adviseContext());
         }
-        
+
         return response;
     }
-    
+
     private boolean containsSensitiveContent(String text) {
-        if (text == null) return false;
+        if (text == null)
+            return false;
         return SENSITIVE_KEYWORDS.stream().anyMatch(text::contains);
     }
 }
@@ -1192,7 +1248,8 @@ public class SafeValidAdvisor implements AroundAdvisor {
 
 ```sql
 -- 在 users 表基础上新增 api_key 字段
-ALTER TABLE users ADD COLUMN api_key VARCHAR(255) DEFAULT NULL COMMENT '用户自配的 DeepSeek API Key';
+ALTER TABLE users
+    ADD COLUMN api_key VARCHAR(255) DEFAULT NULL COMMENT '用户自配的 DeepSeek API Key';
 ```
 
 #### 7.5.2 限流逻辑
@@ -1201,28 +1258,28 @@ ALTER TABLE users ADD COLUMN api_key VARCHAR(255) DEFAULT NULL COMMENT '用户�
 // RateLimitService.java
 @Service
 public class RateLimitService {
-    
+
     // 每日限额配置
     private static final int DAILY_REPORT_LIMIT = 3;
     private static final int DAILY_INTERVIEW_LIMIT = 1;
-    
+
     // 使用 Redis 或本地缓存统计
     private final Map<String, Map<String, Integer>> dailyCounts = new ConcurrentHashMap<>();
-    
+
     public boolean tryConsume(Long userId, String actionType) {
         String date = LocalDate.now().toString();
         String key = userId + ":" + actionType + ":" + date;
-        
+
         int limit = switch (actionType) {
             case "report" -> DAILY_REPORT_LIMIT;
             case "interview" -> DAILY_INTERVIEW_LIMIT;
             default -> Integer.MAX_VALUE;
         };
-        
+
         // 原子递增，判断是否超限
         return incrementAndCheck(key, limit);
     }
-    
+
     public boolean hasApiKey(Long userId) {
         // 查询用户是否配置了自己的 API Key
         return userRepository.hasApiKey(userId);
@@ -1237,17 +1294,17 @@ public class RateLimitService {
 public String callLLM(String prompt, Long userId) {
     // 1. 检查用户是否配置了自己的 API Key
     String userApiKey = userRepository.getApiKey(userId);
-    
+
     if (StringUtils.hasText(userApiKey)) {
         // 用自己的 Key → 不限量，零成本
         return callWithKey(prompt, userApiKey);
     }
-    
+
     // 2. 用平台 Key → 检查限额
     if (!rateLimitService.tryConsume(userId, getActionType())) {
         throw new BusinessException(429, "今日次数已用完，请明日再试或配置自己的 API Key");
     }
-    
+
     // 3. 调用平台 Key
     return callWithKey(prompt, platformApiKey);
 }
@@ -1260,14 +1317,35 @@ public String callLLM(String prompt, Long userId) {
 // 在后端返回的限额信息中附带剩余次数
 
 // 获取用户信息 API 扩展
-GET /api/v1/auth/me
+GET / api / v1 / auth / me
 Response: {
-    ...,
-    "apiKeyConfigured": false,
-    "dailyQuota": {
-        "report": { "used": 2, "limit": 3 },
-        "interview": { "used": 1, "limit": 1 }
+...,
+  "apiKeyConfigured"
+:
+  false,
+      "dailyQuota"
+:
+  {
+    "report"
+  :
+    {
+      "used"
+    :
+      2, "limit"
+    :
+      3
     }
+  ,
+    "interview"
+  :
+    {
+      "used"
+    :
+      1, "limit"
+    :
+      1
+    }
+  }
 }
 ```
 
@@ -1280,64 +1358,64 @@ Response: {
 ```typescript
 // router/index.ts
 const routes = [
-    {
-        path: '/login',
-        name: 'Login',
-        component: () => import('@/views/login/LoginView.vue'),
-        meta: { requiresAuth: false }
-    },
-    {
-        path: '/',
-        component: () => import('@/components/AppLayout.vue'),
-        meta: { requiresAuth: true },
-        children: [
-            {
-                path: '',
-                name: 'Home',
-                component: () => import('@/views/home/HomeView.vue')
-            },
-            {
-                path: 'resume/upload',
-                name: 'ResumeUpload',
-                component: () => import('@/views/resume/UploadView.vue')
-            },
-            {
-                path: 'resume/:id',
-                name: 'ResumeDetail',
-                component: () => import('@/views/resume/DetailView.vue')
-            },
-            {
-                path: 'resume/:id/position/add',
-                name: 'AddPosition',
-                component: () => import('@/views/position/PositionForm.vue')
-            },
-            {
-                path: 'report/:id',
-                name: 'ReportDetail',
-                component: () => import('@/views/report/ReportView.vue')
-            },
-            {
-                path: 'interview/prepare/:resumeId/:positionId',
-                name: 'InterviewPrepare',
-                component: () => import('@/views/interview/PrepareView.vue')
-            },
-            {
-                path: 'interview/:id',
-                name: 'InterviewChat',
-                component: () => import('@/views/interview/ChatView.vue')
-            },
-            {
-                path: 'interview/:id/summary',
-                name: 'InterviewSummary',
-                component: () => import('@/views/interview/SummaryView.vue')
-            },
-            {
-                path: 'settings',
-                name: 'Settings',
-                component: () => import('@/views/settings/SettingsView.vue')
-            }
-        ]
-    }
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/login/LoginView.vue'),
+    meta: {requiresAuth: false}
+  },
+  {
+    path: '/',
+    component: () => import('@/components/AppLayout.vue'),
+    meta: {requiresAuth: true},
+    children: [
+      {
+        path: '',
+        name: 'Home',
+        component: () => import('@/views/home/HomeView.vue')
+      },
+      {
+        path: 'resume/upload',
+        name: 'ResumeUpload',
+        component: () => import('@/views/resume/UploadView.vue')
+      },
+      {
+        path: 'resume/:id',
+        name: 'ResumeDetail',
+        component: () => import('@/views/resume/DetailView.vue')
+      },
+      {
+        path: 'resume/:id/position/add',
+        name: 'AddPosition',
+        component: () => import('@/views/position/PositionForm.vue')
+      },
+      {
+        path: 'report/:id',
+        name: 'ReportDetail',
+        component: () => import('@/views/report/ReportView.vue')
+      },
+      {
+        path: 'interview/prepare/:resumeId/:positionId',
+        name: 'InterviewPrepare',
+        component: () => import('@/views/interview/PrepareView.vue')
+      },
+      {
+        path: 'interview/:id',
+        name: 'InterviewChat',
+        component: () => import('@/views/interview/ChatView.vue')
+      },
+      {
+        path: 'interview/:id/summary',
+        name: 'InterviewSummary',
+        component: () => import('@/views/interview/SummaryView.vue')
+      },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: () => import('@/views/settings/SettingsView.vue')
+      }
+    ]
+  }
 ];
 ```
 
@@ -1346,71 +1424,71 @@ const routes = [
 ```vue
 <!-- SseChat.vue - 面试对话核心组件 -->
 <template>
-    <div class="sse-chat">
-        <div v-for="msg in messages" :key="msg.id" class="message-bubble">
-            <div v-if="msg.role === 'assistant'" class="assistant-message">
-                <span class="role-tag">面试官</span>
-                <div class="content" v-html="renderMarkdown(msg.content)"></div>
-            </div>
-            <div v-else class="user-message">
-                <span class="role-tag">我</span>
-                <div class="content">{{ msg.content }}</div>
-            </div>
-        </div>
-        
-        <!-- 流式输出区域 -->
-        <div v-if="streamingContent" class="message-bubble assistant-message streaming">
-            <span class="role-tag">面试官</span>
-            <div class="content" v-html="renderMarkdown(streamingContent)"></div>
-            <span class="cursor-blink">|</span>
-        </div>
-        
-        <!-- 输入区域 -->
-        <div class="input-area" v-if="isWaitingAnswer">
-            <el-input
-                v-model="userAnswer"
-                type="textarea"
-                :rows="3"
-                placeholder="请输入你的回答..."
-                @keydown.ctrl.enter="submitAnswer"
-            />
-            <el-button type="primary" @click="submitAnswer" :loading="submitting">
-                发送回答
-            </el-button>
-        </div>
+  <div class="sse-chat">
+    <div v-for="msg in messages" :key="msg.id" class="message-bubble">
+      <div v-if="msg.role === 'assistant'" class="assistant-message">
+        <span class="role-tag">面试官</span>
+        <div class="content" v-html="renderMarkdown(msg.content)"></div>
+      </div>
+      <div v-else class="user-message">
+        <span class="role-tag">我</span>
+        <div class="content">{{ msg.content }}</div>
+      </div>
     </div>
+
+    <!-- 流式输出区域 -->
+    <div v-if="streamingContent" class="message-bubble assistant-message streaming">
+      <span class="role-tag">面试官</span>
+      <div class="content" v-html="renderMarkdown(streamingContent)"></div>
+      <span class="cursor-blink">|</span>
+    </div>
+
+    <!-- 输入区域 -->
+    <div class="input-area" v-if="isWaitingAnswer">
+      <el-input
+          v-model="userAnswer"
+          type="textarea"
+          :rows="3"
+          placeholder="请输入你的回答..."
+          @keydown.ctrl.enter="submitAnswer"
+      />
+      <el-button type="primary" @click="submitAnswer" :loading="submitting">
+        发送回答
+      </el-button>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-// SSE 连接管理
-const connectSSE = (url: string) => {
+  // SSE 连接管理
+  const connectSSE = (url: string) => {
     const eventSource = new EventSource(url);
-    
+
     eventSource.addEventListener('feedback', (event) => {
-        const data = JSON.parse(event.data);
-        streamingContent.value += data.content;
+      const data = JSON.parse(event.data);
+      streamingContent.value += data.content;
     });
-    
+
     eventSource.addEventListener('next_question', (event) => {
-        const data = JSON.parse(event.data);
-        messages.value.push({ role: 'assistant', content: streamingContent.value });
-        streamingContent.value = data.content;
-        currentQuestionId.value = data.questionId;
-        isWaitingAnswer.value = true;
+      const data = JSON.parse(event.data);
+      messages.value.push({role: 'assistant', content: streamingContent.value});
+      streamingContent.value = data.content;
+      currentQuestionId.value = data.questionId;
+      isWaitingAnswer.value = true;
     });
-    
+
     eventSource.addEventListener('complete', (event) => {
-        eventSource.close();
-        // 跳转到总结页
-        router.push(`/interview/${sessionId}/summary`);
+      eventSource.close();
+      // 跳转到总结页
+      router.push(`/interview/${sessionId}/summary`);
     });
-    
+
     eventSource.onerror = () => {
-        // 断线重连逻辑
-        console.error('SSE 连接中断，尝试重连...');
-        setTimeout(() => connectSSE(url), 3000);
+      // 断线重连逻辑
+      console.error('SSE 连接中断，尝试重连...');
+      setTimeout(() => connectSSE(url), 3000);
     };
-};
+  };
 </script>
 ```
 
@@ -1419,39 +1497,39 @@ const connectSSE = (url: string) => {
 ```typescript
 // api/request.ts
 import axios from 'axios';
-import { ElMessage } from 'element-plus';
+import {ElMessage} from 'element-plus';
 
 const request = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || '/api/v1',
-    timeout: 30000,
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api/v1',
+  timeout: 30000,
 });
 
 // 请求拦截器：自动注入 Token
 request.interceptors.request.use((config) => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 // 响应拦截器：统一错误处理
 request.interceptors.response.use(
     (response) => {
-        const res = response.data;
-        if (res.code !== 200) {
-            ElMessage.error(res.message);
-            return Promise.reject(new Error(res.message));
-        }
-        return res;
+      const res = response.data;
+      if (res.code !== 200) {
+        ElMessage.error(res.message);
+        return Promise.reject(new Error(res.message));
+      }
+      return res;
     },
     (error) => {
-        if (error.response?.status === 401) {
-            // Token 过期，尝试刷新
-            // 刷新失败，跳转登录页
-        }
-        ElMessage.error(error.message);
-        return Promise.reject(error);
+      if (error.response?.status === 401) {
+        // Token 过期，尝试刷新
+        // 刷新失败，跳转登录页
+      }
+      ElMessage.error(error.message);
+      return Promise.reject(error);
     }
 );
 ```
@@ -1469,17 +1547,17 @@ server:
 spring:
   application:
     name: offer-agent
-  
+
   datasource:
     url: jdbc:mysql://localhost:3306/offer_agent?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: ${MYSQL_ROOT_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
-  
+
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
-  
+
   ai:
     deepseek:
       api-key: ${DEEPSEEK_API_KEY}
@@ -1487,13 +1565,13 @@ spring:
         options:
           model: deepseek-chat
           temperature: 0.7
-  
+
     vectorstore:
       pgvector:
         index-type: HNSW
         distance-type: COSINE
         dimension: 512
-  
+
     embedding:
       transformer:
         tokenizer:
@@ -1554,21 +1632,21 @@ minio:
 
 ### 10.1 错误码
 
-| 错误码 | 说明 | 场景 |
-|--------|------|------|
-| 200 | 成功 | |
-| 400 | 参数错误 | 参数校验失败 |
-| 401 | 未认证 | Token 过期或无效 |
-| 403 | 无权限 | 访问他人资源 |
-| 404 | 资源不存在 | 简历/报告/面试不存在 |
-| 409 | 资源冲突 | 邮箱已注册 |
-| 429 | 请求太频繁 | 限流 |
-| 500 | 系统错误 | 服务器内部异常 |
+| 错误码  | 说明      | 场景                |
+|------|---------|-------------------|
+| 200  | 成功      |                   |
+| 400  | 参数错误    | 参数校验失败            |
+| 401  | 未认证     | Token 过期或无效       |
+| 403  | 无权限     | 访问他人资源            |
+| 404  | 资源不存在   | 简历/报告/面试不存在       |
+| 409  | 资源冲突    | 邮箱已注册             |
+| 429  | 请求太频繁   | 限流                |
+| 500  | 系统错误    | 服务器内部异常           |
 | 1001 | AI 服务异常 | DeepSeek API 调用失败 |
-| 1002 | 文档解析失败 | 百炼解析异常 |
-| 1003 | 简历解析超时 | 解析超过 30 秒 |
-| 2001 | 面试已过期 | 中断超过 1 小时 |
-| 2002 | 面试已结束 | 重复操作已结束的面试 |
+| 1002 | 文档解析失败  | 百炼解析异常            |
+| 1003 | 简历解析超时  | 解析超过 30 秒         |
+| 2001 | 面试已过期   | 中断超过 1 小时         |
+| 2002 | 面试已结束   | 重复操作已结束的面试        |
 
 ### 10.2 异常处理代码
 
@@ -1579,21 +1657,21 @@ minio:
 public class BusinessException extends RuntimeException {
     private final int code;
     private final String message;
-    
+
     public BusinessException(int code, String message) {
         super(message);
         this.code = code;
         this.message = message;
     }
-    
+
     public static BusinessException resumeNotFound() {
         return new BusinessException(404, "简历不存在");
     }
-    
+
     public static BusinessException interviewExpired() {
         return new BusinessException(2001, "面试已过期，请重新开始");
     }
-    
+
     public static BusinessException emailAlreadyRegistered() {
         return new BusinessException(409, "该邮箱已被注册");
     }
@@ -1603,21 +1681,21 @@ public class BusinessException extends RuntimeException {
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-    
+
     @ExceptionHandler(BusinessException.class)
     public ApiResult<Void> handleBusiness(BusinessException e) {
         log.warn("业务异常: code={}, msg={}", e.getCode(), e.getMessage());
         return ApiResult.error(e.getCode(), e.getMessage());
     }
-    
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResult<Void> handleValidation(MethodArgumentNotValidException e) {
         String msg = e.getBindingResult().getFieldErrors().stream()
-                .map(f -> f.getField() + ": " + f.getDefaultMessage())
-                .collect(Collectors.joining("; "));
+            .map(f -> f.getField() + ": " + f.getDefaultMessage())
+            .collect(Collectors.joining("; "));
         return ApiResult.error(400, msg);
     }
-    
+
     @ExceptionHandler(Exception.class)
     public ApiResult<Void> handleUnknown(Exception e) {
         log.error("系统异常", e);
@@ -1821,16 +1899,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Build Backend
         run: mvn package -DskipTests
-      
+
       - name: Build Frontend
         working-directory: ./offer-agent-frontend
         run: |
           npm ci
           npm run build
-      
+
       - name: Deploy to Server
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -1839,7 +1917,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           source: "./"
           target: "/opt/offer-agent/"
-      
+
       - name: Restart Services
         uses: appleboy/ssh-action@v0.1.5
         with:
@@ -1866,7 +1944,7 @@ jobs:
 // 使用方式
 @Slf4j
 public class ResumeServiceImpl implements ResumeService {
-    
+
     public void parseResume(Long resumeId) {
         log.info("开始解析简历, resumeId={}", resumeId);
         try {
@@ -1883,19 +1961,19 @@ public class ResumeServiceImpl implements ResumeService {
 ### 12.2 切面日志（API 调用记录）
 
 ```java
+
 @Aspect
 @Component
 @Slf4j
 public class ApiLogAspect {
-    
+
     @Around("@within(org.springframework.web.bind.annotation.RestController)")
     public Object logApi(ProceedingJoinPoint pjp) throws Throwable {
         long start = System.currentTimeMillis();
         String method = pjp.getSignature().toShortString();
-        
-        log.info("请求开始: method={}, args={}", method, 
-                Arrays.toString(pjp.getArgs()));
-        
+
+        log.info("请求开始: method={}, args={}", method, Arrays.toString(pjp.getArgs()));
+
         try {
             Object result = pjp.proceed();
             long cost = System.currentTimeMillis() - start;
@@ -1916,20 +1994,20 @@ public class ApiLogAspect {
 // MyLogAdvisor.java
 @Slf4j
 public class MyLogAdvisor implements AroundAdvisor {
-    
+
     @Override
     public AdvisedResponse around(AdvisedRequest request) {
         long start = System.currentTimeMillis();
-        
+
         AdvisedResponse response = proceed(request);
-        
+
         long cost = System.currentTimeMillis() - start;
         int inputTokens = ...;  // 从 response 获取
         int outputTokens = ...;
-        
+
         log.info("AI调用完成: model={}, cost={}ms, inputTokens={}, outputTokens={}",
-                "deepseek-chat", cost, inputTokens, outputTokens);
-        
+            "deepseek-chat", cost, inputTokens, outputTokens);
+
         return response;
     }
 }
@@ -1941,14 +2019,14 @@ public class MyLogAdvisor implements AroundAdvisor {
 
 ### 13.1 测试层级
 
-| 层级 | 覆盖范围 | 示例 |
-|------|---------|------|
-| 单元测试 | Service 核心逻辑 | AuthService 注册/登录逻辑 |
-| 单元测试 | 工具类 | JsonUtil、TraceIdUtil |
-| 集成测试 | 数据库操作 | ResumeRepository CRUD |
-| 集成测试 | RAG 链路 | 简历向量化 → 检索 |
-| API 测试 | 接口响应 | 注册接口参数校验 |
-| AI 测试 | Prompt 效果 | 评估报告输出格式验证 |
+| 层级     | 覆盖范围         | 示例                    |
+|--------|--------------|-----------------------|
+| 单元测试   | Service 核心逻辑 | AuthService 注册/登录逻辑   |
+| 单元测试   | 工具类          | JsonUtil、TraceIdUtil  |
+| 集成测试   | 数据库操作        | ResumeRepository CRUD |
+| 集成测试   | RAG 链路       | 简历向量化 → 检索            |
+| API 测试 | 接口响应         | 注册接口参数校验              |
+| AI 测试  | Prompt 效果    | 评估报告输出格式验证            |
 
 ### 13.2 关键测试用例
 
@@ -1956,10 +2034,10 @@ public class MyLogAdvisor implements AroundAdvisor {
 // AuthServiceTest.java
 @SpringBootTest
 class AuthServiceTest {
-    
+
     @Autowired
     private AuthService authService;
-    
+
     @Test
     void testRegister_Success() {
         var request = new RegisterRequest("test@test.com", "password123");
@@ -1967,7 +2045,7 @@ class AuthServiceTest {
         assertNotNull(response.getAccessToken());
         assertEquals("test@test.com", response.getUser().getEmail());
     }
-    
+
     @Test
     void testRegister_DuplicateEmail() {
         var request = new RegisterRequest("test@test.com", "password123");
@@ -1976,7 +2054,7 @@ class AuthServiceTest {
             authService.register(request);
         });
     }
-    
+
     @Test
     void testLogin_WrongPassword() {
         var request = new LoginRequest("test@test.com", "wrongpassword");
@@ -1989,7 +2067,7 @@ class AuthServiceTest {
 // ReportServiceTest.java
 @SpringBootTest
 class ReportServiceTest {
-    
+
     @Test
     void testReport_JsonOutput() {
         var report = reportService.generateReport(1L, 1L);
@@ -2040,17 +2118,17 @@ chore: 构建/工具
 
 ## 15. 面试展示话术
 
-| 技术点 | 面试话术 |
-|--------|---------|
-| **RAG 全链路** | 从 PDF 解析 → 切片 → 向量化 → 检索增强 → 生成，全链路自研，不依赖平台拖拽，每个环节都可控 |
+| 技术点          | 面试话术                                                             |
+|--------------|------------------------------------------------------------------|
+| **RAG 全链路**  | 从 PDF 解析 → 切片 → 向量化 → 检索增强 → 生成，全链路自研，不依赖平台拖拽，每个环节都可控            |
 | **Agent 编排** | 基于 Spring AI Advisor Chain 设计管线，可插拔、可扩展，定义了安全过滤、记忆注入、RAG 检索的执行顺序 |
-| **SSE 流式** | 面试对话流式输出，前端 EventSource 逐字渲染，断线自动重连 |
-| **数据隔离** | 多用户场景下，向量检索按 user_id 过滤，确保用户只能搜到自己的简历内容，不越权 |
-| **面试状态机** | 三面制状态机，支持中断恢复（1小时内）、过期自动失效、主动结束生成总结 |
-| **结构化输出** | LLM 返回 JSON 格式，精确解析匹配度、技术栈、评分等字段，前端按字段渲染 |
-| **模块化架构** | 遵循 DDD 限界上下文划分，AI 核心模块（aicore）可独立抽取为微服务 |
-| **工程规范** | Liquibase 版本管理、统一响应体、全局异常处理、traceId 链路追踪、多环境配置 |
-| **部署方案** | Docker Compose 容器化编排，MinIO 对象存储，Nginx 反向代理，GitHub Actions CI/CD |
+| **SSE 流式**   | 面试对话流式输出，前端 EventSource 逐字渲染，断线自动重连                              |
+| **数据隔离**     | 多用户场景下，向量检索按 user_id 过滤，确保用户只能搜到自己的简历内容，不越权                      |
+| **面试状态机**    | 三面制状态机，支持中断恢复（1小时内）、过期自动失效、主动结束生成总结                              |
+| **结构化输出**    | LLM 返回 JSON 格式，精确解析匹配度、技术栈、评分等字段，前端按字段渲染                         |
+| **模块化架构**    | 遵循 DDD 限界上下文划分，AI 核心模块（aicore）可独立抽取为微服务                          |
+| **工程规范**     | Liquibase 版本管理、统一响应体、全局异常处理、traceId 链路追踪、多环境配置                   |
+| **部署方案**     | Docker Compose 容器化编排，MinIO 对象存储，Nginx 反向代理，GitHub Actions CI/CD  |
 
 ---
 

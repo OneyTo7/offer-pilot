@@ -3,6 +3,12 @@ package com.eyki.offerpilot.aicore.memory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.eyki.offerpilot.aicore.memory.domain.ChatMemoryMessage;
 import com.eyki.offerpilot.aicore.memory.repository.ChatMemoryRecordRepository;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.AssistantMessage;
@@ -13,18 +19,10 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-
 /**
  * MySQL-backed ChatMemory（对话记忆 + 持久化 + 窗口管理）。
  *
- * 并发安全：按 conversationId 粒度加锁，同一会话的 add/clear 串行化。
- * 事务：delete + insert 在同一个事务内执行，保证原子性。
+ * 并发安全：按 conversationId 粒度加锁，同一会话的 add/clear 串行化。 事务：delete + insert 在同一个事务内执行，保证原子性。
  */
 @Slf4j
 @Component
@@ -41,8 +39,7 @@ public class MysqlChatMemory implements ChatMemory {
     /** 按 conversationId 粒度的锁池，同一会话的 add/clear 互斥 */
     private final Map<String, Object> locks = new ConcurrentHashMap<>();
 
-    public MysqlChatMemory(ChatMemoryRecordRepository repository,
-                           TransactionTemplate transactionTemplate) {
+    public MysqlChatMemory(ChatMemoryRecordRepository repository, TransactionTemplate transactionTemplate) {
         this.repository = repository;
         this.transactionTemplate = transactionTemplate;
     }
@@ -74,17 +71,14 @@ public class MysqlChatMemory implements ChatMemory {
     @Override
     public List<Message> get(String conversationId) {
         // 读操作不需要加锁，MySQL 的读一致性足够
-        return loadMessages(conversationId).stream()
-                .map(this::toMessage)
-                .collect(Collectors.toList());
+        return loadMessages(conversationId).stream().map(this::toMessage).collect(Collectors.toList());
     }
 
     @Override
     public void clear(String conversationId) {
         synchronized (locks.computeIfAbsent(conversationId, k -> new Object())) {
             conversationUsers.remove(conversationId);
-            repository.delete(new QueryWrapper<ChatMemoryMessage>()
-                    .eq("conversation_id", conversationId));
+            repository.delete(new QueryWrapper<ChatMemoryMessage>().eq("conversation_id", conversationId));
             // 清理锁对象，避免内存泄漏
             locks.remove(conversationId);
         }
@@ -100,29 +94,21 @@ public class MysqlChatMemory implements ChatMemory {
 
     public List<String> findConversationIdsByUserId(Long userId) {
         return repository.selectList(
-                new QueryWrapper<ChatMemoryMessage>()
-                        .eq("user_id", userId)
-                        .select("DISTINCT conversation_id")
-                        .orderByDesc("created_at")
-        ).stream().map(ChatMemoryMessage::getConversationId).distinct().collect(Collectors.toList());
+                new QueryWrapper<ChatMemoryMessage>().eq("user_id", userId).select("DISTINCT conversation_id")
+                    .orderByDesc("created_at")).stream().map(ChatMemoryMessage::getConversationId).distinct()
+            .collect(Collectors.toList());
     }
 
     public List<ChatMemoryMessage> findMessagesByConversationId(String conversationId) {
         return repository.selectList(
-                new QueryWrapper<ChatMemoryMessage>()
-                        .eq("conversation_id", conversationId)
-                        .orderByAsc("id")
-        );
+            new QueryWrapper<ChatMemoryMessage>().eq("conversation_id", conversationId).orderByAsc("id"));
     }
 
     // ========== 内部方法 ==========
 
     private List<ChatMemoryMessage> loadMessages(String conversationId) {
         return repository.selectList(
-                new QueryWrapper<ChatMemoryMessage>()
-                        .eq("conversation_id", conversationId)
-                        .orderByAsc("id")
-        );
+            new QueryWrapper<ChatMemoryMessage>().eq("conversation_id", conversationId).orderByAsc("id"));
     }
 
     /**
@@ -130,8 +116,7 @@ public class MysqlChatMemory implements ChatMemory {
      */
     private void saveAllRows(String conversationId, List<ChatMemoryMessage> rows) {
         transactionTemplate.executeWithoutResult(status -> {
-            repository.delete(new QueryWrapper<ChatMemoryMessage>()
-                    .eq("conversation_id", conversationId));
+            repository.delete(new QueryWrapper<ChatMemoryMessage>().eq("conversation_id", conversationId));
 
             if (!rows.isEmpty()) {
                 repository.insert(rows);
@@ -149,8 +134,9 @@ public class MysqlChatMemory implements ChatMemory {
             row.setUserId(userId);
             row.setMessageType(msg.getMessageType().name());
             row.setContent(msg.getText());
-            row.setMetadata(msg.getMetadata() != null && !msg.getMetadata().isEmpty()
-                    ? cn.hutool.json.JSONUtil.toJsonStr(msg.getMetadata()) : null);
+            row.setMetadata(
+                msg.getMetadata() != null && !msg.getMetadata().isEmpty() ? cn.hutool.json.JSONUtil.toJsonStr(
+                    msg.getMetadata()) : null);
             row.setCreatedAt(now);
             rows.add(row);
         }

@@ -2,18 +2,26 @@ package com.eyki.offerpilot.knowledge.interfaces;
 
 import com.eyki.offerpilot.common.model.ApiResult;
 import com.eyki.offerpilot.knowledge.application.KnowledgeApplicationService;
-import com.eyki.offerpilot.knowledge.application.dto.*;
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeDocumentDetailVO;
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeDocumentVO;
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeSearchRequest;
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeSearchResult;
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeUploadRequest;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 知识库管理 — REST 接口层。
  *
- * 职责：HTTP 请求解析、响应包装、参数校验。
- * 不包含业务逻辑，直接委派给 Application Service。
+ * 职责：HTTP 请求解析、响应包装、参数校验。 不包含业务逻辑，直接委派给 Application Service。
  */
 @RestController
 @RequestMapping("/api/v1/knowledge")

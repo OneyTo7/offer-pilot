@@ -5,25 +5,31 @@ spring:
   application:
     name: offer-pilot
 
+  # Jackson 全局配置
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    default-property-inclusion: non_null
+
   # MySQL 主数据源（业务数据）
   datasource:
-    url: jdbc:mysql://localhost:3306/offer_pilot?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: ${MYSQL_ROOT_PASSWORD:root}
+    url: jdbc:mysql://14.103.58.208:3306/offer_pilot?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: offer_pilot
+    password: ${MYSQL_ROOT_PASSWORD:2rWBNKnjJfebpd2m}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+    # pgvector 数据源
+    vector:
+      url: jdbc:postgresql://14.103.58.208:5433/offer_pilot_vector
+      username: postgres
+      password: ${POSTGRES_PASSWORD:postgres}
+      driver-class-name: org.postgresql.Driver
 
   # Liquibase
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
-
-  # pgvector 数据源（默认配置，dev/prod 环境覆盖）
-  datasource:
-    vector:
-      url: jdbc:postgresql://localhost:5432/offer_pilot_vector
-      username: postgres
-      password: ${POSTGRES_PASSWORD:postgres}
-      driver-class-name: org.postgresql.Driver
 
   
   # Spring AI - DeepSeek (OpenAI 兼容 API)
@@ -67,16 +73,10 @@ sa-token:
 
 # MinIO
 minio:
-  endpoint: http://localhost:9000
-  access-key: ${MINIO_ACCESS_KEY:minioadmin}
-  secret-key: ${MINIO_SECRET_KEY:minioadmin}
+  endpoint: http://14.103.58.208:19000
+  access-key: ${MINIO_ACCESS_KEY:minio}
+  secret-key: ${MINIO_SECRET_KEY:MzL8zWEATiwbftSN}
   bucket: offer-pilot-files
-
-# 阿里云百炼
-bailian:
-  api-key: ${BAILIAN_API_KEY:}
-  document-parser:
-    url: https://api.bailian.aliyun.com/v1/document/parse
 
 # 日志级别
 logging:

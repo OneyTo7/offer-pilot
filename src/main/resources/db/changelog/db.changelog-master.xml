@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
-    <include file="db/changelog/001-create-users.sql"/>
-    <include file="db/changelog/002-create-resumes.sql"/>
-    <include file="db/changelog/003-create-target_positions.sql"/>
-    <include file="db/changelog/004-create-reports.sql"/>
-    <include file="db/changelog/005-create-interview_sessions.sql"/>
-    <include file="db/changelog/006-create-interview_questions.sql"/>
-    <include file="db/changelog/007-create-chat_memory.sql"/>
-    <include file="db/changelog/008-create-knowledge_base.sql"/>
+  <include file="db/changelog/001-create-users.sql"/>
+  <include file="db/changelog/002-create-resumes.sql"/>
+  <include file="db/changelog/003-create-target_positions.sql"/>
+  <include file="db/changelog/004-create-reports.sql"/>
+  <include file="db/changelog/005-create-interview_sessions.sql"/>
+  <include file="db/changelog/006-create-interview_questions.sql"/>
+  <include file="db/changelog/007-create-chat_memory.sql"/>
+  <include file="db/changelog/008-create-knowledge_base.sql"/>
 
 </databaseChangeLog>

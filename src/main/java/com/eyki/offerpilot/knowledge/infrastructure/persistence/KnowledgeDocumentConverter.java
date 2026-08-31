@@ -14,18 +14,10 @@ import org.springframework.stereotype.Component;
 public class KnowledgeDocumentConverter {
 
     public KnowledgeDocument toDomain(KnowledgeDocumentPO po) {
-        return KnowledgeDocument.restore(
-                po.getId(),
-                po.getUserId(),
-                po.getTitle(),
-                po.getContent(),
-                ContentType.fromValue(po.getContentType()),
-                po.getFileUrl(),
-                po.getChunkCount() != null ? po.getChunkCount() : 0,
-                DocumentStatus.fromCode(po.getStatus()),
-                po.getFailReason(),
-                po.getCreatedAt(),
-                po.getUpdatedAt());
+        return KnowledgeDocument.restore(po.getId(), po.getUserId(), po.getTitle(), po.getContent(),
+            ContentType.fromValue(po.getContentType()), po.getFileUrl(),
+            po.getChunkCount() != null ? po.getChunkCount() : 0, DocumentStatus.fromCode(po.getStatus()),
+            po.getFailReason(), po.getCreatedAt(), po.getUpdatedAt());
     }
 
     public KnowledgeDocumentPO toPO(KnowledgeDocument domain) {

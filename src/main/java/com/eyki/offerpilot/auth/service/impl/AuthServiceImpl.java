@@ -5,20 +5,25 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.eyki.offerpilot.auth.domain.User;
-import com.eyki.offerpilot.auth.dto.*;
+import com.eyki.offerpilot.auth.dto.LoginRequest;
+import com.eyki.offerpilot.auth.dto.RefreshRequest;
+import com.eyki.offerpilot.auth.dto.RegisterRequest;
+import com.eyki.offerpilot.auth.dto.TokenResponse;
+import com.eyki.offerpilot.auth.dto.UpdateApiKeyRequest;
+import com.eyki.offerpilot.auth.dto.UpdateProfileRequest;
+import com.eyki.offerpilot.auth.dto.UserVO;
 import com.eyki.offerpilot.auth.repository.UserRepository;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
 import com.eyki.offerpilot.common.model.ErrorCode;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
@@ -31,8 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
 
     /**
-     * In-memory refresh token store (MVP only — migrate to Redis in production).
-     * Maps refresh token -> user ID.
+     * In-memory refresh token store (MVP only — migrate to Redis in production). Maps refresh token -> user ID.
      */
     private final Map<String, RefreshTokenEntry> refreshTokenStore = new ConcurrentHashMap<>();
 
@@ -60,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public TokenResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> BusinessException.of(ErrorCode.UNAUTHORIZED, "邮箱或密码错误"));
+            .orElseThrow(() -> BusinessException.of(ErrorCode.UNAUTHORIZED, "邮箱或密码错误"));
 
         if (user.getStatus() == 0) {
             throw BusinessException.of(ErrorCode.FORBIDDEN, "账号已被禁用");
@@ -148,15 +152,12 @@ public class AuthServiceImpl implements AuthService {
 
         // Generate refresh token
         String refreshToken = IdUtil.fastSimpleUUID();
-        refreshTokenStore.put(refreshToken, new RefreshTokenEntry(
-                user.getId(), LocalDateTime.now().plusSeconds(REFRESH_TOKEN_TTL)));
+        refreshTokenStore.put(refreshToken,
+            new RefreshTokenEntry(user.getId(), LocalDateTime.now().plusSeconds(REFRESH_TOKEN_TTL)));
 
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        return TokenResponse.builder()
-                .accessToken(tokenInfo.getTokenValue())
-                .refreshToken(refreshToken)
-                .expiresIn(tokenInfo.getTokenTimeout())
-                .build();
+        return TokenResponse.builder().accessToken(tokenInfo.getTokenValue()).refreshToken(refreshToken)
+            .expiresIn(tokenInfo.getTokenTimeout()).build();
     }
 
     private UserVO toUserVO(User user) {
@@ -165,5 +166,6 @@ public class AuthServiceImpl implements AuthService {
         return vo;
     }
 
-    private record RefreshTokenEntry(Long userId, LocalDateTime expiresAt) {}
+    private record RefreshTokenEntry(Long userId, LocalDateTime expiresAt) {
+    }
 }

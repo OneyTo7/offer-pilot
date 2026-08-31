@@ -29,7 +29,8 @@ public class InterviewEvent {
         return new InterviewEvent("feedback", content, null, null, null);
     }
 
-    public static InterviewEvent nextQuestion(Long questionId, Integer round, Integer questionIndex, String questionText) {
+    public static InterviewEvent nextQuestion(Long questionId, Integer round, Integer questionIndex,
+        String questionText) {
         return new InterviewEvent("next_question", questionText, round, questionIndex, questionId);
     }
 

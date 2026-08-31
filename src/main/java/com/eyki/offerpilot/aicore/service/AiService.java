@@ -1,8 +1,7 @@
 package com.eyki.offerpilot.aicore.service;
 
-import reactor.core.publisher.Flux;
-
 import java.util.Map;
+import reactor.core.publisher.Flux;
 
 public interface AiService {
 

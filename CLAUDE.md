@@ -1,10 +1,12 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this
+repository.
 
 ## Project Overview
 
-**面壁 (OfferPilot)** — AI简历智能平台 for tech job seekers. Upload a resume, set a target position, and get an AI-generated match assessment + 3-round mock interview (10 questions each round).
+**面壁 (OfferPilot)** — AI简历智能平台 for tech job seekers. Upload a resume, set a target position,
+and get an AI-generated match assessment + 3-round mock interview (10 questions each round).
 
 - **Framework:** Spring Boot 4.1.1 + Spring AI 2.0.1
 - **Language:** Java 21 (Preview features enabled)
@@ -69,27 +71,34 @@ com.eyki.offeragent/
 
 ### Key Architectural Decisions
 
-1. **Advisor Chain for AI pipeline:** SafeValidAdvisor → ReReadingAdvisor → MessageChatMemoryAdvisor → (optional) RetrievalAugmentationAdvisor → LLM → output validation
-2. **RAG with user-level isolation:** All vector store entries tagged with `user_id`; search filters by `user_id` to prevent data leakage
-3. **Interview state machine:** 3 rounds, 10 Qs each, interruptible (1-hour resume window), auto-expire after 1h
-4. **Rate limiting:** Free tier = 3 reports/day + 1 interview/day; users can supply their own DeepSeek API key for unlimited use
-5. **SSE streaming:** Interview answer responses streamed via `text/event-stream`; frontend uses EventSource with auto-reconnect
-6. **Unified response:** `ApiResult<T>` (code, message, data, traceId) and `PageResult<T>` (records, total, page, size)
-7. **Error codes:** 200=success, 400/401/403/404/409/429/500 + custom codes (1001=AI error, 1002=parse error, 2001=interview expired)
+1. **Advisor Chain for AI pipeline:** SafeValidAdvisor → ReReadingAdvisor →
+   MessageChatMemoryAdvisor → (optional) RetrievalAugmentationAdvisor → LLM → output validation
+2. **RAG with user-level isolation:** All vector store entries tagged with `user_id`; search filters
+   by `user_id` to prevent data leakage
+3. **Interview state machine:** 3 rounds, 10 Qs each, interruptible (1-hour resume window),
+   auto-expire after 1h
+4. **Rate limiting:** Free tier = 3 reports/day + 1 interview/day; users can supply their own
+   DeepSeek API key for unlimited use
+5. **SSE streaming:** Interview answer responses streamed via `text/event-stream`; frontend uses
+   EventSource with auto-reconnect
+6. **Unified response:** `ApiResult<T>` (code, message, data, traceId) and `PageResult<T>` (records,
+   total, page, size)
+7. **Error codes:** 200=success, 400/401/403/404/409/429/500 + custom codes (1001=AI error,
+   1002=parse error, 2001=interview expired)
 
 ### API Design
 
 Base path: `/api/v1`
 
-| Module | Endpoints |
-|--------|-----------|
-| Auth | `POST /register`, `/login`, `/refresh`, `/logout`, `GET /me`, `PUT /profile`, `PUT /api-key`, `DELETE /api-key` |
-| Resume | `POST /resumes`, `GET /resumes`, `GET /resumes/{id}`, `DELETE /resumes/{id}`, `PUT /resumes/{id}/default` |
-| Position | `POST /positions`, `GET /positions`, `GET /positions/{id}`, `DELETE /positions/{id}`, `PUT /positions/{id}/default` |
-| Report | `POST /reports`, `GET /reports`, `GET /reports/{id}`, `DELETE /reports/{id}` |
+| Module    | Endpoints                                                                                                                                                                    |
+|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Auth      | `POST /register`, `/login`, `/refresh`, `/logout`, `GET /me`, `PUT /profile`, `PUT /api-key`, `DELETE /api-key`                                                              |
+| Resume    | `POST /resumes`, `GET /resumes`, `GET /resumes/{id}`, `DELETE /resumes/{id}`, `PUT /resumes/{id}/default`                                                                    |
+| Position  | `POST /positions`, `GET /positions`, `GET /positions/{id}`, `DELETE /positions/{id}`, `PUT /positions/{id}/default`                                                          |
+| Report    | `POST /reports`, `GET /reports`, `GET /reports/{id}`, `DELETE /reports/{id}`                                                                                                 |
 | Interview | `POST /interviews`, `GET /interviews`, `GET /interviews/{id}`, `POST /{id}/start-round`, `POST /{id}/answer` (SSE), `POST /{id}/skip`, `POST /{id}/end`, `GET /{id}/summary` |
-| File | `GET /files/{filePath}` |
-| Health | `GET /api/health` |
+| File      | `GET /files/{filePath}`                                                                                                                                                      |
+| Health    | `GET /api/health`                                                                                                                                                            |
 
 ### Database (6 tables via Liquibase)
 
@@ -108,4 +117,6 @@ Base path: `/api/v1`
 
 ## Current State
 
-This is a **new project** — the architecture docs are fully written, but only the `OfferPilotApplication` bootstrap class and context-loads test exist in code. The actual module structure, services, controllers, and infrastructure are yet to be implemented.
+This is a **new project** — the architecture docs are fully written, but only the
+`OfferPilotApplication` bootstrap class and context-loads test exist in code. The actual module
+structure, services, controllers, and infrastructure are yet to be implemented.

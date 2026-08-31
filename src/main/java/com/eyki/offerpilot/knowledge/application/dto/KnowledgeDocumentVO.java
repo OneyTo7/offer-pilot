@@ -1,9 +1,8 @@
 package com.eyki.offerpilot.knowledge.application.dto;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 /**
  * 知识文档列表返回 VO。

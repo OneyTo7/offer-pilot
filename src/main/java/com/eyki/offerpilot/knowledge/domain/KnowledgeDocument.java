@@ -6,8 +6,7 @@ import java.util.Objects;
 /**
  * 知识库文档 — 领域聚合根。
  *
- * 每个文档代表用户上传的一份知识内容，经分片处理后存入向量库用于 RAG 检索。
- * 封装了文档创建、状态转换、内容校验等核心业务规则。
+ * 每个文档代表用户上传的一份知识内容，经分片处理后存入向量库用于 RAG 检索。 封装了文档创建、状态转换、内容校验等核心业务规则。
  *
  * ⚠️ 本类为纯领域对象，不依赖任何框架注解（无 @TableName、无 @Data）。
  */
@@ -54,13 +53,11 @@ public class KnowledgeDocument {
     }
 
     /**
-     * 从持久化存储重建文档（供 Repository 从数据库加载时使用）。
-     * 与 {@link #create} 不同，该方法不执行创建时校验，直接还原全部字段。
+     * 从持久化存储重建文档（供 Repository 从数据库加载时使用）。 与 {@link #create} 不同，该方法不执行创建时校验，直接还原全部字段。
      */
-    public static KnowledgeDocument restore(Long id, Long userId, String title, String content,
-                                            ContentType contentType, String fileUrl, int chunkCount,
-                                            DocumentStatus status, String failReason,
-                                            LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public static KnowledgeDocument restore(Long id, Long userId, String title, String content, ContentType contentType,
+        String fileUrl, int chunkCount, DocumentStatus status, String failReason, LocalDateTime createdAt,
+        LocalDateTime updatedAt) {
         Objects.requireNonNull(id, "id must not be null");
         Objects.requireNonNull(userId, "userId must not be null");
         Objects.requireNonNull(title, "title must not be null");
@@ -88,8 +85,7 @@ public class KnowledgeDocument {
     // ========== 业务行为 ==========
 
     /**
-     * 标记索引完成。
-     * 仅当当前状态为 INDEXING 时允许调用。
+     * 标记索引完成。 仅当当前状态为 INDEXING 时允许调用。
      */
     public void markIndexed() {
         ensureStatus(DocumentStatus.INDEXING, "mark as indexed");
@@ -99,8 +95,7 @@ public class KnowledgeDocument {
     }
 
     /**
-     * 标记索引失败。
-     * 仅当当前状态为 INDEXING 时允许调用。
+     * 标记索引失败。 仅当当前状态为 INDEXING 时允许调用。
      */
     public void markFailed(String reason) {
         ensureStatus(DocumentStatus.INDEXING, "mark as failed");
@@ -126,8 +121,7 @@ public class KnowledgeDocument {
     // ========== 基础设施回调（仅 Repository 使用） ==========
 
     /**
-     * 持久化后设置数据库自增 ID。
-     * 仅允许设置一次（id 为 null 时）。
+     * 持久化后设置数据库自增 ID。 仅允许设置一次（id 为 null 时）。
      */
     public void onPersisted(Long id) {
         if (this.id != null) {
@@ -138,25 +132,57 @@ public class KnowledgeDocument {
 
     // ========== Getters ==========
 
-    public Long getId()                           { return id; }
-    public Long getUserId()                       { return userId; }
-    public String getTitle()                      { return title; }
-    public String getContent()                    { return content; }
-    public ContentType getContentType()           { return contentType; }
-    public String getFileUrl()                    { return fileUrl; }
-    public int getChunkCount()                    { return chunkCount; }
-    public DocumentStatus getStatus()             { return status; }
-    public String getFailReason()                 { return failReason; }
-    public LocalDateTime getCreatedAt()           { return createdAt; }
-    public LocalDateTime getUpdatedAt()           { return updatedAt; }
+    public Long getId() {
+        return id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public ContentType getContentType() {
+        return contentType;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public int getChunkCount() {
+        return chunkCount;
+    }
+
+    public DocumentStatus getStatus() {
+        return status;
+    }
+
+    public String getFailReason() {
+        return failReason;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
     // ========== 内部方法 ==========
 
     private void ensureStatus(DocumentStatus expected, String action) {
         if (this.status != expected) {
             throw new IllegalStateException(
-                    "Cannot " + action + ": current status is " + this.status.getDescription()
-                            + ", expected " + expected.getDescription());
+                "Cannot " + action + ": current status is " + this.status.getDescription() + ", expected "
+                    + expected.getDescription());
         }
     }
 
@@ -164,16 +190,20 @@ public class KnowledgeDocument {
         if (content == null || content.isEmpty()) {
             return 0;
         }
-        return (int) Math.ceil((double) content.length() / CHUNK_SIZE);
+        return (int)Math.ceil((double)content.length() / CHUNK_SIZE);
     }
 
     // ========== equals / hashCode ==========
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        KnowledgeDocument that = (KnowledgeDocument) o;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        KnowledgeDocument that = (KnowledgeDocument)o;
         return id != null && Objects.equals(id, that.id);
     }
 
@@ -184,11 +214,7 @@ public class KnowledgeDocument {
 
     @Override
     public String toString() {
-        return "KnowledgeDocument{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", title='" + title + '\'' +
-                ", status=" + status +
-                '}';
+        return "KnowledgeDocument{" + "id=" + id + ", userId=" + userId + ", title='" + title + '\'' + ", status="
+            + status + '}';
     }
 }

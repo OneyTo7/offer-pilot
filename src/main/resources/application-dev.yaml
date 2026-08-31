@@ -5,15 +5,15 @@ spring:
     password: ${MYSQL_ROOT_PASSWORD:root}
 
     vector:
-      url: jdbc:postgresql://${INFRA_HOST:localhost}:5432/offer_pilot_vector
+      url: jdbc:postgresql://${INFRA_HOST:localhost}:5433/offer_pilot_vector
       username: postgres
       password: ${POSTGRES_PASSWORD:postgres}
       driver-class-name: org.postgresql.Driver
 
 minio:
-  endpoint: http://${INFRA_HOST:localhost}:9000
-  access-key: ${MINIO_ACCESS_KEY:minioadmin}
-  secret-key: ${MINIO_SECRET_KEY:minioadmin}
+  endpoint: http://${INFRA_HOST:localhost}:19001
+  access-key: ${MINIO_ACCESS_KEY:minio}
+  secret-key: ${MINIO_SECRET_KEY:pTmWPGK5JDinNp7a}
 
 logging:
   level:

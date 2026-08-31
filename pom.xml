@@ -104,11 +104,31 @@
       <version>${minio.version}</version>
     </dependency>
 
+    <!-- PDFBox (PDF 文本提取) -->
+    <dependency>
+      <groupId>org.apache.pdfbox</groupId>
+      <artifactId>pdfbox</artifactId>
+      <version>3.0.4</version>
+    </dependency>
+
+    <!-- Tess4j (OCR，扫描件降级方案) -->
+    <dependency>
+      <groupId>net.sourceforge.tess4j</groupId>
+      <artifactId>tess4j</artifactId>
+      <version>5.15.0</version>
+    </dependency>
+
     <!-- Hutool -->
     <dependency>
       <groupId>cn.hutool</groupId>
       <artifactId>hutool-all</artifactId>
       <version>${hutool.version}</version>
+    </dependency>
+
+    <!-- Jackson 日期序列化 -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
     </dependency>
 
     <!-- Lombok -->

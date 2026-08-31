@@ -7,9 +7,7 @@ package com.eyki.offerpilot.knowledge.domain;
  */
 public enum DocumentStatus {
 
-    INDEXING(0, "索引中"),
-    COMPLETED(1, "已完成"),
-    FAILED(2, "失败");
+    INDEXING(0, "索引中"), COMPLETED(1, "已完成"), FAILED(2, "失败");
 
     private final int code;
     private final String description;

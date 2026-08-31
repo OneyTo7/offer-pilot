@@ -1,5 +1,8 @@
 package com.eyki.offerpilot.storage;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.eyki.offerpilot.storage.config.MinioConfig;
 import io.minio.MinioClient;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,11 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class MinioFileStorageTest {
@@ -34,8 +32,8 @@ class MinioFileStorageTest {
     void getFileUrl_shouldReturnCorrectUrl() {
         // Verify the URL format
         String expectedUrl = "http://localhost:9000/offer-pilot-files/test/file.pdf";
-        assertEquals(expectedUrl, String.format("%s/%s/%s",
-                minioConfig.getEndpoint(), minioConfig.getBucket(), "test/file.pdf"));
+        assertEquals(expectedUrl,
+            String.format("%s/%s/%s", minioConfig.getEndpoint(), minioConfig.getBucket(), "test/file.pdf"));
     }
 
     @Test

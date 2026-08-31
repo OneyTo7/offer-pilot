@@ -1,9 +1,11 @@
 package com.eyki.offerpilot.report;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.eyki.offerpilot.auth.domain.User;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
-import com.eyki.offerpilot.position.domain.TargetPosition;
 import com.eyki.offerpilot.position.repository.PositionRepository;
 import com.eyki.offerpilot.report.domain.Report;
 import com.eyki.offerpilot.report.dto.ReportRequest;
@@ -17,10 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReportServiceImplTest {

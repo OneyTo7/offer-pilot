@@ -1,14 +1,16 @@
 package com.eyki.offerpilot.aicore.advisor;
 
+import java.time.Duration;
+import java.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClientRequest;
 import org.springframework.ai.chat.client.ChatClientResponse;
-import org.springframework.ai.chat.client.advisor.api.*;
+import org.springframework.ai.chat.client.advisor.api.CallAdvisor;
+import org.springframework.ai.chat.client.advisor.api.CallAdvisorChain;
+import org.springframework.ai.chat.client.advisor.api.StreamAdvisor;
+import org.springframework.ai.chat.client.advisor.api.StreamAdvisorChain;
 import reactor.core.publisher.Flux;
-
-import java.time.Duration;
-import java.time.Instant;
 
 /**
  * Advisor that logs AI request/response details including timing.
@@ -50,19 +52,19 @@ public class MyLogAdvisor implements CallAdvisor, StreamAdvisor {
         log.info("AI 流式请求: prompt={}", promptPreview);
         Flux<ChatClientResponse> responses = chain.nextStream(request);
 
-        return responses
-                .doOnComplete(() -> {
-                    Duration elapsed = Duration.between(start, Instant.now());
-                    log.info("AI 流式响应完成: 耗时={}ms", elapsed.toMillis());
-                })
-                .doOnError(error -> {
-                    Duration elapsed = Duration.between(start, Instant.now());
-                    log.error("AI 流式响应异常: 耗时={}ms, error={}", elapsed.toMillis(), error.getMessage());
-                });
+        return responses.doOnComplete(() -> {
+            Duration elapsed = Duration.between(start, Instant.now());
+            log.info("AI 流式响应完成: 耗时={}ms", elapsed.toMillis());
+        }).doOnError(error -> {
+            Duration elapsed = Duration.between(start, Instant.now());
+            log.error("AI 流式响应异常: 耗时={}ms, error={}", elapsed.toMillis(), error.getMessage());
+        });
     }
 
     private String truncate(String text, int maxLen) {
-        if (text == null) return "null";
+        if (text == null) {
+            return "null";
+        }
         return text.length() <= maxLen ? text : text.substring(0, maxLen) + "...";
     }
 }

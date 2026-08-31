@@ -1,8 +1,7 @@
 package com.eyki.offerpilot.common.util;
 
-import org.slf4j.MDC;
-
 import java.util.UUID;
+import org.slf4j.MDC;
 
 public class TraceIdUtil {
 

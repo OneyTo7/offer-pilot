@@ -2,18 +2,20 @@ package com.eyki.offerpilot.storage.controller;
 
 import com.eyki.offerpilot.storage.service.FileStorageService;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 /**
- * File proxy controller.
- * Serves files from MinIO through the backend to avoid exposing MinIO directly.
+ * File proxy controller. Serves files from MinIO through the backend to avoid exposing MinIO directly.
  */
 @RestController
 @RequestMapping("/api/v1/files")
@@ -23,13 +25,11 @@ public class FileController {
     private final FileStorageService fileStorageService;
 
     /**
-     * Download/serve a file.
-     * Supports both inline viewing and attachment download via the 'download' query param.
+     * Download/serve a file. Supports both inline viewing and attachment download via the 'download' query param.
      */
     @GetMapping("/{*filePath}")
     public StreamingResponseBody getFile(@PathVariable String filePath,
-                                         @RequestParam(value = "download", required = false) boolean forceDownload,
-                                         HttpServletResponse response) {
+        @RequestParam(value = "download", required = false) boolean forceDownload, HttpServletResponse response) {
         // Decode URL-encoded path
         String decodedPath = java.net.URLDecoder.decode(filePath, StandardCharsets.UTF_8);
 
@@ -68,17 +68,39 @@ public class FileController {
 
     private String determineContentType(String fileName) {
         String name = fileName.toLowerCase();
-        if (name.endsWith(".pdf")) return MediaType.APPLICATION_PDF_VALUE;
-        if (name.endsWith(".png")) return MediaType.IMAGE_PNG_VALUE;
-        if (name.endsWith(".jpg") || name.endsWith(".jpeg")) return MediaType.IMAGE_JPEG_VALUE;
-        if (name.endsWith(".gif")) return MediaType.IMAGE_GIF_VALUE;
-        if (name.endsWith(".svg")) return "image/svg+xml";
-        if (name.endsWith(".doc")) return "application/msword";
-        if (name.endsWith(".docx")) return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-        if (name.endsWith(".xls")) return "application/vnd.ms-excel";
-        if (name.endsWith(".xlsx")) return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        if (name.endsWith(".json")) return MediaType.APPLICATION_JSON_VALUE;
-        if (name.endsWith(".txt")) return MediaType.TEXT_PLAIN_VALUE;
+        if (name.endsWith(".pdf")) {
+            return MediaType.APPLICATION_PDF_VALUE;
+        }
+        if (name.endsWith(".png")) {
+            return MediaType.IMAGE_PNG_VALUE;
+        }
+        if (name.endsWith(".jpg") || name.endsWith(".jpeg")) {
+            return MediaType.IMAGE_JPEG_VALUE;
+        }
+        if (name.endsWith(".gif")) {
+            return MediaType.IMAGE_GIF_VALUE;
+        }
+        if (name.endsWith(".svg")) {
+            return "image/svg+xml";
+        }
+        if (name.endsWith(".doc")) {
+            return "application/msword";
+        }
+        if (name.endsWith(".docx")) {
+            return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        }
+        if (name.endsWith(".xls")) {
+            return "application/vnd.ms-excel";
+        }
+        if (name.endsWith(".xlsx")) {
+            return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        }
+        if (name.endsWith(".json")) {
+            return MediaType.APPLICATION_JSON_VALUE;
+        }
+        if (name.endsWith(".txt")) {
+            return MediaType.TEXT_PLAIN_VALUE;
+        }
         return MediaType.APPLICATION_OCTET_STREAM_VALUE;
     }
 }

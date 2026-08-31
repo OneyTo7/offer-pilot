@@ -2,9 +2,8 @@ package com.eyki.offerpilot.resume.service;
 
 import com.eyki.offerpilot.resume.dto.ResumeDetailVO;
 import com.eyki.offerpilot.resume.dto.ResumeVO;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ResumeService {
 

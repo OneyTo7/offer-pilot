@@ -3,15 +3,14 @@ package com.eyki.offerpilot.storage.service;
 import java.io.InputStream;
 
 /**
- * File storage service interface.
- * Abstracts the underlying object storage (MinIO).
+ * File storage service interface. Abstracts the underlying object storage (MinIO).
  */
 public interface FileStorageService {
 
     /**
      * Upload a file.
      *
-     * @param fileName  the file name (path) in storage
+     * @param fileName    the file name (path) in storage
      * @param inputStream file content
      * @param contentType MIME type
      * @return the accessible URL of the file

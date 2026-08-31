@@ -14,6 +14,7 @@ AI 简历智能平台，面向技术研发岗位求职者。产品名"面壁"，
 **技术栈：** Spring Boot 4.1.1 + Spring AI 2.0.1 + DeepSeek + pgvector + Vue3 + Element Plus
 
 **关键决策：**
+
 - 文件存储用 MinIO，不用 OSS
 - 注册用邮箱+密码，不用短信验证码
 - 面试三面制（一面基础/二面深入/三面综合），中断 1 小时内可恢复

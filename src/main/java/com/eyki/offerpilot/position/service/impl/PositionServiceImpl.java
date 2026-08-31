@@ -9,14 +9,13 @@ import com.eyki.offerpilot.position.repository.PositionRepository;
 import com.eyki.offerpilot.position.service.PositionService;
 import com.eyki.offerpilot.resume.domain.Resume;
 import com.eyki.offerpilot.resume.repository.ResumeRepository;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -95,9 +94,7 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public List<PositionVO> listMyPositions() {
         Long userId = authService.getCurrentUserEntity().getId();
-        return positionRepository.findByUserId(userId).stream()
-                .map(this::toPositionVO)
-                .collect(Collectors.toList());
+        return positionRepository.findByUserId(userId).stream().map(this::toPositionVO).collect(Collectors.toList());
     }
 
     @Override
@@ -123,10 +120,8 @@ public class PositionServiceImpl implements PositionService {
 
         // Clear existing default
         positionRepository.selectList(
-                new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<TargetPosition>()
-                        .eq(TargetPosition::getUserId, userId)
-                        .eq(TargetPosition::getIsDefault, 1)
-        ).forEach(p -> {
+            new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<TargetPosition>().eq(
+                TargetPosition::getUserId, userId).eq(TargetPosition::getIsDefault, 1)).forEach(p -> {
             p.setIsDefault(0);
             positionRepository.updateById(p);
         });
@@ -138,17 +133,9 @@ public class PositionServiceImpl implements PositionService {
     }
 
     private PositionVO toPositionVO(TargetPosition position) {
-        return PositionVO.builder()
-                .id(position.getId())
-                .resumeId(position.getResumeId())
-                .title(position.getTitle())
-                .company(position.getCompany())
-                .jdText(position.getJdText())
-                .location(position.getLocation())
-                .salaryRange(position.getSalaryRange())
-                .isDefault(position.getIsDefault())
-                .createdAt(position.getCreatedAt())
-                .updatedAt(position.getUpdatedAt())
-                .build();
+        return PositionVO.builder().id(position.getId()).resumeId(position.getResumeId()).title(position.getTitle())
+            .company(position.getCompany()).jdText(position.getJdText()).location(position.getLocation())
+            .salaryRange(position.getSalaryRange()).isDefault(position.getIsDefault())
+            .createdAt(position.getCreatedAt()).updatedAt(position.getUpdatedAt()).build();
     }
 }

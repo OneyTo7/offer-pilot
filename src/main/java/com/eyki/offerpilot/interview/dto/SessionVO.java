@@ -1,9 +1,8 @@
 package com.eyki.offerpilot.interview.dto;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 /**
  * Interview session view object for listing and detail.

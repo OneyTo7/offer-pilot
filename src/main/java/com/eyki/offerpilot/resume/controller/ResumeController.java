@@ -4,12 +4,18 @@ import com.eyki.offerpilot.common.model.ApiResult;
 import com.eyki.offerpilot.resume.dto.ResumeDetailVO;
 import com.eyki.offerpilot.resume.dto.ResumeVO;
 import com.eyki.offerpilot.resume.service.ResumeService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/resumes")
@@ -20,7 +26,7 @@ public class ResumeController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResult<ResumeVO> upload(@RequestParam("file") MultipartFile file,
-                                      @RequestParam(value = "name", required = false) String name) {
+        @RequestParam(value = "name", required = false) String name) {
         ResumeVO resume = resumeService.upload(file, name);
         return ApiResult.success("上传成功", resume);
     }

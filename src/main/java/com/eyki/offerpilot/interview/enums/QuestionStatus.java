@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum QuestionStatus {
 
-    PENDING(0, "待答"),
-    ANSWERED(1, "已答"),
-    SKIPPED(2, "已跳过");
+    PENDING(0, "待答"), ANSWERED(1, "已答"), SKIPPED(2, "已跳过");
 
     private final int code;
     private final String desc;

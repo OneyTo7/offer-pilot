@@ -1,7 +1,13 @@
 package com.eyki.offerpilot.auth.service;
 
-import com.eyki.offerpilot.auth.dto.*;
 import com.eyki.offerpilot.auth.domain.User;
+import com.eyki.offerpilot.auth.dto.LoginRequest;
+import com.eyki.offerpilot.auth.dto.RefreshRequest;
+import com.eyki.offerpilot.auth.dto.RegisterRequest;
+import com.eyki.offerpilot.auth.dto.TokenResponse;
+import com.eyki.offerpilot.auth.dto.UpdateApiKeyRequest;
+import com.eyki.offerpilot.auth.dto.UpdateProfileRequest;
+import com.eyki.offerpilot.auth.dto.UserVO;
 
 public interface AuthService {
 

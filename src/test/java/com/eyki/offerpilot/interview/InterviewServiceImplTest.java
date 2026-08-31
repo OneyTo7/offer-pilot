@@ -1,5 +1,8 @@
 package com.eyki.offerpilot.interview;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.eyki.offerpilot.auth.domain.User;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
@@ -10,18 +13,13 @@ import com.eyki.offerpilot.interview.repository.InterviewQuestionRepository;
 import com.eyki.offerpilot.interview.repository.InterviewSessionRepository;
 import com.eyki.offerpilot.interview.service.InterviewSessionManager;
 import com.eyki.offerpilot.interview.service.impl.InterviewServiceImpl;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class InterviewServiceImplTest {

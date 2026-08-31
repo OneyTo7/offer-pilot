@@ -1,15 +1,18 @@
 package com.eyki.offerpilot.resume.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-
+/**
+ * 简历详情 VO。
+ *
+ * JSON 字段已解析为结构化的 Java 对象，前端直接使用。
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -29,17 +32,31 @@ public class ResumeDetailVO {
     @JsonProperty("page_count")
     private Integer pageCount;
 
+    /** 全文原始文本 */
     @JsonProperty("parsed_text")
     private String parsedText;
 
-    @JsonProperty("tech_stack")
-    private List<String> techStack;
+    /** 基本信息 */
+    @JsonProperty("basic_info")
+    private ResumeBasicInfo basicInfo;
 
-    @JsonProperty("work_years")
-    private BigDecimal workYears;
+    /** 教育经历 */
+    private List<ResumeEducation> education;
 
-    private String education;
+    /** 工作经历 */
+    @JsonProperty("work_experience")
+    private List<ResumeWorkExperience> workExperience;
 
+    /** 项目经历 */
+    private List<ResumeProject> projects;
+
+    /** 技能标签 */
+    private List<ResumeSkill> skills;
+
+    /** 证书/语言 */
+    private List<ResumeCertificate> certificates;
+
+    /** 简历摘要 */
     private String summary;
 
     @JsonProperty("is_default")

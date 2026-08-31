@@ -2,18 +2,20 @@ package com.eyki.offerpilot.aicore.advisor;
 
 import com.eyki.offerpilot.common.exception.BusinessException;
 import com.eyki.offerpilot.common.model.ErrorCode;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClientRequest;
 import org.springframework.ai.chat.client.ChatClientResponse;
-import org.springframework.ai.chat.client.advisor.api.*;
+import org.springframework.ai.chat.client.advisor.api.CallAdvisor;
+import org.springframework.ai.chat.client.advisor.api.CallAdvisorChain;
+import org.springframework.ai.chat.client.advisor.api.StreamAdvisor;
+import org.springframework.ai.chat.client.advisor.api.StreamAdvisorChain;
 import reactor.core.publisher.Flux;
 
-import java.util.List;
-
 /**
- * Advisor that checks for sensitive content in user input.
- * Blocks requests containing harmful/inappropriate content before they reach the LLM.
+ * Advisor that checks for sensitive content in user input. Blocks requests containing harmful/inappropriate content
+ * before they reach the LLM.
  */
 public class SafeValidAdvisor implements CallAdvisor, StreamAdvisor {
 

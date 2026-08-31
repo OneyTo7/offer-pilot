@@ -2,14 +2,19 @@ package com.eyki.offerpilot.storage.service.impl;
 
 import com.eyki.offerpilot.storage.config.MinioConfig;
 import com.eyki.offerpilot.storage.service.FileStorageService;
-import io.minio.*;
+import io.minio.BucketExistsArgs;
+import io.minio.GetObjectArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import io.minio.StatObjectArgs;
 import io.minio.errors.MinioException;
 import jakarta.annotation.PostConstruct;
+import java.io.InputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.io.InputStream;
 
 @Slf4j
 @Service
@@ -22,11 +27,10 @@ public class MinioFileStorage implements FileStorageService {
     @PostConstruct
     public void init() {
         try {
-            boolean bucketExists = minioClient.bucketExists(
-                    BucketExistsArgs.builder().bucket(minioConfig.getBucket()).build());
+            boolean bucketExists =
+                minioClient.bucketExists(BucketExistsArgs.builder().bucket(minioConfig.getBucket()).build());
             if (!bucketExists) {
-                minioClient.makeBucket(
-                        MakeBucketArgs.builder().bucket(minioConfig.getBucket()).build());
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(minioConfig.getBucket()).build());
                 log.info("MinIO bucket 已创建: {}", minioConfig.getBucket());
             } else {
                 log.info("MinIO bucket 已存在: {}", minioConfig.getBucket());
@@ -39,13 +43,9 @@ public class MinioFileStorage implements FileStorageService {
     @Override
     public String upload(String fileName, InputStream inputStream, String contentType) {
         try {
-            minioClient.putObject(
-                    PutObjectArgs.builder()
-                            .bucket(minioConfig.getBucket())
-                            .object(fileName)
-                            .stream(inputStream, -1, 10 * 1024 * 1024) // max 10MB per part
-                            .contentType(contentType)
-                            .build());
+            minioClient.putObject(PutObjectArgs.builder().bucket(minioConfig.getBucket()).object(fileName)
+                .stream(inputStream, -1, 10 * 1024 * 1024) // max 10MB per part
+                .contentType(contentType).build());
             log.info("文件上传成功: bucket={}, fileName={}", minioConfig.getBucket(), fileName);
             return getFileUrl(fileName);
         } catch (Exception e) {
@@ -58,10 +58,7 @@ public class MinioFileStorage implements FileStorageService {
     public InputStream download(String fileName) {
         try {
             return minioClient.getObject(
-                    GetObjectArgs.builder()
-                            .bucket(minioConfig.getBucket())
-                            .object(fileName)
-                            .build());
+                GetObjectArgs.builder().bucket(minioConfig.getBucket()).object(fileName).build());
         } catch (Exception e) {
             log.error("文件下载失败: fileName={}", fileName, e);
             throw new RuntimeException("文件下载失败: " + e.getMessage(), e);
@@ -72,10 +69,7 @@ public class MinioFileStorage implements FileStorageService {
     public void delete(String fileName) {
         try {
             minioClient.removeObject(
-                    RemoveObjectArgs.builder()
-                            .bucket(minioConfig.getBucket())
-                            .object(fileName)
-                            .build());
+                RemoveObjectArgs.builder().bucket(minioConfig.getBucket()).object(fileName).build());
             log.info("文件删除成功: fileName={}", fileName);
         } catch (Exception e) {
             log.error("文件删除失败: fileName={}", fileName, e);
@@ -93,11 +87,7 @@ public class MinioFileStorage implements FileStorageService {
     @Override
     public boolean fileExists(String fileName) {
         try {
-            minioClient.statObject(
-                    StatObjectArgs.builder()
-                            .bucket(minioConfig.getBucket())
-                            .object(fileName)
-                            .build());
+            minioClient.statObject(StatObjectArgs.builder().bucket(minioConfig.getBucket()).object(fileName).build());
             return true;
         } catch (MinioException e) {
             return false;

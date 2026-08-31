@@ -4,18 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.eyki.offerpilot.knowledge.domain.KnowledgeDocument;
 import com.eyki.offerpilot.knowledge.domain.KnowledgeDocumentRepository;
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Component;
 
 /**
  * 知识文档 Repository — MyBatis-Plus 实现。
  *
- * 领域层 {@link KnowledgeDocumentRepository} 接口的唯一实现。
- * 负责 PO ⇔ Domain 转换，封装所有 MyBatis-Plus 调用细节。
+ * 领域层 {@link KnowledgeDocumentRepository} 接口的唯一实现。 负责 PO ⇔ Domain 转换，封装所有 MyBatis-Plus 调用细节。
  */
 @Component
 public class KnowledgeDocumentRepositoryImpl implements KnowledgeDocumentRepository {
@@ -23,8 +21,7 @@ public class KnowledgeDocumentRepositoryImpl implements KnowledgeDocumentReposit
     private final KnowledgeDocumentMapper mapper;
     private final KnowledgeDocumentConverter converter;
 
-    public KnowledgeDocumentRepositoryImpl(KnowledgeDocumentMapper mapper,
-                                           KnowledgeDocumentConverter converter) {
+    public KnowledgeDocumentRepositoryImpl(KnowledgeDocumentMapper mapper, KnowledgeDocumentConverter converter) {
         this.mapper = mapper;
         this.converter = converter;
     }
@@ -51,8 +48,8 @@ public class KnowledgeDocumentRepositoryImpl implements KnowledgeDocumentReposit
 
     @Override
     public Optional<KnowledgeDocument> findByUserIdAndId(Long userId, Long id) {
-        LambdaQueryWrapper<KnowledgeDocumentPO> wrapper = new LambdaQueryWrapper<KnowledgeDocumentPO>()
-                .eq(KnowledgeDocumentPO::getUserId, userId)
+        LambdaQueryWrapper<KnowledgeDocumentPO> wrapper =
+            new LambdaQueryWrapper<KnowledgeDocumentPO>().eq(KnowledgeDocumentPO::getUserId, userId)
                 .eq(KnowledgeDocumentPO::getId, id);
         KnowledgeDocumentPO po = mapper.selectOne(wrapper);
         return Optional.ofNullable(po).map(converter::toDomain);
@@ -60,12 +57,10 @@ public class KnowledgeDocumentRepositoryImpl implements KnowledgeDocumentReposit
 
     @Override
     public List<KnowledgeDocument> findByUserId(Long userId) {
-        LambdaQueryWrapper<KnowledgeDocumentPO> wrapper = new LambdaQueryWrapper<KnowledgeDocumentPO>()
-                .eq(KnowledgeDocumentPO::getUserId, userId)
+        LambdaQueryWrapper<KnowledgeDocumentPO> wrapper =
+            new LambdaQueryWrapper<KnowledgeDocumentPO>().eq(KnowledgeDocumentPO::getUserId, userId)
                 .orderByDesc(KnowledgeDocumentPO::getCreatedAt);
-        return mapper.selectList(wrapper).stream()
-                .map(converter::toDomain)
-                .collect(Collectors.toList());
+        return mapper.selectList(wrapper).stream().map(converter::toDomain).collect(Collectors.toList());
     }
 
     @Override

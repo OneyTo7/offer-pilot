@@ -3,15 +3,13 @@ package com.eyki.offerpilot.knowledge.infrastructure.persistence;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-
 import java.time.LocalDateTime;
+import lombok.Data;
 
 /**
  * 知识库文档 — 持久化对象。
  *
- * 与数据库表一一对应，携带 MyBatis-Plus 框架注解。
- * 与领域对象 {@link com.eyki.offerpilot.knowledge.domain.KnowledgeDocument} 分离，
+ * 与数据库表一一对应，携带 MyBatis-Plus 框架注解。 与领域对象 {@link com.eyki.offerpilot.knowledge.domain.KnowledgeDocument} 分离，
  * 避免框架污染纯领域模型。
  */
 @Data

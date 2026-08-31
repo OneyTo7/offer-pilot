@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum SessionStatus {
 
-    IN_PROGRESS(0, "进行中"),
-    COMPLETED(1, "已完成"),
-    EXPIRED(2, "已过期"),
-    ABANDONED(3, "已中断");
+    IN_PROGRESS(0, "进行中"), COMPLETED(1, "已完成"), EXPIRED(2, "已过期"), ABANDONED(3, "已中断");
 
     private final int code;
     private final String desc;

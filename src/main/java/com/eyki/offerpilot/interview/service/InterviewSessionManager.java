@@ -3,15 +3,13 @@ package com.eyki.offerpilot.interview.service;
 import com.eyki.offerpilot.common.exception.BusinessException;
 import com.eyki.offerpilot.interview.domain.InterviewSession;
 import com.eyki.offerpilot.interview.enums.SessionStatus;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 /**
- * Interview state machine manager.
- * Handles status transitions, expiration checks, and round/question tracking.
+ * Interview state machine manager. Handles status transitions, expiration checks, and round/question tracking.
  */
 @Slf4j
 @Service
@@ -23,8 +21,7 @@ public class InterviewSessionManager {
     private static final int EXPIRATION_HOURS = 1;
 
     /**
-     * Check if the session can be operated on.
-     * Throws appropriate exception if the session is expired or closed.
+     * Check if the session can be operated on. Throws appropriate exception if the session is expired or closed.
      */
     public void checkSessionActive(InterviewSession session) {
         if (session == null) {
@@ -71,8 +68,8 @@ public class InterviewSessionManager {
     }
 
     /**
-     * Advance to the next question after an answer or skip.
-     * Returns true if there's a next question, false if the round/session is complete.
+     * Advance to the next question after an answer or skip. Returns true if there's a next question, false if the
+     * round/session is complete.
      */
     public boolean advanceQuestion(InterviewSession session) {
         int currentQuestion = session.getCurrentQuestion();
@@ -109,7 +106,7 @@ public class InterviewSessionManager {
         session.setFinishedAt(LocalDateTime.now());
         if (session.getStartedAt() != null) {
             session.setDurationSeconds(
-                    (int) java.time.Duration.between(session.getStartedAt(), session.getFinishedAt()).getSeconds());
+                (int)java.time.Duration.between(session.getStartedAt(), session.getFinishedAt()).getSeconds());
         }
         session.setUpdatedAt(LocalDateTime.now());
     }
@@ -122,7 +119,7 @@ public class InterviewSessionManager {
         session.setFinishedAt(LocalDateTime.now());
         if (session.getStartedAt() != null) {
             session.setDurationSeconds(
-                    (int) java.time.Duration.between(session.getStartedAt(), session.getFinishedAt()).getSeconds());
+                (int)java.time.Duration.between(session.getStartedAt(), session.getFinishedAt()).getSeconds());
         }
         session.setUpdatedAt(LocalDateTime.now());
     }

@@ -1,9 +1,8 @@
 package com.eyki.offerpilot.interview.dto;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * Interview summary returned after completion.

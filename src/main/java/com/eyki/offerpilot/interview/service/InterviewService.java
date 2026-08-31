@@ -1,9 +1,11 @@
 package com.eyki.offerpilot.interview.service;
 
-import com.eyki.offerpilot.interview.dto.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
+import com.eyki.offerpilot.interview.dto.AnswerRequest;
+import com.eyki.offerpilot.interview.dto.InterviewSummaryVO;
+import com.eyki.offerpilot.interview.dto.SessionVO;
+import com.eyki.offerpilot.interview.dto.StartInterviewRequest;
 import java.util.List;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 public interface InterviewService {
 
@@ -23,8 +25,7 @@ public interface InterviewService {
     SessionVO getSession(Long id);
 
     /**
-     * Start a round and generate the first question.
-     * Returns an SSE emitter that streams the first question event.
+     * Start a round and generate the first question. Returns an SSE emitter that streams the first question event.
      */
     SseEmitter startRound(Long sessionId);
 

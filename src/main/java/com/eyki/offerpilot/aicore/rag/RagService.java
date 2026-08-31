@@ -1,5 +1,7 @@
 package com.eyki.offerpilot.aicore.rag;
 
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.document.Document;
@@ -11,13 +13,9 @@ import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * RAG service for indexing, searching, and deleting documents in the pgvector store.
- * All documents are scoped by user_id for data isolation.
- * Designed to work without a VectorStore when pgvector is not configured.
+ * RAG service for indexing, searching, and deleting documents in the pgvector store. All documents are scoped by
+ * user_id for data isolation. Designed to work without a VectorStore when pgvector is not configured.
  */
 @Service
 public class RagService {
@@ -34,10 +32,8 @@ public class RagService {
 
     public RagService(ObjectProvider<VectorStore> vectorStoreProvider) {
         this.vectorStore = vectorStoreProvider.getIfAvailable();
-        this.textSplitter = TokenTextSplitter.builder()
-                .withChunkSize(CHUNK_SIZE)
-                .withMinChunkSizeChars(CHUNK_OVERLAP)
-                .build();
+        this.textSplitter =
+            TokenTextSplitter.builder().withChunkSize(CHUNK_SIZE).withMinChunkSizeChars(CHUNK_OVERLAP).build();
     }
 
     /**
@@ -73,12 +69,8 @@ public class RagService {
         FilterExpressionBuilder builder = new FilterExpressionBuilder();
         Filter.Expression filter = builder.eq("user_id", userId.toString()).build();
 
-        SearchRequest searchRequest = SearchRequest.builder()
-                .query(query)
-                .topK(topK > 0 ? topK : DEFAULT_TOP_K)
-                .similarityThreshold(DEFAULT_SIMILARITY_THRESHOLD)
-                .filterExpression(filter)
-                .build();
+        SearchRequest searchRequest = SearchRequest.builder().query(query).topK(topK > 0 ? topK : DEFAULT_TOP_K)
+            .similarityThreshold(DEFAULT_SIMILARITY_THRESHOLD).filterExpression(filter).build();
 
         List<Document> results = vectorStore.similaritySearch(searchRequest);
         log.debug("RAG 检索完成: userId={}, query={}, results={}", userId, query, results.size());
@@ -115,10 +107,8 @@ public class RagService {
             return;
         }
         FilterExpressionBuilder builder = new FilterExpressionBuilder();
-        Filter.Expression filter = builder.and(
-                builder.eq("user_id", userId.toString()),
-                builder.eq("resume_id", resumeId)
-        ).build();
+        Filter.Expression filter =
+            builder.and(builder.eq("user_id", userId.toString()), builder.eq("resume_id", resumeId)).build();
         vectorStore.delete(filter);
         log.info("简历文档删除成功: userId={}, resumeId={}", userId, resumeId);
     }
@@ -132,10 +122,8 @@ public class RagService {
             return;
         }
         FilterExpressionBuilder builder = new FilterExpressionBuilder();
-        Filter.Expression filter = builder.and(
-                builder.eq("user_id", userId.toString()),
-                builder.eq("document_id", documentId)
-        ).build();
+        Filter.Expression filter =
+            builder.and(builder.eq("user_id", userId.toString()), builder.eq("document_id", documentId)).build();
         vectorStore.delete(filter);
         log.info("知识文档向量删除成功: userId={}, documentId={}", userId, documentId);
     }

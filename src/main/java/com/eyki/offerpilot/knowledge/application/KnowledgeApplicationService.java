@@ -4,25 +4,27 @@ import com.eyki.offerpilot.aicore.rag.RagService;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
 import com.eyki.offerpilot.knowledge.application.assembler.KnowledgeAssembler;
-import com.eyki.offerpilot.knowledge.application.dto.*;
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeDocumentDetailVO;
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeDocumentVO;
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeSearchRequest;
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeSearchResult;
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeUploadRequest;
 import com.eyki.offerpilot.knowledge.domain.ContentType;
 import com.eyki.offerpilot.knowledge.domain.KnowledgeDocument;
 import com.eyki.offerpilot.knowledge.domain.KnowledgeDocumentRepository;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 /**
  * 知识库 — 应用服务。
  *
- * 职责：编排领域对象和基础设施，控制事务边界，DTO 转换。
- * 不包含业务逻辑（业务逻辑在 KnowledgeDocument 领域实体中）。
+ * 职责：编排领域对象和基础设施，控制事务边界，DTO 转换。 不包含业务逻辑（业务逻辑在 KnowledgeDocument 领域实体中）。
  */
 @Slf4j
 @Service
@@ -43,8 +45,7 @@ public class KnowledgeApplicationService {
     /**
      * 创建知识文档。
      *
-     * 流程：创建领域实体 → 持久化 → 索引到 pgvector → 更新索引状态。
-     * 索引失败不阻断流程，实体状态标记为 FAILED 供前端展示。
+     * 流程：创建领域实体 → 持久化 → 索引到 pgvector → 更新索引状态。 索引失败不阻断流程，实体状态标记为 FAILED 供前端展示。
      */
     @Transactional
     public KnowledgeDocumentVO create(KnowledgeUploadRequest request) {
@@ -52,19 +53,16 @@ public class KnowledgeApplicationService {
 
         // 1. 领域工厂创建实体（执行业务校验）
         ContentType contentType = ContentType.fromValue(request.getContentType());
-        KnowledgeDocument doc = KnowledgeDocument.create(
-                userId, request.getTitle(), request.getContent(), contentType);
+        KnowledgeDocument doc = KnowledgeDocument.create(userId, request.getTitle(), request.getContent(), contentType);
 
         // 2. 持久化
         repository.save(doc);
 
         // 3. 索引到 pgvector
         try {
-            Map<String, Object> metadata = Map.of(
-                    META_DOCUMENT_ID, doc.getId().toString(),
-                    META_TITLE, doc.getTitle(),
-                    META_USER_ID, userId.toString(),
-                    META_SOURCE, "knowledge_base");
+            Map<String, Object> metadata =
+                Map.of(META_DOCUMENT_ID, doc.getId().toString(), META_TITLE, doc.getTitle(), META_USER_ID,
+                    userId.toString(), META_SOURCE, "knowledge_base");
             ragService.indexDocument(doc.getContent(), userId, null, metadata);
 
             // 4. 标记索引完成
@@ -77,8 +75,8 @@ public class KnowledgeApplicationService {
         // 5. 更新持久化状态
         repository.save(doc);
 
-        log.info("知识文档创建成功: docId={}, userId={}, title={}, status={}",
-                doc.getId(), userId, doc.getTitle(), doc.getStatus().getDescription());
+        log.info("知识文档创建成功: docId={}, userId={}, title={}, status={}", doc.getId(), userId, doc.getTitle(),
+            doc.getStatus().getDescription());
         return assembler.toVO(doc);
     }
 
@@ -87,9 +85,7 @@ public class KnowledgeApplicationService {
      */
     public List<KnowledgeDocumentVO> listMyDocuments() {
         Long userId = authService.getCurrentUserEntity().getId();
-        return repository.findByUserId(userId).stream()
-                .map(assembler::toVO)
-                .collect(Collectors.toList());
+        return repository.findByUserId(userId).stream().map(assembler::toVO).collect(Collectors.toList());
     }
 
     /**
@@ -97,8 +93,8 @@ public class KnowledgeApplicationService {
      */
     public KnowledgeDocumentDetailVO getDetail(Long id) {
         Long userId = authService.getCurrentUserEntity().getId();
-        KnowledgeDocument doc = repository.findByUserIdAndId(userId, id)
-                .orElseThrow(() -> BusinessException.notFound("知识文档不存在"));
+        KnowledgeDocument doc =
+            repository.findByUserIdAndId(userId, id).orElseThrow(() -> BusinessException.notFound("知识文档不存在"));
         return assembler.toDetailVO(doc);
     }
 
@@ -108,8 +104,8 @@ public class KnowledgeApplicationService {
     @Transactional
     public void delete(Long id) {
         Long userId = authService.getCurrentUserEntity().getId();
-        KnowledgeDocument doc = repository.findByUserIdAndId(userId, id)
-                .orElseThrow(() -> BusinessException.notFound("知识文档不存在"));
+        KnowledgeDocument doc =
+            repository.findByUserIdAndId(userId, id).orElseThrow(() -> BusinessException.notFound("知识文档不存在"));
 
         // 从 pgvector 删除该文档的所有分片
         ragService.deleteByDocumentId(doc.getId().toString(), userId);
@@ -127,8 +123,6 @@ public class KnowledgeApplicationService {
         Long userId = authService.getCurrentUserEntity().getId();
         List<Document> results = ragService.search(request.getQuery(), userId, request.getTopK());
 
-        return results.stream()
-                .map(assembler::toSearchResult)
-                .collect(Collectors.toList());
+        return results.stream().map(assembler::toSearchResult).collect(Collectors.toList());
     }
 }

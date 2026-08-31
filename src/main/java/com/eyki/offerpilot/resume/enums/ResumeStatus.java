@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ResumeStatus {
 
-    PARSING(0, "解析中"),
-    COMPLETED(1, "解析完成"),
-    FAILED(2, "解析失败");
+    PARSING(0, "解析中"), COMPLETED(1, "解析完成"), FAILED(2, "解析失败");
 
     private final int code;
     private final String desc;

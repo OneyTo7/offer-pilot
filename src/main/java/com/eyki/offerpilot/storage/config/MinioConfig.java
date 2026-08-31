@@ -21,9 +21,6 @@ public class MinioConfig {
     @Bean
     public MinioClient minioClient() {
         log.info("初始化 MinIO 客户端: endpoint={}", endpoint);
-        return MinioClient.builder()
-                .endpoint(endpoint)
-                .credentials(accessKey, secretKey)
-                .build();
+        return MinioClient.builder().endpoint(endpoint).credentials(accessKey, secretKey).build();
     }
 }

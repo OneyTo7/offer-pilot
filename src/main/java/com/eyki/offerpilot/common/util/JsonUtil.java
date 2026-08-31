@@ -3,9 +3,8 @@ package com.eyki.offerpilot.common.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class JsonUtil {
@@ -42,7 +41,7 @@ public class JsonUtil {
     public static <T> List<T> fromJsonList(String json, Class<T> clazz) {
         try {
             return OBJECT_MAPPER.readValue(json,
-                    OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, clazz));
+                OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, clazz));
         } catch (JsonProcessingException e) {
             log.error("JSON 列表反序列化失败", e);
             return null;

@@ -6,14 +6,12 @@ import java.util.Optional;
 /**
  * 知识库文档 Repository — 领域层接口。
  *
- * 定义持久化契约，不依赖任何基础设施框架。
- * 实现由 infrastructure 层提供。
+ * 定义持久化契约，不依赖任何基础设施框架。 实现由 infrastructure 层提供。
  */
 public interface KnowledgeDocumentRepository {
 
     /**
-     * 保存文档（新增或更新）。
-     * 新增时自动填充 ID 到实体。
+     * 保存文档（新增或更新）。 新增时自动填充 ID 到实体。
      */
     KnowledgeDocument save(KnowledgeDocument document);
 

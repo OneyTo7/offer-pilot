@@ -1,14 +1,21 @@
 package com.eyki.offerpilot.interview.controller;
 
 import com.eyki.offerpilot.common.model.ApiResult;
-import com.eyki.offerpilot.interview.dto.*;
+import com.eyki.offerpilot.interview.dto.AnswerRequest;
+import com.eyki.offerpilot.interview.dto.InterviewSummaryVO;
+import com.eyki.offerpilot.interview.dto.SessionVO;
+import com.eyki.offerpilot.interview.dto.StartInterviewRequest;
 import com.eyki.offerpilot.interview.service.InterviewService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequestMapping("/api/v1/interviews")
@@ -45,8 +52,7 @@ public class InterviewController {
     }
 
     /**
-     * Start a round and generate the first question.
-     * Returns SSE stream with the first question event.
+     * Start a round and generate the first question. Returns SSE stream with the first question event.
      */
     @PostMapping("/{id}/start-round")
     public SseEmitter startRound(@PathVariable Long id) {

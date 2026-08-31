@@ -5,10 +5,16 @@ import com.eyki.offerpilot.position.dto.PositionRequest;
 import com.eyki.offerpilot.position.dto.PositionVO;
 import com.eyki.offerpilot.position.service.PositionService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/positions")
@@ -36,8 +42,7 @@ public class PositionController {
     }
 
     @PutMapping("/{id}")
-    public ApiResult<PositionVO> update(@PathVariable Long id,
-                                        @Valid @RequestBody PositionRequest request) {
+    public ApiResult<PositionVO> update(@PathVariable Long id, @Valid @RequestBody PositionRequest request) {
         PositionVO position = positionService.update(id, request);
         return ApiResult.success("更新成功", position);
     }
