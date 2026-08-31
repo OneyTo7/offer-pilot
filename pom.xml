@@ -118,6 +118,12 @@
       <optional>true</optional>
     </dependency>
 
+    <!-- Spring AOP (aspectjweaver) -->
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+    </dependency>
+
     <!-- Liquibase -->
     <dependency>
       <groupId>org.liquibase</groupId>
@@ -154,8 +160,10 @@
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
+              <version>1.18.46</version>
             </path>
           </annotationProcessorPaths>
+          <proc>full</proc>
         </configuration>
       </plugin>
     </plugins>
