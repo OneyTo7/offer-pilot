@@ -17,6 +17,14 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
 
+  # pgvector 数据源（默认配置，dev/prod 环境覆盖）
+  datasource:
+    vector:
+      url: jdbc:postgresql://localhost:5432/offer_pilot_vector
+      username: postgres
+      password: ${POSTGRES_PASSWORD:postgres}
+      driver-class-name: org.postgresql.Driver
+
   
   # Spring AI - DeepSeek (OpenAI 兼容 API)
   ai:

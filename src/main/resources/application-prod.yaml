@@ -4,13 +4,11 @@ spring:
     username: root
     password: ${MYSQL_ROOT_PASSWORD}
 
-  ai:
-    datasource:
-      vector:
-        url: jdbc:postgresql://postgres:5432/offer_pilot_vector
-        username: postgres
-        password: ${POSTGRES_PASSWORD}
-        driver-class-name: org.postgresql.Driver
+    vector:
+      url: jdbc:postgresql://postgres:5432/offer_pilot_vector
+      username: postgres
+      password: ${POSTGRES_PASSWORD}
+      driver-class-name: org.postgresql.Driver
 
 minio:
   endpoint: http://minio:9000
