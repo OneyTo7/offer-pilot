@@ -205,7 +205,8 @@ public class ReportServiceImpl implements ReportService {
         if (userApiKey == null || userApiKey.isBlank()) {
             context = Map.of(
                 "chat_memory_conversation_id", "report-" + report.getId(),
-                "vector_store_filter_expression", ragService.buildUserFilter(report.getUserId())
+                "vector_store_filter_expression", ragService.buildUserFilter(report.getUserId()),
+                "user_id", report.getUserId()
             );
         } else {
             try {

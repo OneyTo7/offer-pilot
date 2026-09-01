@@ -31,9 +31,15 @@
 - 中断恢复：1 小时内可继续
 - 面试总结报告：三轮汇总 + 综合评分
 
-### 🔑 API Key 管理
-- **免费层**：使用平台 Key，每日限额（3 份报告 + 1 次面试）
-- **Pro 层**：自配 DeepSeek API Key，无限使用
+### 🤖 AI 大模型配置
+- 大模型配置页面（`/ai`）集中管理 AI 相关设置
+- 支持配置自己的 DeepSeek API Key，解锁无限使用
+- 用量透明展示：今日用量、月度统计、每日趋势
+- API Key 加密存储，保障账户安全
+
+### 🔑 使用模式
+- **免费模式**：使用平台默认 Key，每月 10 万 Token 限额
+- **Pro 模式**：自配 DeepSeek API Key，无限制使用
 
 ---
 
@@ -81,7 +87,7 @@ com.eyki.offerpilot/
 |------|------|------|
 | 后端框架 | Spring Boot 4.1.1 + Spring AI 2.0.1 | |
 | 运行环境 | JDK 21 | 预览特性已启用 |
-| 数据库 | MySQL 8（业务数据）+ PostgreSQL + pgvector（向量库） | |
+| 数据库 | PostgreSQL + pgvector（向量库） | |
 | AI 模型 | DeepSeek（OpenAI 兼容 API） | |
 | 文档解析 | PDFBox + Tess4j OCR | |
 | 文件存储 | MinIO 对象存储 | |
@@ -129,7 +135,7 @@ npm run dev
 
 启动后访问 **个人设置 → API Key 配置**，填入你的 DeepSeek API Key 解锁全部功能。
 
-> 未配置 API Key 时使用平台默认 Key，每天限 3 份报告 + 1 次面试。
+> 未配置 API Key 时使用平台默认 Key，每月限 10 万 Token。用量可在「大模型配置」页面查看。
 
 ---
 
@@ -202,7 +208,65 @@ offer-pilot-ui/             # 前端项目（独立仓库）
 | Interview | POST | `/interviews/{id}/skip` | 跳过题目 |
 | Interview | POST | `/interviews/{id}/end` | 结束面试 |
 | Interview | GET | `/interviews/{id}/summary` | 面试总结 |
+| AI | GET | `/ai/info` | 大模型配置信息（API Key 状态、用量、套餐、社区） |
 | Health | GET | `/api/health` | 健康检查 |
+
+---
+
+## 🔒 安全与隐私
+
+### 数据隔离
+
+所有用户数据严格按 `user_id` 隔离：
+
+| 数据 | 隔离方式 |
+|------|---------|
+| 简历 | 所有查询带 `WHERE user_id = ?`，MyBatis-Plus LambdaQueryWrapper 约束 |
+| 目标职位 | 同上，增删改查均校验当前用户归属 |
+| 评估报告 | 每个报告关联 `user_id`，controller 层查询前校验归属 |
+| 面试会话 | 同上，`getSession`、`startRound`、`answer` 等接口均校验归属 |
+| 知识库文档 | 按 `user_id` 过滤，RAG 检索时通过 `vector_store_filter_expression` 注入过滤条件 |
+| 向量存储 | pgvector 每条记录带 `user_id` 标签，检索时 Spring AI 的 `RetrievalAugmentationAdvisor` 自动注入过滤表达式 |
+
+**原则**：后端 Service 层每个读取操作都校验 `user_id` 匹配，防止越权访问。不存在"所有用户共享"的数据接口。
+
+### API Key 加密存储
+
+用户配置的 DeepSeek API Key 采用 **AES-256-GCM** 加密后存入数据库：
+
+```
+保存流程：明文 Key → AES-256-GCM 加密 → Base64 编码 → 存入 DB
+读取流程：DB 密文 → Base64 解码 → AES-256-GCM 解密 → 明文 Key（仅内存中短暂存在）
+```
+
+- 加密密钥通过环境变量 `API_KEY_ENCRYPTION_SECRET` 注入，**不写死在代码或配置文件中**
+- 每个请求处理时临时解密，使用后即被 GC 回收，**不会写入日志**
+- 前端响应中 **不返回真实 Key**，仅通过 `has_api_key` 布尔值告知是否已配置
+- 数据库泄露时攻击者拿到的只是密文，无加密密钥无法解密
+
+> ⚠️ 如果是从旧版本升级的用户，此前已明文存储的 API Key 不会自动迁移。如需加密旧数据，可通过设置页面清除后重新配置。
+
+### Token 用量透明
+
+系统对每次 LLM 调用的 token 消耗进行记录，记入 `user_token_usage` 表：
+
+- 记录维度：`user_id` + `usage_date` + `prompt_tokens` + `completion_tokens`
+- 用户可在大模型配置页面查看 **今日用量**、**本月累计**、**每日趋势**
+- 免费用户每月 10 万 tokens 上限，用完后接口返回 429
+- 配置了自己 API Key 的用户不限量，用量仅作展示
+
+### 传输安全
+
+- 所有 API 响应通过统一的 `ApiResult<T>` 包装，异常信息不会暴露内部实现细节
+- 敏感信息（API Key）在 JSON 序列化时标记为 `@JsonIgnore`
+- 前后端通信建议在生产环境启用 HTTPS（需自行配置反向代理）
+
+### 认证安全
+
+- 密码采用 **BCrypt** 哈希存储（`hutool-crypto` 实现）
+- 双 Token 机制：2 小时 Access Token + 7 天 Refresh Token
+- Refresh Token 一次有效，刷新后旧 Token 自动失效
+- 支持 Token 自动刷新（前端 Axios 拦截器 + 订阅队列模式）
 
 ---
 

@@ -97,10 +97,18 @@ Base path: `/api/v1`
 | Position  | `POST /positions`, `GET /positions`, `GET /positions/{id}`, `DELETE /positions/{id}`, `PUT /positions/{id}/default`                                                          |
 | Report    | `POST /reports`, `GET /reports`, `GET /reports/{id}`, `DELETE /reports/{id}`                                                                                                 |
 | Interview | `POST /interviews`, `GET /interviews`, `GET /interviews/{id}`, `POST /{id}/start-round`, `POST /{id}/answer` (SSE), `POST /{id}/skip`, `POST /{id}/end`, `GET /{id}/summary` |
+| AI        | `GET /ai/info`                                                                                                                                                               |
 | File      | `GET /files/{filePath}`                                                                                                                                                      |
 | Health    | `GET /api/health`                                                                                                                                                            |
 
-### Database (6 tables via Liquibase)
+### Security
+
+- **Data isolation**: All queries filtered by `user_id`; every service operation validates ownership before access
+- **API Key encryption**: AES-256-GCM encryption via `AesGcmEncryptor`; key derived from env var `API_KEY_ENCRYPTION_SECRET`
+- **Token usage**: Tracked per user per day in `user_token_usage` table; free tier capped at 100K tokens/month
+- **Password**: BCrypt hashing; dual-token auth (2h access + 7d refresh)
+
+### Database (7 tables via Liquibase)
 
 - `users` — email/password auth, optional api_key
 - `resumes` — parsed text, tech_stack, work_years, education, status

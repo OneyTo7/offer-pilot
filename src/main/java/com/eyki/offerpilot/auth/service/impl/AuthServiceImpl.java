@@ -16,6 +16,7 @@ import com.eyki.offerpilot.auth.repository.UserRepository;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
 import com.eyki.offerpilot.common.model.ErrorCode;
+import com.eyki.offerpilot.common.util.AesGcmEncryptor;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private static final String REFRESH_TOKEN_PREFIX = "refresh_token:";
 
     private final UserRepository userRepository;
+    private final AesGcmEncryptor encryptor;
 
     /**
      * In-memory refresh token store (MVP only — migrate to Redis in production). Maps refresh token -> user ID.
@@ -135,10 +137,10 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public UserVO updateApiKey(UpdateApiKeyRequest request) {
         User user = getCurrentUserEntity();
-        user.setApiKey(request.getApiKey());
+        user.setApiKey(encryptor.encrypt(request.getApiKey()));
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.updateById(user);
-        log.info("用户 API Key 已更新: userId={}", user.getId());
+        log.info("用户 API Key 已更新（加密存储）: userId={}", user.getId());
         return toUserVO(user);
     }
 
@@ -159,6 +161,10 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.selectById(userId);
         if (user == null) {
             throw BusinessException.of(ErrorCode.UNAUTHORIZED, "用户不存在");
+        }
+        // 解密 API Key，下游所有服务拿到的是明文 Key
+        if (user.getApiKey() != null) {
+            user.setApiKey(encryptor.decrypt(user.getApiKey()));
         }
         return user;
     }

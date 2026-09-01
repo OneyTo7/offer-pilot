@@ -204,7 +204,8 @@ public class InterviewServiceImpl implements InterviewService {
         if (userApiKey == null || userApiKey.isBlank()) {
             context = Map.of(
                 "vector_store_filter_expression", ragService.buildUserFilter(userId),
-                "chat_memory_conversation_id", ctx.session.getId().toString());
+                "chat_memory_conversation_id", ctx.session.getId().toString(),
+                "user_id", userId);
             finalUserPrompt = userPrompt;
         } else {
             context = null;
@@ -506,7 +507,8 @@ public class InterviewServiceImpl implements InterviewService {
             if (userApiKey == null || userApiKey.isBlank()) {
                 context = Map.of(
                     "chat_memory_conversation_id", "interview-q-" + session.getId(),
-                    "vector_store_filter_expression", ragService.buildUserFilter(session.getUserId()));
+                    "vector_store_filter_expression", ragService.buildUserFilter(session.getUserId()),
+                    "user_id", session.getUserId());
                 promptToSend = fullPrompt;
             } else {
                 context = null;
