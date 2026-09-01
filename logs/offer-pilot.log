@@ -6832,3 +6832,161 @@ cn.dev33.satoken.exception.SaTokenContextException: SaTokenContext 上下文尚�
         HikariPool-1 - Shutdown initiated...
 2026-09-01 13:58:28.968 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
         HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@72833644 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 14:06:47.325 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Starting OfferPilotApplication using Java 21.0.11 with PID 28506 (/Users/oliver/IdeaProjects/offer-pilot/target/classes started by oliver in /Users/oliver/IdeaProjects/offer-pilot)
+2026-09-01 14:06:47.326 DEBUG [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Running with Spring Boot v4.1.1, Spring v7.0.9
+2026-09-01 14:06:47.326 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        No active profile set, falling back to 1 default profile: "default"
+2026-09-01 14:06:47.789 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat initialized with port 8080 (http)
+2026-09-01 14:06:47.794 INFO  [main] [no-trace] o.a.catalina.core.StandardService -
+        Starting service [Tomcat]
+2026-09-01 14:06:47.794 INFO  [main] [no-trace] o.a.catalina.core.StandardEngine -
+        Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-09-01 14:06:47.810 INFO  [main] [no-trace] o.s.b.w.c.s.WebApplicationContextInitializer -
+        Root WebApplicationContext: initialization completed in 472 ms
+2026-09-01 14:06:47.832 DEBUG [main] [no-trace] c.e.o.common.config.TraceIdFilter -
+        Filter 'traceIdFilter' configured for use
+2026-09-01 14:06:48.222 INFO  [main] [no-trace] c.e.o.storage.config.MinioConfig -
+        初始化 MinIO 客户端: endpoint=http://14.103.58.208:19000
+2026-09-01 14:06:48.348 INFO  [main] [no-trace] c.e.o.s.s.impl.MinioFileStorage -
+        MinIO bucket 已存在: offer-pilot-files
+2026-09-01 14:06:48.371 INFO  [main] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Starting...
+2026-09-01 14:06:48.642 INFO  [main] [no-trace] com.zaxxer.hikari.pool.HikariPool -
+        HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2331cf00
+2026-09-01 14:06:48.643 INFO  [main] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Start completed.
+2026-09-01 14:06:51.903 INFO  [main] [no-trace] liquibase.changelog -
+        Reading from offer_pilot.databasechangelog
+2026-09-01 14:06:57.566 INFO  [main] [no-trace] liquibase.ui -
+        Database is up to date, no changesets to execute
+2026-09-01 14:06:57.593 INFO  [main] [no-trace] liquibase.changelog -
+        Reading from offer_pilot.databasechangelog
+2026-09-01 14:06:57.621 INFO  [main] [no-trace] liquibase.util -
+        UPDATE SUMMARY
+2026-09-01 14:06:57.621 INFO  [main] [no-trace] liquibase.util -
+        Run:                          0
+2026-09-01 14:06:57.621 INFO  [main] [no-trace] liquibase.util -
+        Previously run:               9
+2026-09-01 14:06:57.621 INFO  [main] [no-trace] liquibase.util -
+        Filtered out:                 0
+2026-09-01 14:06:57.621 INFO  [main] [no-trace] liquibase.util -
+        -------------------------------
+2026-09-01 14:06:57.621 INFO  [main] [no-trace] liquibase.util -
+        Total change sets:            9
+2026-09-01 14:06:57.622 INFO  [main] [no-trace] liquibase.util -
+        Update summary generated
+2026-09-01 14:06:57.623 INFO  [main] [no-trace] liquibase.command -
+        Command execution complete
+2026-09-01 14:06:57.791 INFO  [main] [no-trace] c.b.m.s.MybatisPlusApplicationContextAware -
+        Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@bf71cec
+2026-09-01 14:06:57.873 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat started on port 8080 (http) with context path '/'
+2026-09-01 14:06:57.877 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Started OfferPilotApplication in 10.707 seconds (process running for 10.911)
+2026-09-01 14:07:30.491 INFO  [http-nio-8080-exec-1] [no-trace] o.a.c.c.C.[Tomcat].[localhost].[/] -
+        Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-01 14:07:30.492 INFO  [http-nio-8080-exec-1] [no-trace] o.s.web.servlet.DispatcherServlet -
+        Initializing Servlet 'dispatcherServlet'
+2026-09-01 14:07:30.493 INFO  [http-nio-8080-exec-1] [no-trace] o.s.web.servlet.DispatcherServlet -
+        Completed initialization in 1 ms
+2026-09-01 14:07:30.624 WARN  [http-nio-8080-exec-1] [650e7394f77641ab] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 已过期：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyNDA3NzcwMjEsInJuU3RyIjoiUHp1clhaS1h3d3M5dUgxSFMxT1NWSUplaW1BdmVCS1IifQ.mxw66UPU8jsrRM0dSTrotyZbsfNgBeJnMIk10W6uv2s
+2026-09-01 14:07:30.624 WARN  [http-nio-8080-exec-2] [c99eede5231a404d] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 已过期：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyNDA3NzcwMjEsInJuU3RyIjoiUHp1clhaS1h3d3M5dUgxSFMxT1NWSUplaW1BdmVCS1IifQ.mxw66UPU8jsrRM0dSTrotyZbsfNgBeJnMIk10W6uv2s
+2026-09-01 14:07:33.140 WARN  [http-nio-8080-exec-3] [9360f340e00141a7] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 已过期：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyNDA3NzcwMjEsInJuU3RyIjoiUHp1clhaS1h3d3M5dUgxSFMxT1NWSUplaW1BdmVCS1IifQ.mxw66UPU8jsrRM0dSTrotyZbsfNgBeJnMIk10W6uv2s
+2026-09-01 14:07:33.166 WARN  [http-nio-8080-exec-4] [e98bd06c1ed24243] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 已过期：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyNDA3NzcwMjEsInJuU3RyIjoiUHp1clhaS1h3d3M5dUgxSFMxT1NWSUplaW1BdmVCS1IifQ.mxw66UPU8jsrRM0dSTrotyZbsfNgBeJnMIk10W6uv2s
+2026-09-01 14:07:34.170 WARN  [http-nio-8080-exec-8] [a27486bbb1bf4b09] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 已过期：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyNDA3NzcwMjEsInJuU3RyIjoiUHp1clhaS1h3d3M5dUgxSFMxT1NWSUplaW1BdmVCS1IifQ.mxw66UPU8jsrRM0dSTrotyZbsfNgBeJnMIk10W6uv2s
+2026-09-01 14:07:34.170 WARN  [http-nio-8080-exec-6] [770e224add6644ab] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 已过期：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyNDA3NzcwMjEsInJuU3RyIjoiUHp1clhaS1h3d3M5dUgxSFMxT1NWSUplaW1BdmVCS1IifQ.mxw66UPU8jsrRM0dSTrotyZbsfNgBeJnMIk10W6uv2s
+2026-09-01 14:07:34.170 WARN  [http-nio-8080-exec-7] [6e69d8f13c7c4423] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 已过期：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyNDA3NzcwMjEsInJuU3RyIjoiUHp1clhaS1h3d3M5dUgxSFMxT1NWSUplaW1BdmVCS1IifQ.mxw66UPU8jsrRM0dSTrotyZbsfNgBeJnMIk10W6uv2s
+2026-09-01 14:07:34.170 WARN  [http-nio-8080-exec-5] [08c2a00a18b24587] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 已过期：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyNDA3NzcwMjEsInJuU3RyIjoiUHp1clhaS1h3d3M5dUgxSFMxT1NWSUplaW1BdmVCS1IifQ.mxw66UPU8jsrRM0dSTrotyZbsfNgBeJnMIk10W6uv2s
+2026-09-01 14:07:37.666 WARN  [http-nio-8080-exec-9] [ffdd7d39c9ec483b] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 已过期：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyNDA3NzcwMjEsInJuU3RyIjoiUHp1clhaS1h3d3M5dUgxSFMxT1NWSUplaW1BdmVCS1IifQ.mxw66UPU8jsrRM0dSTrotyZbsfNgBeJnMIk10W6uv2s
+2026-09-01 14:07:40.486 WARN  [http-nio-8080-exec-10] [a8a0be22b7394378] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: 未能读取到有效 token
+2026-09-01 14:07:42.028 INFO  [http-nio-8080-exec-2] [be455a92182f4ca2] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=be455a92182f4ca2, POST/api/v1/auth/login AuthController.login(), args=[LoginRequest(email=lidaoqideyouxiang@163.com, password=admin@123)]
+2026-09-01 14:07:42.243 INFO  [http-nio-8080-exec-2] [be455a92182f4ca2] c.e.o.a.service.impl.AuthServiceImpl -
+        用户登录成功: email=lidaoqideyouxiang@163.com, userId=1
+2026-09-01 14:07:42.294 INFO  [http-nio-8080-exec-2] [be455a92182f4ca2] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=be455a92182f4ca2, POST/api/v1/auth/login 耗时=265ms
+2026-09-01 14:07:42.323 INFO  [http-nio-8080-exec-4] [e5c4ab797d9c4472] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=e5c4ab797d9c4472, GET/api/v1/reports ReportController.listMyReports(), args=[]
+2026-09-01 14:07:42.323 INFO  [http-nio-8080-exec-1] [14ffb31c60364611] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=14ffb31c60364611, GET/api/v1/resumes ResumeController.listMyResumes(), args=[]
+2026-09-01 14:07:42.324 INFO  [http-nio-8080-exec-3] [5613277cf473445e] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=5613277cf473445e, GET/api/v1/interviews InterviewController.listMySessions(), args=[]
+2026-09-01 14:07:42.324 INFO  [http-nio-8080-exec-8] [09bdfea148d84680] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=09bdfea148d84680, GET/api/v1/positions PositionController.listMyPositions(), args=[]
+2026-09-01 14:07:42.385 INFO  [http-nio-8080-exec-8] [09bdfea148d84680] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=09bdfea148d84680, GET/api/v1/positions 耗时=61ms
+2026-09-01 14:07:42.392 INFO  [http-nio-8080-exec-4] [e5c4ab797d9c4472] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=e5c4ab797d9c4472, GET/api/v1/reports 耗时=68ms
+2026-09-01 14:07:42.396 INFO  [http-nio-8080-exec-3] [5613277cf473445e] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=5613277cf473445e, GET/api/v1/interviews 耗时=72ms
+2026-09-01 14:07:42.408 INFO  [http-nio-8080-exec-1] [14ffb31c60364611] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=14ffb31c60364611, GET/api/v1/resumes 耗时=84ms
+2026-09-01 14:07:44.023 INFO  [http-nio-8080-exec-6] [cd3ad2d8d2ba4aaf] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=cd3ad2d8d2ba4aaf, GET/api/v1/positions PositionController.listMyPositions(), args=[]
+2026-09-01 14:07:44.098 INFO  [http-nio-8080-exec-6] [cd3ad2d8d2ba4aaf] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=cd3ad2d8d2ba4aaf, GET/api/v1/positions 耗时=75ms
+2026-09-01 14:07:44.833 INFO  [http-nio-8080-exec-7] [7a2b72662532464a] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=7a2b72662532464a, GET/api/v1/resumes ResumeController.listMyResumes(), args=[]
+2026-09-01 14:07:44.957 INFO  [http-nio-8080-exec-7] [7a2b72662532464a] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=7a2b72662532464a, GET/api/v1/resumes 耗时=123ms
+2026-09-01 14:07:45.932 INFO  [http-nio-8080-exec-5] [4d258e32bee340df] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=4d258e32bee340df, GET/api/v1/positions PositionController.listMyPositions(), args=[]
+2026-09-01 14:07:46.004 INFO  [http-nio-8080-exec-5] [4d258e32bee340df] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=4d258e32bee340df, GET/api/v1/positions 耗时=71ms
+2026-09-01 14:07:46.662 INFO  [http-nio-8080-exec-9] [24d8b4649435468d] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=24d8b4649435468d, GET/api/v1/resumes ResumeController.listMyResumes(), args=[]
+2026-09-01 14:07:46.766 INFO  [http-nio-8080-exec-9] [24d8b4649435468d] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=24d8b4649435468d, GET/api/v1/resumes 耗时=104ms
+2026-09-01 14:07:48.536 INFO  [http-nio-8080-exec-10] [08feb1c2f9394c56] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=08feb1c2f9394c56, GET/api/v1/resumes/3 ResumeController.getDetail(), args=[3]
+2026-09-01 14:07:48.644 INFO  [http-nio-8080-exec-10] [08feb1c2f9394c56] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=08feb1c2f9394c56, GET/api/v1/resumes/3 耗时=107ms
+2026-09-01 14:07:52.149 INFO  [http-nio-8080-exec-2] [853dc57ec3954eb0] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=853dc57ec3954eb0, GET/api/v1/interviews InterviewController.listMySessions(), args=[]
+2026-09-01 14:07:52.149 INFO  [http-nio-8080-exec-4] [0ff9fd5fd100472d] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=0ff9fd5fd100472d, GET/api/v1/positions PositionController.listMyPositions(), args=[]
+2026-09-01 14:07:52.149 INFO  [http-nio-8080-exec-8] [73c1c85bd8d54d7a] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=73c1c85bd8d54d7a, GET/api/v1/resumes ResumeController.listMyResumes(), args=[]
+2026-09-01 14:07:52.231 INFO  [http-nio-8080-exec-4] [0ff9fd5fd100472d] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=0ff9fd5fd100472d, GET/api/v1/positions 耗时=82ms
+2026-09-01 14:07:52.232 INFO  [http-nio-8080-exec-2] [853dc57ec3954eb0] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=853dc57ec3954eb0, GET/api/v1/interviews 耗时=83ms
+2026-09-01 14:07:52.275 INFO  [http-nio-8080-exec-8] [73c1c85bd8d54d7a] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=73c1c85bd8d54d7a, GET/api/v1/resumes 耗时=125ms
+2026-09-01 14:07:54.783 INFO  [http-nio-8080-exec-1] [0891d1973470434d] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=0891d1973470434d, GET/api/v1/resumes ResumeController.listMyResumes(), args=[]
+2026-09-01 14:07:54.783 INFO  [http-nio-8080-exec-3] [73a1fa7bb7044106] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=73a1fa7bb7044106, GET/api/v1/reports ReportController.listMyReports(), args=[]
+2026-09-01 14:07:54.783 INFO  [http-nio-8080-exec-6] [205dda963d724194] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=205dda963d724194, GET/api/v1/positions PositionController.listMyPositions(), args=[]
+2026-09-01 14:07:54.851 INFO  [http-nio-8080-exec-3] [73a1fa7bb7044106] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=73a1fa7bb7044106, GET/api/v1/reports 耗时=67ms
+2026-09-01 14:07:54.854 INFO  [http-nio-8080-exec-6] [205dda963d724194] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=205dda963d724194, GET/api/v1/positions 耗时=70ms
+2026-09-01 14:07:54.885 INFO  [http-nio-8080-exec-1] [0891d1973470434d] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=0891d1973470434d, GET/api/v1/resumes 耗时=102ms
+2026-09-01 14:07:55.630 INFO  [http-nio-8080-exec-7] [edd173305d484563] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=edd173305d484563, GET/api/v1/positions PositionController.listMyPositions(), args=[]
+2026-09-01 14:07:55.698 INFO  [http-nio-8080-exec-7] [edd173305d484563] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=edd173305d484563, GET/api/v1/positions 耗时=67ms
+2026-09-01 14:08:01.332 INFO  [SpringApplicationShutdownHook] [no-trace] o.s.boot.tomcat.GracefulShutdown -
+        Commencing graceful shutdown. Waiting for active requests to complete
+2026-09-01 14:08:01.333 INFO  [tomcat-shutdown] [no-trace] o.s.boot.tomcat.GracefulShutdown -
+        Graceful shutdown complete
+2026-09-01 14:08:01.335 INFO  [SpringApplicationShutdownHook] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Shutdown initiated...
+2026-09-01 14:08:01.354 INFO  [SpringApplicationShutdownHook] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Shutdown completed.
