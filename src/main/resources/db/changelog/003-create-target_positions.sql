@@ -1,4 +1,3 @@
---changeset init:003
 CREATE TABLE target_positions
 (
     id           BIGINT AUTO_INCREMENT PRIMARY KEY,

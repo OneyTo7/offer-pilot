@@ -42,3 +42,1332 @@ Identify and stop the process that's listening on port 8080 or configure this ap
 2026-09-01 00:05:45.524 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication - Started OfferPilotApplication in 1.402 seconds (process running for 1.612)
 2026-09-01 00:06:02.850 INFO  [SpringApplicationShutdownHook] [no-trace] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
 2026-09-01 00:06:02.852 INFO  [tomcat-shutdown] [no-trace] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-09-01 00:24:37.071 INFO  [main] [no-trace] c.e.o.OfferPilotApplicationTests -
+        Starting OfferPilotApplicationTests using Java 21.0.11 with PID 66207 (started by oliver in /Users/oliver/IdeaProjects/offer-pilot)
+2026-09-01 00:24:37.071 DEBUG [main] [no-trace] c.e.o.OfferPilotApplicationTests -
+        Running with Spring Boot v4.1.1, Spring v7.0.9
+2026-09-01 00:24:37.071 INFO  [main] [no-trace] c.e.o.OfferPilotApplicationTests -
+        No active profile set, falling back to 1 default profile: "default"
+2026-09-01 00:24:37.989 INFO  [main] [no-trace] c.e.o.storage.config.MinioConfig -
+        初始化 MinIO 客户端: endpoint=http://14.103.58.208:19000
+2026-09-01 00:24:38.130 INFO  [main] [no-trace] c.e.o.s.s.impl.MinioFileStorage -
+        MinIO bucket 已存在: offer-pilot-files
+2026-09-01 00:24:38.305 INFO  [main] [no-trace] c.b.m.s.MybatisPlusApplicationContextAware -
+        Register ApplicationContext instances org.springframework.web.context.support.GenericWebApplicationContext@55fd55d9
+2026-09-01 00:24:38.401 INFO  [main] [no-trace] c.e.o.OfferPilotApplicationTests -
+        Started OfferPilotApplicationTests in 1.468 seconds (process running for 2.672)
+2026-09-01 08:38:50.264 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Starting OfferPilotApplication using Java 21.0.11 with PID 2026 (/Users/oliver/IdeaProjects/offer-pilot/target/classes started by oliver in /Users/oliver/IdeaProjects/offer-pilot)
+2026-09-01 08:38:50.264 DEBUG [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Running with Spring Boot v4.1.1, Spring v7.0.9
+2026-09-01 08:38:50.265 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        No active profile set, falling back to 1 default profile: "default"
+2026-09-01 08:38:50.780 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat initialized with port 8080 (http)
+2026-09-01 08:38:50.786 INFO  [main] [no-trace] o.a.catalina.core.StandardService -
+        Starting service [Tomcat]
+2026-09-01 08:38:50.786 INFO  [main] [no-trace] o.a.catalina.core.StandardEngine -
+        Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-09-01 08:38:50.803 INFO  [main] [no-trace] o.s.b.w.c.s.WebApplicationContextInitializer -
+        Root WebApplicationContext: initialization completed in 524 ms
+2026-09-01 08:38:50.825 DEBUG [main] [no-trace] c.e.o.common.config.TraceIdFilter -
+        Filter 'traceIdFilter' configured for use
+2026-09-01 08:38:51.267 INFO  [main] [no-trace] c.e.o.storage.config.MinioConfig -
+        初始化 MinIO 客户端: endpoint=http://14.103.58.208:19000
+2026-09-01 08:38:51.406 INFO  [main] [no-trace] c.e.o.s.s.impl.MinioFileStorage -
+        MinIO bucket 已存在: offer-pilot-files
+2026-09-01 08:38:51.555 INFO  [main] [no-trace] c.b.m.s.MybatisPlusApplicationContextAware -
+        Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@19542407
+2026-09-01 08:38:51.633 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat started on port 8080 (http) with context path '/'
+2026-09-01 08:38:51.637 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Started OfferPilotApplication in 1.561 seconds (process running for 1.817)
+2026-09-01 08:41:18.035 INFO  [http-nio-8080-exec-1] [no-trace] o.a.c.c.C.[Tomcat].[localhost].[/] -
+        Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-01 08:41:18.036 INFO  [http-nio-8080-exec-1] [no-trace] o.s.web.servlet.DispatcherServlet -
+        Initializing Servlet 'dispatcherServlet'
+2026-09-01 08:41:18.037 INFO  [http-nio-8080-exec-1] [no-trace] o.s.web.servlet.DispatcherServlet -
+        Completed initialization in 1 ms
+2026-09-01 08:41:18.101 WARN  [http-nio-8080-exec-1] [43638786f3364a0f] c.e.o.c.e.GlobalExceptionHandler -
+        参数校验失败: email: 邮箱格式不正确
+2026-09-01 08:41:29.341 WARN  [http-nio-8080-exec-2] [b06790718c5846d7] c.e.o.c.e.GlobalExceptionHandler -
+        参数校验失败: email: 邮箱格式不正确
+2026-09-01 08:41:59.388 INFO  [http-nio-8080-exec-3] [aa1cfc465b9f43f6] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=aa1cfc465b9f43f6, POST/api/v1/auth/register AuthController.register(), args=[RegisterRequest(email=lidaoqideyouxiang@163.com, password=admin@123, nickname=admin)]
+2026-09-01 08:41:59.393 ERROR [http-nio-8080-exec-3] [aa1cfc465b9f43f6] com.zaxxer.hikari.HikariConfig -
+        HikariPool-1 - jdbcUrl is required with driverClassName.
+2026-09-01 08:41:59.393 ERROR [http-nio-8080-exec-3] [aa1cfc465b9f43f6] c.e.o.common.config.ApiLogAspect -
+        [API 异常] traceId=aa1cfc465b9f43f6, POST/api/v1/auth/register 耗时=5ms, error=Could not open JDBC Connection for transaction
+2026-09-01 08:41:59.394 ERROR [http-nio-8080-exec-3] [aa1cfc465b9f43f6] c.e.o.c.e.GlobalExceptionHandler -
+        系统异常
+org.springframework.transaction.CannotCreateTransactionException: Could not open JDBC Connection for transaction
+	at org.springframework.jdbc.datasource.DataSourceTransactionManager.doBegin(DataSourceTransactionManager.java:319)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:628)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:365)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:130)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+	at com.eyki.offerpilot.auth.service.impl.AuthServiceImpl$$SpringCGLIB$$0.register(<generated>)
+	at com.eyki.offerpilot.auth.controller.AuthController.register(AuthController.java:30)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:82)
+	at com.eyki.offerpilot.common.config.ApiLogAspect.logApiCall(ApiLogAspect.java:50)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:648)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:630)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:168)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:96)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+	at com.eyki.offerpilot.auth.controller.AuthController$$SpringCGLIB$$0.register(<generated>)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:184)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:132)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:59)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaFirewallCheckFilterForJakartaServlet.doFilter(SaFirewallCheckFilterForJakartaServlet.java:69)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaTokenCorsFilterForJakartaServlet.doFilter(SaTokenCorsFilterForJakartaServlet.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaTokenContextFilterForJakartaServlet.doFilter(SaTokenContextFilterForJakartaServlet.java:40)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at com.eyki.offerpilot.common.config.TraceIdFilter.doFilterInternal(TraceIdFilter.java:25)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:535)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:86)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:71)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:347)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:406)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:71)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1307)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:2036)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:74)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:949)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:483)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:74)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.IllegalArgumentException: jdbcUrl is required with driverClassName.
+	at com.zaxxer.hikari.HikariConfig.validate(HikariConfig.java:1087)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:108)
+	at org.springframework.jdbc.datasource.DataSourceTransactionManager.doBegin(DataSourceTransactionManager.java:270)
+	... 81 common frames omitted
+2026-09-01 08:42:46.591 INFO  [http-nio-8080-exec-4] [6a7127d311e74285] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=6a7127d311e74285, POST/api/v1/auth/register AuthController.register(), args=[RegisterRequest(email=lidaoqideyouxiang@163.com, password=admin@123, nickname=admin)]
+2026-09-01 08:42:46.594 ERROR [http-nio-8080-exec-4] [6a7127d311e74285] com.zaxxer.hikari.HikariConfig -
+        HikariPool-1 - jdbcUrl is required with driverClassName.
+2026-09-01 08:42:46.595 ERROR [http-nio-8080-exec-4] [6a7127d311e74285] c.e.o.common.config.ApiLogAspect -
+        [API 异常] traceId=6a7127d311e74285, POST/api/v1/auth/register 耗时=3ms, error=Could not open JDBC Connection for transaction
+2026-09-01 08:42:46.595 ERROR [http-nio-8080-exec-4] [6a7127d311e74285] c.e.o.c.e.GlobalExceptionHandler -
+        系统异常
+org.springframework.transaction.CannotCreateTransactionException: Could not open JDBC Connection for transaction
+	at org.springframework.jdbc.datasource.DataSourceTransactionManager.doBegin(DataSourceTransactionManager.java:319)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:628)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:365)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:130)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+	at com.eyki.offerpilot.auth.service.impl.AuthServiceImpl$$SpringCGLIB$$0.register(<generated>)
+	at com.eyki.offerpilot.auth.controller.AuthController.register(AuthController.java:30)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:82)
+	at com.eyki.offerpilot.common.config.ApiLogAspect.logApiCall(ApiLogAspect.java:50)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:648)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:630)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:168)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:96)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+	at com.eyki.offerpilot.auth.controller.AuthController$$SpringCGLIB$$0.register(<generated>)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:184)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:132)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:59)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaFirewallCheckFilterForJakartaServlet.doFilter(SaFirewallCheckFilterForJakartaServlet.java:69)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaTokenCorsFilterForJakartaServlet.doFilter(SaTokenCorsFilterForJakartaServlet.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaTokenContextFilterForJakartaServlet.doFilter(SaTokenContextFilterForJakartaServlet.java:40)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at com.eyki.offerpilot.common.config.TraceIdFilter.doFilterInternal(TraceIdFilter.java:25)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:535)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:86)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:71)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:347)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:406)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:71)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1307)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:2036)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:74)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:949)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:483)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:74)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.IllegalArgumentException: jdbcUrl is required with driverClassName.
+	at com.zaxxer.hikari.HikariConfig.validate(HikariConfig.java:1087)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:108)
+	at org.springframework.jdbc.datasource.DataSourceTransactionManager.doBegin(DataSourceTransactionManager.java:270)
+	... 81 common frames omitted
+2026-09-01 08:48:10.094 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Starting OfferPilotApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 2997 (/Users/oliver/IdeaProjects/offer-pilot/target/offer-pilot-0.0.1-SNAPSHOT.jar started by oliver in /Users/oliver/IdeaProjects/offer-pilot)
+2026-09-01 08:48:10.095 DEBUG [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Running with Spring Boot v4.1.1, Spring v7.0.9
+2026-09-01 08:48:10.095 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        No active profile set, falling back to 1 default profile: "default"
+2026-09-01 08:48:10.788 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat initialized with port 8080 (http)
+2026-09-01 08:48:10.795 INFO  [main] [no-trace] o.a.catalina.core.StandardService -
+        Starting service [Tomcat]
+2026-09-01 08:48:10.795 INFO  [main] [no-trace] o.a.catalina.core.StandardEngine -
+        Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-09-01 08:48:10.809 INFO  [main] [no-trace] o.s.b.w.c.s.WebApplicationContextInitializer -
+        Root WebApplicationContext: initialization completed in 689 ms
+2026-09-01 08:48:10.835 DEBUG [main] [no-trace] c.e.o.common.config.TraceIdFilter -
+        Filter 'traceIdFilter' configured for use
+2026-09-01 08:48:11.433 INFO  [main] [no-trace] c.e.o.storage.config.MinioConfig -
+        初始化 MinIO 客户端: endpoint=http://14.103.58.208:19000
+2026-09-01 08:48:11.608 INFO  [main] [no-trace] c.e.o.s.s.impl.MinioFileStorage -
+        MinIO bucket 已存在: offer-pilot-files
+2026-09-01 08:48:11.784 INFO  [main] [no-trace] c.b.m.s.MybatisPlusApplicationContextAware -
+        Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@6f0628de
+2026-09-01 08:48:11.877 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat started on port 8080 (http) with context path '/'
+2026-09-01 08:48:11.883 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Started OfferPilotApplication in 2.052 seconds (process running for 2.325)
+2026-09-01 08:51:35.509 INFO  [http-nio-8080-exec-1] [no-trace] o.a.c.c.C.[Tomcat].[localhost].[/] -
+        Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-01 08:51:35.509 INFO  [http-nio-8080-exec-1] [no-trace] o.s.web.servlet.DispatcherServlet -
+        Initializing Servlet 'dispatcherServlet'
+2026-09-01 08:51:35.510 INFO  [http-nio-8080-exec-1] [no-trace] o.s.web.servlet.DispatcherServlet -
+        Completed initialization in 1 ms
+2026-09-01 08:51:35.572 INFO  [http-nio-8080-exec-1] [017c777cacbf47ee] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=017c777cacbf47ee, POST/api/v1/auth/register AuthController.register(), args=[RegisterRequest(email=lidaoqideyouxiang@163.com, password=admin@123, nickname=admin)]
+2026-09-01 08:51:35.575 ERROR [http-nio-8080-exec-1] [017c777cacbf47ee] com.zaxxer.hikari.HikariConfig -
+        HikariPool-1 - jdbcUrl is required with driverClassName.
+2026-09-01 08:51:35.575 ERROR [http-nio-8080-exec-1] [017c777cacbf47ee] c.e.o.common.config.ApiLogAspect -
+        [API 异常] traceId=017c777cacbf47ee, POST/api/v1/auth/register 耗时=3ms, error=Could not open JDBC Connection for transaction
+2026-09-01 08:51:35.576 ERROR [http-nio-8080-exec-1] [017c777cacbf47ee] c.e.o.c.e.GlobalExceptionHandler -
+        系统异常
+org.springframework.transaction.CannotCreateTransactionException: Could not open JDBC Connection for transaction
+	at org.springframework.jdbc.datasource.DataSourceTransactionManager.doBegin(DataSourceTransactionManager.java:319)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:628)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:365)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:130)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+	at com.eyki.offerpilot.auth.service.impl.AuthServiceImpl$$SpringCGLIB$$0.register(<generated>)
+	at com.eyki.offerpilot.auth.controller.AuthController.register(AuthController.java:30)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:82)
+	at com.eyki.offerpilot.common.config.ApiLogAspect.logApiCall(ApiLogAspect.java:50)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:648)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:630)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:168)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:96)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+	at com.eyki.offerpilot.auth.controller.AuthController$$SpringCGLIB$$0.register(<generated>)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:184)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:132)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:59)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaFirewallCheckFilterForJakartaServlet.doFilter(SaFirewallCheckFilterForJakartaServlet.java:69)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaTokenCorsFilterForJakartaServlet.doFilter(SaTokenCorsFilterForJakartaServlet.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaTokenContextFilterForJakartaServlet.doFilter(SaTokenContextFilterForJakartaServlet.java:40)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at com.eyki.offerpilot.common.config.TraceIdFilter.doFilterInternal(TraceIdFilter.java:25)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:535)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:86)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:71)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:347)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:406)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:71)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1307)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:2036)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:74)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:949)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:483)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:74)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.IllegalArgumentException: jdbcUrl is required with driverClassName.
+	at com.zaxxer.hikari.HikariConfig.validate(HikariConfig.java:1087)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:108)
+	at org.springframework.jdbc.datasource.DataSourceTransactionManager.doBegin(DataSourceTransactionManager.java:270)
+	... 81 common frames omitted
+2026-09-01 09:03:07.710 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Starting OfferPilotApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 5965 (/Users/oliver/IdeaProjects/offer-pilot/target/offer-pilot-0.0.1-SNAPSHOT.jar started by oliver in /Users/oliver/IdeaProjects/offer-pilot)
+2026-09-01 09:03:07.714 DEBUG [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Running with Spring Boot v4.1.1, Spring v7.0.9
+2026-09-01 09:03:07.715 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        No active profile set, falling back to 1 default profile: "default"
+2026-09-01 09:03:08.349 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat initialized with port 8080 (http)
+2026-09-01 09:03:08.355 INFO  [main] [no-trace] o.a.catalina.core.StandardService -
+        Starting service [Tomcat]
+2026-09-01 09:03:08.355 INFO  [main] [no-trace] o.a.catalina.core.StandardEngine -
+        Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-09-01 09:03:08.368 INFO  [main] [no-trace] o.s.b.w.c.s.WebApplicationContextInitializer -
+        Root WebApplicationContext: initialization completed in 628 ms
+2026-09-01 09:03:08.394 DEBUG [main] [no-trace] c.e.o.common.config.TraceIdFilter -
+        Filter 'traceIdFilter' configured for use
+2026-09-01 09:03:08.966 INFO  [main] [no-trace] c.e.o.storage.config.MinioConfig -
+        初始化 MinIO 客户端: endpoint=http://14.103.58.208:19000
+2026-09-01 09:03:09.149 INFO  [main] [no-trace] c.e.o.s.s.impl.MinioFileStorage -
+        MinIO bucket 已存在: offer-pilot-files
+2026-09-01 09:03:09.337 INFO  [main] [no-trace] c.b.m.s.MybatisPlusApplicationContextAware -
+        Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@6f0628de
+2026-09-01 09:03:09.433 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat started on port 8080 (http) with context path '/'
+2026-09-01 09:03:09.438 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Started OfferPilotApplication in 1.998 seconds (process running for 2.226)
+2026-09-01 09:04:16.146 INFO  [http-nio-8080-exec-1] [no-trace] o.a.c.c.C.[Tomcat].[localhost].[/] -
+        Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-01 09:04:16.146 INFO  [http-nio-8080-exec-1] [no-trace] o.s.web.servlet.DispatcherServlet -
+        Initializing Servlet 'dispatcherServlet'
+2026-09-01 09:04:16.147 INFO  [http-nio-8080-exec-1] [no-trace] o.s.web.servlet.DispatcherServlet -
+        Completed initialization in 1 ms
+2026-09-01 09:04:16.206 INFO  [http-nio-8080-exec-1] [75605e8526a843cb] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=75605e8526a843cb, POST/api/v1/auth/register AuthController.register(), args=[RegisterRequest(email=lidaoqideyouxiang@163.com, password=admin@123, nickname=admin)]
+2026-09-01 09:04:16.209 ERROR [http-nio-8080-exec-1] [75605e8526a843cb] com.zaxxer.hikari.HikariConfig -
+        HikariPool-1 - jdbcUrl is required with driverClassName.
+2026-09-01 09:04:16.209 ERROR [http-nio-8080-exec-1] [75605e8526a843cb] c.e.o.common.config.ApiLogAspect -
+        [API 异常] traceId=75605e8526a843cb, POST/api/v1/auth/register 耗时=2ms, error=Could not open JDBC Connection for transaction
+2026-09-01 09:04:16.210 ERROR [http-nio-8080-exec-1] [75605e8526a843cb] c.e.o.c.e.GlobalExceptionHandler -
+        系统异常
+org.springframework.transaction.CannotCreateTransactionException: Could not open JDBC Connection for transaction
+	at org.springframework.jdbc.datasource.DataSourceTransactionManager.doBegin(DataSourceTransactionManager.java:319)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:628)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:365)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:130)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+	at com.eyki.offerpilot.auth.service.impl.AuthServiceImpl$$SpringCGLIB$$0.register(<generated>)
+	at com.eyki.offerpilot.auth.controller.AuthController.register(AuthController.java:30)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:82)
+	at com.eyki.offerpilot.common.config.ApiLogAspect.logApiCall(ApiLogAspect.java:50)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:648)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:630)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:168)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:96)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+	at com.eyki.offerpilot.auth.controller.AuthController$$SpringCGLIB$$0.register(<generated>)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:184)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:132)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:59)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaFirewallCheckFilterForJakartaServlet.doFilter(SaFirewallCheckFilterForJakartaServlet.java:69)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaTokenCorsFilterForJakartaServlet.doFilter(SaTokenCorsFilterForJakartaServlet.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaTokenContextFilterForJakartaServlet.doFilter(SaTokenContextFilterForJakartaServlet.java:40)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at com.eyki.offerpilot.common.config.TraceIdFilter.doFilterInternal(TraceIdFilter.java:25)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:535)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:86)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:71)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:347)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:406)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:71)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1307)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:2036)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:74)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:949)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:483)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:74)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.IllegalArgumentException: jdbcUrl is required with driverClassName.
+	at com.zaxxer.hikari.HikariConfig.validate(HikariConfig.java:1087)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:108)
+	at org.springframework.jdbc.datasource.DataSourceTransactionManager.doBegin(DataSourceTransactionManager.java:270)
+	... 81 common frames omitted
+2026-09-01 09:10:54.497 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Starting OfferPilotApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 6854 (/Users/oliver/IdeaProjects/offer-pilot/target/offer-pilot-0.0.1-SNAPSHOT.jar started by oliver in /Users/oliver/IdeaProjects/offer-pilot)
+2026-09-01 09:10:54.498 DEBUG [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Running with Spring Boot v4.1.1, Spring v7.0.9
+2026-09-01 09:10:54.498 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        No active profile set, falling back to 1 default profile: "default"
+2026-09-01 09:10:55.241 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat initialized with port 8080 (http)
+2026-09-01 09:10:55.248 INFO  [main] [no-trace] o.a.catalina.core.StandardService -
+        Starting service [Tomcat]
+2026-09-01 09:10:55.248 INFO  [main] [no-trace] o.a.catalina.core.StandardEngine -
+        Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-09-01 09:10:55.262 INFO  [main] [no-trace] o.s.b.w.c.s.WebApplicationContextInitializer -
+        Root WebApplicationContext: initialization completed in 744 ms
+2026-09-01 09:10:55.288 DEBUG [main] [no-trace] c.e.o.common.config.TraceIdFilter -
+        Filter 'traceIdFilter' configured for use
+2026-09-01 09:10:55.895 INFO  [main] [no-trace] c.e.o.storage.config.MinioConfig -
+        初始化 MinIO 客户端: endpoint=http://14.103.58.208:19000
+2026-09-01 09:10:56.084 INFO  [main] [no-trace] c.e.o.s.s.impl.MinioFileStorage -
+        MinIO bucket 已存在: offer-pilot-files
+2026-09-01 09:10:56.282 INFO  [main] [no-trace] c.b.m.s.MybatisPlusApplicationContextAware -
+        Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@6f0628de
+2026-09-01 09:10:56.441 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat started on port 8080 (http) with context path '/'
+2026-09-01 09:10:56.449 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Started OfferPilotApplication in 2.188 seconds (process running for 2.412)
+2026-09-01 09:11:45.145 INFO  [http-nio-8080-exec-1] [no-trace] o.a.c.c.C.[Tomcat].[localhost].[/] -
+        Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-01 09:11:45.145 INFO  [http-nio-8080-exec-1] [no-trace] o.s.web.servlet.DispatcherServlet -
+        Initializing Servlet 'dispatcherServlet'
+2026-09-01 09:11:45.146 INFO  [http-nio-8080-exec-1] [no-trace] o.s.web.servlet.DispatcherServlet -
+        Completed initialization in 1 ms
+2026-09-01 09:11:45.200 INFO  [http-nio-8080-exec-1] [d5a2ca3fee70438c] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=d5a2ca3fee70438c, POST/api/v1/auth/register AuthController.register(), args=[RegisterRequest(email=lidaoqideyouxiang@163.com, password=admin@123, nickname=admin)]
+2026-09-01 09:11:45.203 INFO  [http-nio-8080-exec-1] [d5a2ca3fee70438c] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Starting...
+2026-09-01 09:11:45.623 INFO  [http-nio-8080-exec-1] [d5a2ca3fee70438c] com.zaxxer.hikari.pool.HikariPool -
+        HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4df253f
+2026-09-01 09:11:45.624 INFO  [http-nio-8080-exec-1] [d5a2ca3fee70438c] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Start completed.
+2026-09-01 09:11:45.822 ERROR [http-nio-8080-exec-1] [d5a2ca3fee70438c] c.e.o.common.config.ApiLogAspect -
+        [API 异常] traceId=d5a2ca3fee70438c, POST/api/v1/auth/register 耗时=621ms, error=
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'offer_pilot.users' doesn't exist
+### The error may exist in com/eyki/offerpilot/auth/repository/UserRepository.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT COUNT( * ) AS total FROM users      WHERE  (email = ?)
+### Cause: java.sql.SQLSyntaxErrorException: Table 'offer_pilot.users' doesn't exist
+; bad SQL grammar []
+2026-09-01 09:11:45.823 ERROR [http-nio-8080-exec-1] [d5a2ca3fee70438c] c.e.o.c.e.GlobalExceptionHandler -
+        系统异常
+org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'offer_pilot.users' doesn't exist
+### The error may exist in com/eyki/offerpilot/auth/repository/UserRepository.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT COUNT( * ) AS total FROM users      WHERE  (email = ?)
+### Cause: java.sql.SQLSyntaxErrorException: Table 'offer_pilot.users' doesn't exist
+; bad SQL grammar []
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:244)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:102)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:95)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:362)
+	at jdk.proxy2/jdk.proxy2.$Proxy77.selectOne(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.selectOne(SqlSessionTemplate.java:169)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:109)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:156)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:93)
+	at jdk.proxy2/jdk.proxy2.$Proxy90.selectCount(Unknown Source)
+	at com.eyki.offerpilot.auth.repository.UserRepository.existsByEmail(UserRepository.java:18)
+	at java.base/java.lang.invoke.MethodHandle.invokeWithArguments(MethodHandle.java:733)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$DefaultMethodInvoker.invoke(MybatisMapperProxy.java:182)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:93)
+	at jdk.proxy2/jdk.proxy2.$Proxy90.existsByEmail(Unknown Source)
+	at com.eyki.offerpilot.auth.service.impl.AuthServiceImpl.register(AuthServiceImpl.java:46)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:133)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:371)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:130)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+	at com.eyki.offerpilot.auth.service.impl.AuthServiceImpl$$SpringCGLIB$$0.register(<generated>)
+	at com.eyki.offerpilot.auth.controller.AuthController.register(AuthController.java:30)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:82)
+	at com.eyki.offerpilot.common.config.ApiLogAspect.logApiCall(ApiLogAspect.java:50)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:648)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:630)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:168)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:96)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+	at com.eyki.offerpilot.auth.controller.AuthController$$SpringCGLIB$$0.register(<generated>)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:184)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:132)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:59)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaFirewallCheckFilterForJakartaServlet.doFilter(SaFirewallCheckFilterForJakartaServlet.java:69)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaTokenCorsFilterForJakartaServlet.doFilter(SaTokenCorsFilterForJakartaServlet.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at cn.dev33.satoken.filter.SaTokenContextFilterForJakartaServlet.doFilter(SaTokenContextFilterForJakartaServlet.java:40)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at com.eyki.offerpilot.common.config.TraceIdFilter.doFilterInternal(TraceIdFilter.java:25)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:535)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:86)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:71)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:347)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:406)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:71)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1307)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:2036)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:74)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:949)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:483)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:74)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.sql.SQLSyntaxErrorException: Table 'offer_pilot.users' doesn't exist
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:988)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:383)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:58)
+	at jdk.proxy3/jdk.proxy3.$Proxy119.execute(Unknown Source)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.query(PreparedStatementHandler.java:65)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.query(RoutingStatementHandler.java:80)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:61)
+	at jdk.proxy2/jdk.proxy2.$Proxy117.query(Unknown Source)
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:65)
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:336)
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:158)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:110)
+	at com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor.intercept(MybatisPlusInterceptor.java:81)
+	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:59)
+	at jdk.proxy2/jdk.proxy2.$Proxy116.query(Unknown Source)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:154)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:147)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:142)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectOne(DefaultSqlSession.java:75)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:348)
+	... 96 common frames omitted
+2026-09-01 09:19:52.906 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Starting OfferPilotApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 8072 (/Users/oliver/IdeaProjects/offer-pilot/target/offer-pilot-0.0.1-SNAPSHOT.jar started by oliver in /Users/oliver/IdeaProjects/offer-pilot)
+2026-09-01 09:19:52.907 DEBUG [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Running with Spring Boot v4.1.1, Spring v7.0.9
+2026-09-01 09:19:52.907 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        No active profile set, falling back to 1 default profile: "default"
+2026-09-01 09:19:53.528 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat initialized with port 8080 (http)
+2026-09-01 09:19:53.538 INFO  [main] [no-trace] o.a.catalina.core.StandardService -
+        Starting service [Tomcat]
+2026-09-01 09:19:53.538 INFO  [main] [no-trace] o.a.catalina.core.StandardEngine -
+        Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-09-01 09:19:53.547 INFO  [main] [no-trace] o.s.b.w.c.s.WebApplicationContextInitializer -
+        Root WebApplicationContext: initialization completed in 615 ms
+2026-09-01 09:19:53.571 DEBUG [main] [no-trace] c.e.o.common.config.TraceIdFilter -
+        Filter 'traceIdFilter' configured for use
+2026-09-01 09:19:54.140 INFO  [main] [no-trace] c.e.o.storage.config.MinioConfig -
+        初始化 MinIO 客户端: endpoint=http://14.103.58.208:19000
+2026-09-01 09:19:54.321 INFO  [main] [no-trace] c.e.o.s.s.impl.MinioFileStorage -
+        MinIO bucket 已存在: offer-pilot-files
+2026-09-01 09:19:54.376 INFO  [main] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Starting...
+2026-09-01 09:19:54.621 INFO  [main] [no-trace] com.zaxxer.hikari.pool.HikariPool -
+        HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1cf26804
+2026-09-01 09:19:54.622 INFO  [main] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Start completed.
+2026-09-01 09:19:56.909 INFO  [main] [no-trace] liquibase.snapshot -
+        Creating snapshot
+2026-09-01 09:19:56.984 INFO  [main] [no-trace] liquibase.changelog -
+        Creating database changelog table with name: offer_pilot.databasechangelog
+2026-09-01 09:20:01.083 INFO  [main] [no-trace] liquibase.snapshot -
+        Creating snapshot
+2026-09-01 09:20:01.468 INFO  [main] [no-trace] liquibase.lockservice -
+        Successfully acquired change log lock
+2026-09-01 09:20:01.484 INFO  [main] [no-trace] liquibase.command -
+        Using deploymentId: 8225594367
+2026-09-01 09:20:01.502 INFO  [main] [no-trace] liquibase.changelog -
+        Reading from offer_pilot.databasechangelog
+2026-09-01 09:20:01.532 INFO  [main] [no-trace] liquibase.ui -
+        Running Changeset: db/changelog/001-create-users.sql::raw::includeAll
+2026-09-01 09:20:01.603 ERROR [main] [no-trace] liquibase.changelog -
+        ChangeSet db/changelog/001-create-users.sql::raw::includeAll encountered an exception.
+liquibase.exception.DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMEN' at line 1 [Failed SQL: (1064) --changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email         VARCHAR(100) NOT NULL UNIQUE COMMENT '邮箱，唯一',
+    password_hash VARCHAR(255) NOT NULL COMMENT 'BCrypt 加密密码',
+    nickname      VARCHAR(50)           DEFAULT NULL COMMENT '昵称',
+    api_key       VARCHAR(255)          DEFAULT NULL COMMENT '用户自配的 DeepSeek API Key',
+    status        TINYINT               DEFAULT 1 COMMENT '0-禁用 1-正常',
+    last_login_at DATETIME              DEFAULT NULL COMMENT '最后登录时间',
+    created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX         idx_email (email),
+    INDEX         idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';]
+	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:525)
+	at liquibase.executor.jvm.JdbcExecutor.execute(JdbcExecutor.java:85)
+	at liquibase.executor.jvm.JdbcExecutor.execute(JdbcExecutor.java:188)
+	at liquibase.executor.AbstractExecutor.execute(AbstractExecutor.java:148)
+	at liquibase.database.AbstractJdbcDatabase.executeStatements(AbstractJdbcDatabase.java:1198)
+	at liquibase.changelog.ChangeSet.execute(ChangeSet.java:860)
+	at liquibase.changelog.visitor.UpdateVisitor.executeAcceptedChange(UpdateVisitor.java:127)
+	at liquibase.changelog.visitor.UpdateVisitor.visit(UpdateVisitor.java:71)
+	at liquibase.changelog.ChangeLogIterator.lambda$run$0(ChangeLogIterator.java:133)
+	at liquibase.Scope.lambda$child$0(Scope.java:243)
+	at liquibase.Scope.child(Scope.java:252)
+	at liquibase.Scope.child(Scope.java:242)
+	at liquibase.Scope.child(Scope.java:221)
+	at liquibase.changelog.ChangeLogIterator.lambda$run$1(ChangeLogIterator.java:122)
+	at liquibase.Scope.lambda$child$0(Scope.java:243)
+	at liquibase.Scope.child(Scope.java:252)
+	at liquibase.Scope.child(Scope.java:242)
+	at liquibase.Scope.child(Scope.java:221)
+	at liquibase.Scope.child(Scope.java:309)
+	at liquibase.Scope.child(Scope.java:313)
+	at liquibase.changelog.ChangeLogIterator.run(ChangeLogIterator.java:91)
+	at liquibase.command.core.AbstractUpdateCommandStep.lambda$run$1(AbstractUpdateCommandStep.java:122)
+	at liquibase.Scope.lambda$child$0(Scope.java:243)
+	at liquibase.Scope.child(Scope.java:252)
+	at liquibase.Scope.child(Scope.java:242)
+	at liquibase.Scope.child(Scope.java:221)
+	at liquibase.command.core.AbstractUpdateCommandStep.run(AbstractUpdateCommandStep.java:120)
+	at liquibase.command.core.UpdateCommandStep.run(UpdateCommandStep.java:100)
+	at liquibase.command.CommandScope.lambda$execute$5(CommandScope.java:269)
+	at liquibase.Scope.child(Scope.java:252)
+	at liquibase.Scope.child(Scope.java:228)
+	at liquibase.command.CommandScope.execute(CommandScope.java:257)
+	at liquibase.Liquibase.lambda$update$0(Liquibase.java:216)
+	at liquibase.Scope.lambda$child$0(Scope.java:243)
+	at liquibase.Scope.child(Scope.java:252)
+	at liquibase.Scope.child(Scope.java:242)
+	at liquibase.Scope.child(Scope.java:221)
+	at liquibase.Liquibase.runInScope(Liquibase.java:1366)
+	at liquibase.Liquibase.update(Liquibase.java:205)
+	at liquibase.Liquibase.update(Liquibase.java:188)
+	at liquibase.integration.spring.SpringLiquibase.performUpdate(SpringLiquibase.java:327)
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:279)
+	at liquibase.Scope.lambda$child$0(Scope.java:243)
+	at liquibase.Scope.child(Scope.java:252)
+	at liquibase.Scope.child(Scope.java:242)
+	at liquibase.Scope.child(Scope.java:221)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:272)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1862)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1811)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:603)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1225)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1191)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1121)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:994)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621)
+	at org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+	at com.eyki.offerpilot.OfferPilotApplication.main(OfferPilotApplication.java:12)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:106)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
+Caused by: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMEN' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:839)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:687)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:517)
+	... 71 common frames omitted
+2026-09-01 09:20:01.623 INFO  [main] [no-trace] liquibase.util -
+        UPDATE SUMMARY
+2026-09-01 09:20:01.623 INFO  [main] [no-trace] liquibase.util -
+        Run:                          0
+2026-09-01 09:20:01.623 INFO  [main] [no-trace] liquibase.util -
+        Previously run:               0
+2026-09-01 09:20:01.623 INFO  [main] [no-trace] liquibase.util -
+        Filtered out:                 0
+2026-09-01 09:20:01.624 INFO  [main] [no-trace] liquibase.util -
+        -------------------------------
+2026-09-01 09:20:01.624 INFO  [main] [no-trace] liquibase.util -
+        Total change sets:            8
+2026-09-01 09:20:01.624 INFO  [main] [no-trace] liquibase.util -
+        Update summary generated
+2026-09-01 09:20:01.625 INFO  [main] [no-trace] liquibase.command -
+        Update command encountered an exception.
+2026-09-01 09:20:01.674 INFO  [main] [no-trace] liquibase.lockservice -
+        Successfully released change log lock
+2026-09-01 09:20:01.691 INFO  [main] [no-trace] liquibase.command -
+        Logging exception.
+2026-09-01 09:20:01.691 INFO  [main] [no-trace] liquibase.ui -
+        ERROR: Exception Details
+2026-09-01 09:20:01.691 INFO  [main] [no-trace] liquibase.ui -
+        ERROR: Exception Primary Class:  SQLSyntaxErrorException
+2026-09-01 09:20:01.691 INFO  [main] [no-trace] liquibase.ui -
+        ERROR: Exception Primary Reason:  You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMEN' at line 1
+2026-09-01 09:20:01.691 INFO  [main] [no-trace] liquibase.ui -
+        ERROR: Exception Primary Source:  MySQL 8.4.10
+2026-09-01 09:20:01.691 INFO  [main] [no-trace] liquibase.command -
+        Command execution complete
+2026-09-01 09:20:01.707 WARN  [main] [no-trace] o.s.b.w.s.s.c.AnnotationConfigServletWebServerApplicationContext -
+        Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [com/eyki/offerpilot/common/config/LiquibaseConfig.class]: liquibase.exception.CommandExecutionException: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changelog/001-create-users.sql::raw::includeAll:
+     Reason: liquibase.exception.DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMEN' at line 1 [Failed SQL: (1064) --changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email         VARCHAR(100) NOT NULL UNIQUE COMMENT '邮箱，唯一',
+    password_hash VARCHAR(255) NOT NULL COMMENT 'BCrypt 加密密码',
+    nickname      VARCHAR(50)           DEFAULT NULL COMMENT '昵称',
+    api_key       VARCHAR(255)          DEFAULT NULL COMMENT '用户自配的 DeepSeek API Key',
+    status        TINYINT               DEFAULT 1 COMMENT '0-禁用 1-正常',
+    last_login_at DATETIME              DEFAULT NULL COMMENT '最后登录时间',
+    created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX         idx_email (email),
+    INDEX         idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';]
+2026-09-01 09:20:01.708 INFO  [main] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Shutdown initiated...
+2026-09-01 09:20:01.724 INFO  [main] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Shutdown completed.
+2026-09-01 09:20:01.727 INFO  [main] [no-trace] o.a.catalina.core.StandardService -
+        Stopping service [Tomcat]
+2026-09-01 09:20:01.735 INFO  [main] [no-trace] o.s.b.a.l.ConditionEvaluationReportLogger -
+        
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-09-01 09:20:01.741 ERROR [main] [no-trace] o.s.boot.SpringApplication -
+        Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [com/eyki/offerpilot/common/config/LiquibaseConfig.class]: liquibase.exception.CommandExecutionException: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changelog/001-create-users.sql::raw::includeAll:
+     Reason: liquibase.exception.DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMEN' at line 1 [Failed SQL: (1064) --changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email         VARCHAR(100) NOT NULL UNIQUE COMMENT '邮箱，唯一',
+    password_hash VARCHAR(255) NOT NULL COMMENT 'BCrypt 加密密码',
+    nickname      VARCHAR(50)           DEFAULT NULL COMMENT '昵称',
+    api_key       VARCHAR(255)          DEFAULT NULL COMMENT '用户自配的 DeepSeek API Key',
+    status        TINYINT               DEFAULT 1 COMMENT '0-禁用 1-正常',
+    last_login_at DATETIME              DEFAULT NULL COMMENT '最后登录时间',
+    created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX         idx_email (email),
+    INDEX         idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1815)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:603)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1225)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1191)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1121)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:994)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621)
+	at org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+	at com.eyki.offerpilot.OfferPilotApplication.main(OfferPilotApplication.java:12)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:106)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
+Caused by: liquibase.exception.LiquibaseException: liquibase.exception.CommandExecutionException: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changelog/001-create-users.sql::raw::includeAll:
+     Reason: liquibase.exception.DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMEN' at line 1 [Failed SQL: (1064) --changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email         VARCHAR(100) NOT NULL UNIQUE COMMENT '邮箱，唯一',
+    password_hash VARCHAR(255) NOT NULL COMMENT 'BCrypt 加密密码',
+    nickname      VARCHAR(50)           DEFAULT NULL COMMENT '昵称',
+    api_key       VARCHAR(255)          DEFAULT NULL COMMENT '用户自配的 DeepSeek API Key',
+    status        TINYINT               DEFAULT 1 COMMENT '0-禁用 1-正常',
+    last_login_at DATETIME              DEFAULT NULL COMMENT '最后登录时间',
+    created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX         idx_email (email),
+    INDEX         idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';]
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:289)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1862)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1811)
+	... 23 common frames omitted
+Caused by: liquibase.exception.CommandExecutionException: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changelog/001-create-users.sql::raw::includeAll:
+     Reason: liquibase.exception.DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMEN' at line 1 [Failed SQL: (1064) --changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email         VARCHAR(100) NOT NULL UNIQUE COMMENT '邮箱，唯一',
+    password_hash VARCHAR(255) NOT NULL COMMENT 'BCrypt 加密密码',
+    nickname      VARCHAR(50)           DEFAULT NULL COMMENT '昵称',
+    api_key       VARCHAR(255)          DEFAULT NULL COMMENT '用户自配的 DeepSeek API Key',
+    status        TINYINT               DEFAULT 1 COMMENT '0-禁用 1-正常',
+    last_login_at DATETIME              DEFAULT NULL COMMENT '最后登录时间',
+    created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX         idx_email (email),
+    INDEX         idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';]
+	at liquibase.command.CommandScope.lambda$execute$5(CommandScope.java:325)
+	at liquibase.Scope.child(Scope.java:252)
+	at liquibase.Scope.child(Scope.java:228)
+	at liquibase.command.CommandScope.execute(CommandScope.java:257)
+	at liquibase.Liquibase.lambda$update$0(Liquibase.java:216)
+	at liquibase.Scope.lambda$child$0(Scope.java:243)
+	at liquibase.Scope.child(Scope.java:252)
+	at liquibase.Scope.child(Scope.java:242)
+	at liquibase.Scope.child(Scope.java:221)
+	at liquibase.Liquibase.runInScope(Liquibase.java:1366)
+	at liquibase.Liquibase.update(Liquibase.java:205)
+	at liquibase.Liquibase.update(Liquibase.java:188)
+	at liquibase.integration.spring.SpringLiquibase.performUpdate(SpringLiquibase.java:327)
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:279)
+	at liquibase.Scope.lambda$child$0(Scope.java:243)
+	at liquibase.Scope.child(Scope.java:252)
+	at liquibase.Scope.child(Scope.java:242)
+	at liquibase.Scope.child(Scope.java:221)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:272)
+	... 25 common frames omitted
+Caused by: liquibase.exception.LiquibaseException: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changelog/001-create-users.sql::raw::includeAll:
+     Reason: liquibase.exception.DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMEN' at line 1 [Failed SQL: (1064) --changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email         VARCHAR(100) NOT NULL UNIQUE COMMENT '邮箱，唯一',
+    password_hash VARCHAR(255) NOT NULL COMMENT 'BCrypt 加密密码',
+    nickname      VARCHAR(50)           DEFAULT NULL COMMENT '昵称',
+    api_key       VARCHAR(255)          DEFAULT NULL COMMENT '用户自配的 DeepSeek API Key',
+    status        TINYINT               DEFAULT 1 COMMENT '0-禁用 1-正常',
+    last_login_at DATETIME              DEFAULT NULL COMMENT '最后登录时间',
+    created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX         idx_email (email),
+    INDEX         idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';]
+	at liquibase.changelog.ChangeLogIterator.run(ChangeLogIterator.java:155)
+	at liquibase.command.core.AbstractUpdateCommandStep.lambda$run$1(AbstractUpdateCommandStep.java:122)
+	at liquibase.Scope.lambda$child$0(Scope.java:243)
+	at liquibase.Scope.child(Scope.java:252)
+	at liquibase.Scope.child(Scope.java:242)
+	at liquibase.Scope.child(Scope.java:221)
+	at liquibase.command.core.AbstractUpdateCommandStep.run(AbstractUpdateCommandStep.java:120)
+	at liquibase.command.core.UpdateCommandStep.run(UpdateCommandStep.java:100)
+	at liquibase.command.CommandScope.lambda$execute$5(CommandScope.java:269)
+	... 43 common frames omitted
+Caused by: liquibase.exception.MigrationFailedException: Migration failed for changeset db/changelog/001-create-users.sql::raw::includeAll:
+     Reason: liquibase.exception.DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMEN' at line 1 [Failed SQL: (1064) --changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email         VARCHAR(100) NOT NULL UNIQUE COMMENT '邮箱，唯一',
+    password_hash VARCHAR(255) NOT NULL COMMENT 'BCrypt 加密密码',
+    nickname      VARCHAR(50)           DEFAULT NULL COMMENT '昵称',
+    api_key       VARCHAR(255)          DEFAULT NULL COMMENT '用户自配的 DeepSeek API Key',
+    status        TINYINT               DEFAULT 1 COMMENT '0-禁用 1-正常',
+    last_login_at DATETIME              DEFAULT NULL COMMENT '最后登录时间',
+    created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX         idx_email (email),
+    INDEX         idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';]
+	at liquibase.changelog.ChangeSet.execute(ChangeSet.java:918)
+	at liquibase.changelog.visitor.UpdateVisitor.executeAcceptedChange(UpdateVisitor.java:127)
+	at liquibase.changelog.visitor.UpdateVisitor.visit(UpdateVisitor.java:71)
+	at liquibase.changelog.ChangeLogIterator.lambda$run$0(ChangeLogIterator.java:133)
+	at liquibase.Scope.lambda$child$0(Scope.java:243)
+	at liquibase.Scope.child(Scope.java:252)
+	at liquibase.Scope.child(Scope.java:242)
+	at liquibase.Scope.child(Scope.java:221)
+	at liquibase.changelog.ChangeLogIterator.lambda$run$1(ChangeLogIterator.java:122)
+	at liquibase.Scope.lambda$child$0(Scope.java:243)
+	at liquibase.Scope.child(Scope.java:252)
+	at liquibase.Scope.child(Scope.java:242)
+	at liquibase.Scope.child(Scope.java:221)
+	at liquibase.Scope.child(Scope.java:309)
+	at liquibase.Scope.child(Scope.java:313)
+	at liquibase.changelog.ChangeLogIterator.run(ChangeLogIterator.java:91)
+	... 51 common frames omitted
+Caused by: liquibase.exception.DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMEN' at line 1 [Failed SQL: (1064) --changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email         VARCHAR(100) NOT NULL UNIQUE COMMENT '邮箱，唯一',
+    password_hash VARCHAR(255) NOT NULL COMMENT 'BCrypt 加密密码',
+    nickname      VARCHAR(50)           DEFAULT NULL COMMENT '昵称',
+    api_key       VARCHAR(255)          DEFAULT NULL COMMENT '用户自配的 DeepSeek API Key',
+    status        TINYINT               DEFAULT 1 COMMENT '0-禁用 1-正常',
+    last_login_at DATETIME              DEFAULT NULL COMMENT '最后登录时间',
+    created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX         idx_email (email),
+    INDEX         idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';]
+	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:525)
+	at liquibase.executor.jvm.JdbcExecutor.execute(JdbcExecutor.java:85)
+	at liquibase.executor.jvm.JdbcExecutor.execute(JdbcExecutor.java:188)
+	at liquibase.executor.AbstractExecutor.execute(AbstractExecutor.java:148)
+	at liquibase.database.AbstractJdbcDatabase.executeStatements(AbstractJdbcDatabase.java:1198)
+	at liquibase.changelog.ChangeSet.execute(ChangeSet.java:860)
+	... 66 common frames omitted
+Caused by: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--changeset init:001
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMEN' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:839)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:687)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:517)
+	... 71 common frames omitted
+2026-09-01 09:22:11.872 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Starting OfferPilotApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 8377 (/Users/oliver/IdeaProjects/offer-pilot/target/offer-pilot-0.0.1-SNAPSHOT.jar started by oliver in /Users/oliver/IdeaProjects/offer-pilot)
+2026-09-01 09:22:11.873 DEBUG [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Running with Spring Boot v4.1.1, Spring v7.0.9
+2026-09-01 09:22:11.873 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        No active profile set, falling back to 1 default profile: "default"
+2026-09-01 09:22:12.515 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat initialized with port 8080 (http)
+2026-09-01 09:22:12.521 INFO  [main] [no-trace] o.a.catalina.core.StandardService -
+        Starting service [Tomcat]
+2026-09-01 09:22:12.521 INFO  [main] [no-trace] o.a.catalina.core.StandardEngine -
+        Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-09-01 09:22:12.533 INFO  [main] [no-trace] o.s.b.w.c.s.WebApplicationContextInitializer -
+        Root WebApplicationContext: initialization completed in 640 ms
+2026-09-01 09:22:12.560 DEBUG [main] [no-trace] c.e.o.common.config.TraceIdFilter -
+        Filter 'traceIdFilter' configured for use
+2026-09-01 09:22:13.111 INFO  [main] [no-trace] c.e.o.storage.config.MinioConfig -
+        初始化 MinIO 客户端: endpoint=http://14.103.58.208:19000
+2026-09-01 09:22:13.280 INFO  [main] [no-trace] c.e.o.s.s.impl.MinioFileStorage -
+        MinIO bucket 已存在: offer-pilot-files
+2026-09-01 09:22:13.327 INFO  [main] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Starting...
+2026-09-01 09:22:13.581 INFO  [main] [no-trace] com.zaxxer.hikari.pool.HikariPool -
+        HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5139c649
+2026-09-01 09:22:13.582 INFO  [main] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Start completed.
+2026-09-01 09:22:16.245 INFO  [main] [no-trace] liquibase.changelog -
+        Reading from offer_pilot.databasechangelog
+2026-09-01 09:22:19.029 INFO  [main] [no-trace] liquibase.lockservice -
+        Successfully acquired change log lock
+2026-09-01 09:22:19.045 INFO  [main] [no-trace] liquibase.command -
+        Using deploymentId: 8225733319
+2026-09-01 09:22:19.062 INFO  [main] [no-trace] liquibase.changelog -
+        Reading from offer_pilot.databasechangelog
+2026-09-01 09:22:19.094 INFO  [main] [no-trace] liquibase.ui -
+        Running Changeset: db/changelog/001-create-users.sql::raw::includeAll
+2026-09-01 09:22:19.189 INFO  [main] [no-trace] liquibase.changelog -
+        Custom SQL executed
+2026-09-01 09:22:19.206 INFO  [main] [no-trace] liquibase.changelog -
+        ChangeSet db/changelog/001-create-users.sql::raw::includeAll ran successfully in 110ms
+2026-09-01 09:22:19.291 INFO  [main] [no-trace] liquibase.ui -
+        Running Changeset: db/changelog/002-create-resumes.sql::raw::includeAll
+2026-09-01 09:22:19.380 INFO  [main] [no-trace] liquibase.changelog -
+        Custom SQL executed
+2026-09-01 09:22:19.397 INFO  [main] [no-trace] liquibase.changelog -
+        ChangeSet db/changelog/002-create-resumes.sql::raw::includeAll ran successfully in 105ms
+2026-09-01 09:22:19.468 INFO  [main] [no-trace] liquibase.ui -
+        Running Changeset: db/changelog/003-create-target_positions.sql::raw::includeAll
+2026-09-01 09:22:19.568 INFO  [main] [no-trace] liquibase.changelog -
+        Custom SQL executed
+2026-09-01 09:22:19.584 INFO  [main] [no-trace] liquibase.changelog -
+        ChangeSet db/changelog/003-create-target_positions.sql::raw::includeAll ran successfully in 116ms
+2026-09-01 09:22:19.655 INFO  [main] [no-trace] liquibase.ui -
+        Running Changeset: db/changelog/004-create-reports.sql::raw::includeAll
+2026-09-01 09:22:19.748 INFO  [main] [no-trace] liquibase.changelog -
+        Custom SQL executed
+2026-09-01 09:22:19.765 INFO  [main] [no-trace] liquibase.changelog -
+        ChangeSet db/changelog/004-create-reports.sql::raw::includeAll ran successfully in 109ms
+2026-09-01 09:22:19.837 INFO  [main] [no-trace] liquibase.ui -
+        Running Changeset: db/changelog/005-create-interview_sessions.sql::raw::includeAll
+2026-09-01 09:22:19.933 INFO  [main] [no-trace] liquibase.changelog -
+        Custom SQL executed
+2026-09-01 09:22:19.949 INFO  [main] [no-trace] liquibase.changelog -
+        ChangeSet db/changelog/005-create-interview_sessions.sql::raw::includeAll ran successfully in 112ms
+2026-09-01 09:22:20.020 INFO  [main] [no-trace] liquibase.ui -
+        Running Changeset: db/changelog/006-create-interview_questions.sql::raw::includeAll
+2026-09-01 09:22:20.106 INFO  [main] [no-trace] liquibase.changelog -
+        Custom SQL executed
+2026-09-01 09:22:20.123 INFO  [main] [no-trace] liquibase.changelog -
+        ChangeSet db/changelog/006-create-interview_questions.sql::raw::includeAll ran successfully in 102ms
+2026-09-01 09:22:20.190 INFO  [main] [no-trace] liquibase.ui -
+        Running Changeset: db/changelog/007-create-chat_memory.sql::raw::includeAll
+2026-09-01 09:22:20.273 INFO  [main] [no-trace] liquibase.changelog -
+        Custom SQL executed
+2026-09-01 09:22:20.290 INFO  [main] [no-trace] liquibase.changelog -
+        ChangeSet db/changelog/007-create-chat_memory.sql::raw::includeAll ran successfully in 99ms
+2026-09-01 09:22:20.358 INFO  [main] [no-trace] liquibase.ui -
+        Running Changeset: db/changelog/008-create-knowledge_base.sql::raw::includeAll
+2026-09-01 09:22:20.442 INFO  [main] [no-trace] liquibase.changelog -
+        Custom SQL executed
+2026-09-01 09:22:20.458 INFO  [main] [no-trace] liquibase.changelog -
+        ChangeSet db/changelog/008-create-knowledge_base.sql::raw::includeAll ran successfully in 99ms
+2026-09-01 09:22:20.538 INFO  [main] [no-trace] liquibase.util -
+        UPDATE SUMMARY
+2026-09-01 09:22:20.539 INFO  [main] [no-trace] liquibase.util -
+        Run:                          8
+2026-09-01 09:22:20.539 INFO  [main] [no-trace] liquibase.util -
+        Previously run:               0
+2026-09-01 09:22:20.539 INFO  [main] [no-trace] liquibase.util -
+        Filtered out:                 0
+2026-09-01 09:22:20.539 INFO  [main] [no-trace] liquibase.util -
+        -------------------------------
+2026-09-01 09:22:20.539 INFO  [main] [no-trace] liquibase.util -
+        Total change sets:            8
+2026-09-01 09:22:20.540 INFO  [main] [no-trace] liquibase.util -
+        Update summary generated
+2026-09-01 09:22:20.543 INFO  [main] [no-trace] liquibase.command -
+        Update command completed successfully.
+2026-09-01 09:22:20.543 INFO  [main] [no-trace] liquibase.ui -
+        Liquibase: Update has been successful. Rows affected: 0
+2026-09-01 09:22:20.596 INFO  [main] [no-trace] liquibase.lockservice -
+        Successfully released change log lock
+2026-09-01 09:22:20.613 INFO  [main] [no-trace] liquibase.command -
+        Command execution complete
+2026-09-01 09:22:20.769 INFO  [main] [no-trace] c.b.m.s.MybatisPlusApplicationContextAware -
+        Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@6f0628de
+2026-09-01 09:22:20.852 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat started on port 8080 (http) with context path '/'
+2026-09-01 09:22:20.856 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Started OfferPilotApplication in 9.221 seconds (process running for 9.441)
+2026-09-01 09:22:56.046 INFO  [http-nio-8080-exec-1] [no-trace] o.a.c.c.C.[Tomcat].[localhost].[/] -
+        Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-01 09:22:56.046 INFO  [http-nio-8080-exec-1] [no-trace] o.s.web.servlet.DispatcherServlet -
+        Initializing Servlet 'dispatcherServlet'
+2026-09-01 09:22:56.046 INFO  [http-nio-8080-exec-1] [no-trace] o.s.web.servlet.DispatcherServlet -
+        Completed initialization in 0 ms
+2026-09-01 09:22:56.105 INFO  [http-nio-8080-exec-1] [1610c56e42074173] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=1610c56e42074173, POST/api/v1/auth/register AuthController.register(), args=[RegisterRequest(email=lidaoqideyouxiang@163.com, password=admin@123, nickname=admin)]
+2026-09-01 09:22:56.288 INFO  [http-nio-8080-exec-1] [1610c56e42074173] c.e.o.a.service.impl.AuthServiceImpl -
+        用户注册成功: email=lidaoqideyouxiang@163.com, userId=1
+2026-09-01 09:22:56.435 INFO  [http-nio-8080-exec-1] [1610c56e42074173] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=1610c56e42074173, POST/api/v1/auth/register 耗时=330ms
+2026-09-01 09:23:20.957 INFO  [http-nio-8080-exec-3] [6394c1bb2ab2427b] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=6394c1bb2ab2427b, POST/api/v1/auth/login AuthController.login(), args=[LoginRequest(email=lidaoqideyouxiang@163.com, password=admin@123)]
+2026-09-01 09:23:21.110 INFO  [http-nio-8080-exec-3] [6394c1bb2ab2427b] c.e.o.a.service.impl.AuthServiceImpl -
+        用户登录成功: email=lidaoqideyouxiang@163.com, userId=1
+2026-09-01 09:23:21.145 INFO  [http-nio-8080-exec-3] [6394c1bb2ab2427b] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=6394c1bb2ab2427b, POST/api/v1/auth/login 耗时=187ms
+2026-09-01 09:23:21.157 INFO  [http-nio-8080-exec-5] [4e5025412c534f51] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=4e5025412c534f51, POST/api/v1/auth/login AuthController.login(), args=[LoginRequest(email=lidaoqideyouxiang@163.com, password=admin@123)]
+2026-09-01 09:23:21.285 INFO  [http-nio-8080-exec-5] [4e5025412c534f51] c.e.o.a.service.impl.AuthServiceImpl -
+        用户登录成功: email=lidaoqideyouxiang@163.com, userId=1
+2026-09-01 09:23:21.319 INFO  [http-nio-8080-exec-5] [4e5025412c534f51] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=4e5025412c534f51, POST/api/v1/auth/login 耗时=161ms
+2026-09-01 09:23:21.333 WARN  [http-nio-8080-exec-7] [dc45cafe6c344d5b] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 无效：Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyMzMwMDEyODUsInJuU3RyIjoiRXNtUmpCMlM5RzB1M0RhVzZRQURGVXdEM1NKUmVFQkYifQ.9fZqT8BwY_ZQNc8_JRmV4HM0LX7d4qWZNRafNksbJNk
+2026-09-01 09:23:21.356 INFO  [http-nio-8080-exec-9] [61c97005daaa4df1] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=61c97005daaa4df1, GET/api/health HealthController.health(), args=[]
+2026-09-01 09:23:21.356 INFO  [http-nio-8080-exec-9] [61c97005daaa4df1] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=61c97005daaa4df1, GET/api/health 耗时=0ms
+2026-09-01 09:23:49.015 INFO  [http-nio-8080-exec-1] [3c9848e58936496c] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=3c9848e58936496c, POST/api/v1/auth/login AuthController.login(), args=[LoginRequest(email=lidaoqideyouxiang@163.com, password=admin@123)]
+2026-09-01 09:23:49.165 INFO  [http-nio-8080-exec-1] [3c9848e58936496c] c.e.o.a.service.impl.AuthServiceImpl -
+        用户登录成功: email=lidaoqideyouxiang@163.com, userId=1
+2026-09-01 09:23:49.199 INFO  [http-nio-8080-exec-1] [3c9848e58936496c] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=3c9848e58936496c, POST/api/v1/auth/login 耗时=184ms
+2026-09-01 09:23:49.210 WARN  [http-nio-8080-exec-3] [fcc204a3ccf94b2b] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 无效：Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyMzMwMjkxNjUsInJuU3RyIjoid2pHN05pNzhlbXYwZFU2d3oxYW9FZE1ocXZpemk0VmoifQ.bmEzPxkbG00aws55D2bCc49H1aUSGt2Tc49pcpPTYrA
+2026-09-01 09:23:49.237 INFO  [http-nio-8080-exec-5] [472629c746e04682] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=472629c746e04682, POST/api/v1/auth/login AuthController.login(), args=[LoginRequest(email=lidaoqideyouxiang@163.com, password=admin@123)]
+2026-09-01 09:23:49.367 INFO  [http-nio-8080-exec-5] [472629c746e04682] c.e.o.a.service.impl.AuthServiceImpl -
+        用户登录成功: email=lidaoqideyouxiang@163.com, userId=1
+2026-09-01 09:23:49.401 INFO  [http-nio-8080-exec-5] [472629c746e04682] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=472629c746e04682, POST/api/v1/auth/login 耗时=164ms
+2026-09-01 09:23:49.413 INFO  [http-nio-8080-exec-7] [9bdf64f2f7b34c87] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=9bdf64f2f7b34c87, POST/api/v1/auth/refresh AuthController.refresh(), args=[RefreshRequest(refreshToken=85da72b51e424968a24d4407ef8fc9b6)]
+2026-09-01 09:23:49.431 INFO  [http-nio-8080-exec-7] [9bdf64f2f7b34c87] c.e.o.a.service.impl.AuthServiceImpl -
+        令牌刷新成功: userId=1
+2026-09-01 09:23:49.432 INFO  [http-nio-8080-exec-7] [9bdf64f2f7b34c87] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=9bdf64f2f7b34c87, POST/api/v1/auth/refresh 耗时=19ms
+2026-09-01 09:24:19.900 INFO  [http-nio-8080-exec-9] [614e26f9de154efd] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=614e26f9de154efd, POST/api/v1/auth/login AuthController.login(), args=[LoginRequest(email=lidaoqideyouxiang@163.com, password=admin@123)]
+2026-09-01 09:24:20.058 INFO  [http-nio-8080-exec-9] [614e26f9de154efd] c.e.o.a.service.impl.AuthServiceImpl -
+        用户登录成功: email=lidaoqideyouxiang@163.com, userId=1
+2026-09-01 09:24:20.091 INFO  [http-nio-8080-exec-9] [614e26f9de154efd] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=614e26f9de154efd, POST/api/v1/auth/login 耗时=191ms
+2026-09-01 09:24:20.103 INFO  [http-nio-8080-exec-1] [28f20afe129344fa] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=28f20afe129344fa, GET/api/v1/auth/me AuthController.getCurrentUser(), args=[]
+2026-09-01 09:24:20.123 INFO  [http-nio-8080-exec-1] [28f20afe129344fa] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=28f20afe129344fa, GET/api/v1/auth/me 耗时=20ms
+2026-09-01 09:25:00.286 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Starting OfferPilotApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 8737 (/Users/oliver/IdeaProjects/offer-pilot/target/offer-pilot-0.0.1-SNAPSHOT.jar started by oliver in /Users/oliver/IdeaProjects/offer-pilot)
+2026-09-01 09:25:00.287 DEBUG [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Running with Spring Boot v4.1.1, Spring v7.0.9
+2026-09-01 09:25:00.288 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        No active profile set, falling back to 1 default profile: "default"
+2026-09-01 09:25:00.918 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat initialized with port 8080 (http)
+2026-09-01 09:25:00.925 INFO  [main] [no-trace] o.a.catalina.core.StandardService -
+        Starting service [Tomcat]
+2026-09-01 09:25:00.925 INFO  [main] [no-trace] o.a.catalina.core.StandardEngine -
+        Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-09-01 09:25:00.937 INFO  [main] [no-trace] o.s.b.w.c.s.WebApplicationContextInitializer -
+        Root WebApplicationContext: initialization completed in 629 ms
+2026-09-01 09:25:00.961 DEBUG [main] [no-trace] c.e.o.common.config.TraceIdFilter -
+        Filter 'traceIdFilter' configured for use
+2026-09-01 09:25:01.494 INFO  [main] [no-trace] c.e.o.storage.config.MinioConfig -
+        初始化 MinIO 客户端: endpoint=http://14.103.58.208:19000
+2026-09-01 09:25:01.656 INFO  [main] [no-trace] c.e.o.s.s.impl.MinioFileStorage -
+        MinIO bucket 已存在: offer-pilot-files
+2026-09-01 09:25:01.705 INFO  [main] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Starting...
+2026-09-01 09:25:01.949 INFO  [main] [no-trace] com.zaxxer.hikari.pool.HikariPool -
+        HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5139c649
+2026-09-01 09:25:01.949 INFO  [main] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Start completed.
+2026-09-01 09:25:04.230 INFO  [main] [no-trace] liquibase.changelog -
+        Reading from offer_pilot.databasechangelog
+2026-09-01 09:25:06.827 INFO  [main] [no-trace] liquibase.ui -
+        Database is up to date, no changesets to execute
+2026-09-01 09:25:06.845 INFO  [main] [no-trace] liquibase.changelog -
+        Reading from offer_pilot.databasechangelog
+2026-09-01 09:25:06.866 INFO  [main] [no-trace] liquibase.util -
+        UPDATE SUMMARY
+2026-09-01 09:25:06.867 INFO  [main] [no-trace] liquibase.util -
+        Run:                          0
+2026-09-01 09:25:06.867 INFO  [main] [no-trace] liquibase.util -
+        Previously run:               8
+2026-09-01 09:25:06.867 INFO  [main] [no-trace] liquibase.util -
+        Filtered out:                 0
+2026-09-01 09:25:06.867 INFO  [main] [no-trace] liquibase.util -
+        -------------------------------
+2026-09-01 09:25:06.867 INFO  [main] [no-trace] liquibase.util -
+        Total change sets:            8
+2026-09-01 09:25:06.867 INFO  [main] [no-trace] liquibase.util -
+        Update summary generated
+2026-09-01 09:25:06.868 INFO  [main] [no-trace] liquibase.command -
+        Command execution complete
+2026-09-01 09:25:07.036 INFO  [main] [no-trace] c.b.m.s.MybatisPlusApplicationContextAware -
+        Register ApplicationContext instances org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext@1e392345
+2026-09-01 09:25:07.123 INFO  [main] [no-trace] o.s.boot.tomcat.TomcatWebServer -
+        Tomcat started on port 8080 (http) with context path '/'
+2026-09-01 09:25:07.129 INFO  [main] [no-trace] c.e.offerpilot.OfferPilotApplication -
+        Started OfferPilotApplication in 7.074 seconds (process running for 7.299)

@@ -1,4 +1,3 @@
---changeset init:004
 CREATE TABLE reports
 (
     id                  BIGINT AUTO_INCREMENT PRIMARY KEY,

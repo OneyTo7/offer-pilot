@@ -1,4 +1,3 @@
---changeset init:002
 CREATE TABLE resumes
 (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

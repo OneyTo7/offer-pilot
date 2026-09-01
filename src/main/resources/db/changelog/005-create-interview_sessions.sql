@@ -1,4 +1,3 @@
---changeset init:005
 CREATE TABLE interview_sessions
 (
     id               BIGINT AUTO_INCREMENT PRIMARY KEY,

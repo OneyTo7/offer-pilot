@@ -1,4 +1,3 @@
---changeset init:007
 CREATE TABLE chat_memory
 (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

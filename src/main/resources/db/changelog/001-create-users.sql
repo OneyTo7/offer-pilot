@@ -1,4 +1,3 @@
---changeset init:001
 CREATE TABLE users
 (
     id            BIGINT AUTO_INCREMENT PRIMARY KEY,

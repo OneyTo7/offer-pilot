@@ -1,4 +1,3 @@
--- liquibase formatted sql
 
 -- changeset offerpilot:008-knowledge_base
 -- comment: 创建知识库文档表，每个文档对应一次上传（文本或文件），内容分片后索引到 pgvector
