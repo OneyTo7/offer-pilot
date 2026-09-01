@@ -15,9 +15,6 @@ public class PositionVO {
 
     private Long id;
 
-    @JsonProperty("resume_id")
-    private Long resumeId;
-
     private String title;
 
     private String company;

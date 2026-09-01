@@ -3,6 +3,7 @@ package com.eyki.offerpilot.resume.domain;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.eyki.offerpilot.common.config.PgJsonbTypeHandler;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -37,27 +38,27 @@ public class Resume {
     private String parsedText;
 
     /** 基本信息 JSON */
-    @TableField("basic_info")
+    @TableField(value = "basic_info", typeHandler = PgJsonbTypeHandler.class)
     private String basicInfo;
 
     /** 教育经历 JSON */
-    @TableField("education")
+    @TableField(value = "education", typeHandler = PgJsonbTypeHandler.class)
     private String education;
 
     /** 工作经历 JSON */
-    @TableField("work_experience")
+    @TableField(value = "work_experience", typeHandler = PgJsonbTypeHandler.class)
     private String workExperience;
 
     /** 项目经历 JSON */
-    @TableField("projects")
+    @TableField(value = "projects", typeHandler = PgJsonbTypeHandler.class)
     private String projects;
 
     /** 技能标签 JSON */
-    @TableField("skills")
+    @TableField(value = "skills", typeHandler = PgJsonbTypeHandler.class)
     private String skills;
 
     /** 证书/语言 JSON */
-    @TableField("certificates")
+    @TableField(value = "certificates", typeHandler = PgJsonbTypeHandler.class)
     private String certificates;
 
     /** 简历摘要 */

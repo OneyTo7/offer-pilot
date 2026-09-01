@@ -1,6 +1,6 @@
 package com.eyki.offerpilot.interview.service.impl;
 
-import com.eyki.offerpilot.aicore.memory.MysqlChatMemory;
+import com.eyki.offerpilot.aicore.memory.PgChatMemory;
 import com.eyki.offerpilot.aicore.prompt.InterviewPrompt;
 import com.eyki.offerpilot.aicore.prompt.QuestionFeedbackPrompt;
 import com.eyki.offerpilot.aicore.rag.RagService;
@@ -68,7 +68,7 @@ public class InterviewServiceImpl implements InterviewService {
     private final AiService aiService;
     private final RagService ragService;
     private final RateLimitService rateLimitService;
-    private final MysqlChatMemory chatMemoryStore;
+    private final PgChatMemory chatMemoryStore;
     private final ObjectMapper objectMapper;
     private final TransactionTemplate transactionTemplate;
     private final ResumeRepository resumeRepository;
@@ -204,7 +204,7 @@ public class InterviewServiceImpl implements InterviewService {
         if (userApiKey == null || userApiKey.isBlank()) {
             context = Map.of(
                 "vector_store_filter_expression", ragService.buildUserFilter(userId),
-                "conversation_id", ctx.session.getId().toString());
+                "chat_memory_conversation_id", ctx.session.getId().toString());
             finalUserPrompt = userPrompt;
         } else {
             context = null;
@@ -504,7 +504,9 @@ public class InterviewServiceImpl implements InterviewService {
             Map<String, Object> context;
             String promptToSend;
             if (userApiKey == null || userApiKey.isBlank()) {
-                context = Map.of("vector_store_filter_expression", ragService.buildUserFilter(session.getUserId()));
+                context = Map.of(
+                    "chat_memory_conversation_id", "interview-q-" + session.getId(),
+                    "vector_store_filter_expression", ragService.buildUserFilter(session.getUserId()));
                 promptToSend = fullPrompt;
             } else {
                 context = null;

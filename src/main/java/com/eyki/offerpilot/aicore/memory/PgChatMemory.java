@@ -20,13 +20,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
- * MySQL-backed ChatMemory（对话记忆 + 持久化 + 窗口管理）。
+ * PostgreSQL-backed ChatMemory（对话记忆 + 持久化 + 窗口管理）。
  *
  * 并发安全：按 conversationId 粒度加锁，同一会话的 add/clear 串行化。 事务：delete + insert 在同一个事务内执行，保证原子性。
  */
 @Slf4j
 @Component
-public class MysqlChatMemory implements ChatMemory {
+public class PgChatMemory implements ChatMemory {
 
     private static final int MAX_MESSAGES = 10;
 
@@ -39,7 +39,7 @@ public class MysqlChatMemory implements ChatMemory {
     /** 按 conversationId 粒度的锁池，同一会话的 add/clear 互斥 */
     private final Map<String, Object> locks = new ConcurrentHashMap<>();
 
-    public MysqlChatMemory(ChatMemoryRecordRepository repository, TransactionTemplate transactionTemplate) {
+    public PgChatMemory(ChatMemoryRecordRepository repository, TransactionTemplate transactionTemplate) {
         this.repository = repository;
         this.transactionTemplate = transactionTemplate;
     }

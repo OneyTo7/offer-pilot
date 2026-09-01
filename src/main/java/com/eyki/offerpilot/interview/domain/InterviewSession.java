@@ -3,6 +3,8 @@ package com.eyki.offerpilot.interview.domain;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
+import com.eyki.offerpilot.common.config.PgJsonbTypeHandler;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -31,6 +33,7 @@ public class InterviewSession {
     @TableField("total_questions")
     private Integer totalQuestions;
 
+    @TableField(value = "score", typeHandler = PgJsonbTypeHandler.class)
     private String score;
 
     private String summary;
@@ -54,4 +57,8 @@ public class InterviewSession {
 
     @TableField("updated_at")
     private LocalDateTime updatedAt;
+
+    @Version
+    @TableField("version")
+    private Integer version;
 }

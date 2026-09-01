@@ -34,19 +34,22 @@ spring:
         dimension: 512
         initialize-schema: true
 
-    # Local embedding model (ONNX + BGE) for pgvector, no API key needed
+    # Local embedding model (ONNX + BGE) for pgvector, no API key needed.
+    # 模型从国内镜像 hf-mirror.com 下载（huggingface.co 国内不可达/过慢）。
+    # 注意：BGE 的 ONNX 导出在 Xenova 仓库，BAAI 官方仓库没有 onnx 目录。
+    # 可用 ONNX_MODEL_URI 环境变量替换（如量化的 model_quantized.onnx，约 23MB 更快）。
     embedding:
       transformer:
         onnx:
-          model-uri: ${ONNX_MODEL_URI:https://huggingface.co/BAAI/bge-small-zh-v1.5/resolve/main/onnx/model.onnx}
+          model-uri: ${ONNX_MODEL_URI:https://hf-mirror.com/Xenova/bge-small-zh-v1.5/resolve/main/onnx/model.onnx}
         tokenizer:
-          uri: ${ONNX_TOKENIZER_URI:https://huggingface.co/BAAI/bge-small-zh-v1.5/resolve/main/tokenizer.json}
+          uri: ${ONNX_TOKENIZER_URI:https://hf-mirror.com/Xenova/bge-small-zh-v1.5/resolve/main/tokenizer.json}
 
     # Cross-encoder re-ranker (BGE-reranker ONNX) for post-retrieval re-ranking
     rag:
       reranker:
-        model-uri: ${RERANKER_MODEL_URI:https://huggingface.co/Xenova/bge-reranker-base/resolve/main/onnx/model_quantized.onnx}
-        tokenizer-uri: ${RERANKER_TOKENIZER_URI:https://huggingface.co/Xenova/bge-reranker-base/resolve/main/tokenizer.json}
+        model-uri: ${RERANKER_MODEL_URI:https://hf-mirror.com/Xenova/bge-reranker-base/resolve/main/onnx/model_quantized.onnx}
+        tokenizer-uri: ${RERANKER_TOKENIZER_URI:https://hf-mirror.com/Xenova/bge-reranker-base/resolve/main/tokenizer.json}
         top-k: 5
 
 # MyBatis-Plus

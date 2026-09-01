@@ -18,8 +18,14 @@ public class ReportVO {
     @JsonProperty("resume_id")
     private Long resumeId;
 
+    @JsonProperty("resume_name")
+    private String resumeName;
+
     @JsonProperty("position_id")
     private Long positionId;
+
+    @JsonProperty("position_title")
+    private String positionTitle;
 
     private ReportContent content;
 

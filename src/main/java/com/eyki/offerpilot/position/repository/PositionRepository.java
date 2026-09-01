@@ -13,9 +13,4 @@ public interface PositionRepository extends BaseMapper<TargetPosition> {
         return selectList(new LambdaQueryWrapper<TargetPosition>().eq(TargetPosition::getUserId, userId)
             .orderByDesc(TargetPosition::getCreatedAt));
     }
-
-    default List<TargetPosition> findByResumeId(Long resumeId) {
-        return selectList(new LambdaQueryWrapper<TargetPosition>().eq(TargetPosition::getResumeId, resumeId)
-            .orderByDesc(TargetPosition::getCreatedAt));
-    }
 }

@@ -3,7 +3,7 @@ package com.eyki.offerpilot.aicore.config;
 import com.eyki.offerpilot.aicore.advisor.MyLogAdvisor;
 import com.eyki.offerpilot.aicore.advisor.ReReadingAdvisor;
 import com.eyki.offerpilot.aicore.advisor.SafeValidAdvisor;
-import com.eyki.offerpilot.aicore.memory.MysqlChatMemory;
+import com.eyki.offerpilot.aicore.memory.PgChatMemory;
 import com.eyki.offerpilot.aicore.rag.BgeCrossEncoderReRanker;
 import com.eyki.offerpilot.aicore.rag.config.ReRankerProperties;
 import java.util.ArrayList;
@@ -70,11 +70,11 @@ public class AiCoreConfig {
     }
 
     /**
-     * MessageChatMemoryAdvisor uses MysqlChatMemory to persist and inject conversation history.
+     * MessageChatMemoryAdvisor uses PgChatMemory to persist and inject conversation history.
      * The conversationId is passed via advisor context param {@code "conversation_id"}.
      */
     @Bean
-    public MessageChatMemoryAdvisor messageChatMemoryAdvisor(MysqlChatMemory chatMemory) {
+    public MessageChatMemoryAdvisor messageChatMemoryAdvisor(PgChatMemory chatMemory) {
         return MessageChatMemoryAdvisor.builder(chatMemory).order(2).build();
     }
 

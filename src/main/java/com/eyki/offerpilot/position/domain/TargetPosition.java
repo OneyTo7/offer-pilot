@@ -16,9 +16,6 @@ public class TargetPosition {
     @TableField("user_id")
     private Long userId;
 
-    @TableField("resume_id")
-    private Long resumeId;
-
     private String title;
 
     private String company;

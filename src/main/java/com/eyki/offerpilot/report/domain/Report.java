@@ -3,6 +3,7 @@ package com.eyki.offerpilot.report.domain;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.eyki.offerpilot.common.config.PgJsonbTypeHandler;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -26,11 +27,13 @@ public class Report {
     @TableField("match_score")
     private BigDecimal matchScore;
 
-    @TableField("tech_stack_analysis")
+    @TableField(value = "tech_stack_analysis", typeHandler = PgJsonbTypeHandler.class)
     private String techStackAnalysis;
 
+    @TableField(value = "highlights", typeHandler = PgJsonbTypeHandler.class)
     private String highlights;
 
+    @TableField(value = "weaknesses", typeHandler = PgJsonbTypeHandler.class)
     private String weaknesses;
 
     @TableField("full_report")

@@ -22,8 +22,11 @@ import com.eyki.offerpilot.resume.repository.ResumeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -107,7 +110,7 @@ public class ReportServiceImpl implements ReportService {
         });
 
         log.info("报告创建成功: reportId={}, userId={}, hasOwnApiKey={}", report.getId(), userId, hasOwnApiKey);
-        return toReportVO(report);
+        return toReportVO(report, resume.getName(), position.getTitle());
     }
 
     @Override
@@ -117,13 +120,45 @@ public class ReportServiceImpl implements ReportService {
         if (report == null || !report.getUserId().equals(userId)) {
             throw BusinessException.reportNotFound();
         }
-        return toReportVO(report);
+        String resumeName = resolveResumeName(report.getResumeId());
+        String positionTitle = resolvePositionTitle(report.getPositionId());
+        return toReportVO(report, resumeName, positionTitle);
     }
 
     @Override
     public List<ReportVO> listMyReports() {
         Long userId = authService.getCurrentUserEntity().getId();
-        return reportRepository.findByUserId(userId).stream().map(this::toReportVO).collect(Collectors.toList());
+        List<Report> reports = reportRepository.findByUserId(userId);
+        if (reports.isEmpty()) {
+            return List.of();
+        }
+
+        // Batch-load resume names and position titles to avoid N+1
+        Set<Long> resumeIds = reports.stream().map(Report::getResumeId).filter(Objects::nonNull).collect(Collectors.toSet());
+        Set<Long> positionIds = reports.stream().map(Report::getPositionId).filter(Objects::nonNull).collect(Collectors.toSet());
+
+        Map<Long, String> resumeNameMap = Collections.emptyMap();
+        if (!resumeIds.isEmpty()) {
+            resumeNameMap = resumeRepository.selectBatchIds(resumeIds).stream()
+                .filter(r -> r.getName() != null)
+                .collect(Collectors.toMap(Resume::getId, Resume::getName));
+        }
+
+        Map<Long, String> positionTitleMap = Collections.emptyMap();
+        if (!positionIds.isEmpty()) {
+            positionTitleMap = positionRepository.selectBatchIds(positionIds).stream()
+                .filter(p -> p.getTitle() != null)
+                .collect(Collectors.toMap(TargetPosition::getId, TargetPosition::getTitle));
+        }
+
+        final Map<Long, String> finalResumeNameMap = resumeNameMap;
+        final Map<Long, String> finalPositionTitleMap = positionTitleMap;
+
+        return reports.stream()
+            .map(r -> toReportVO(r,
+                finalResumeNameMap.getOrDefault(r.getResumeId(), "未知"),
+                finalPositionTitleMap.getOrDefault(r.getPositionId(), "未知")))
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -168,7 +203,10 @@ public class ReportServiceImpl implements ReportService {
         Map<String, Object> context = null;
         String promptToSend = userPrompt;
         if (userApiKey == null || userApiKey.isBlank()) {
-            context = Map.of("vector_store_filter_expression", ragService.buildUserFilter(report.getUserId()));
+            context = Map.of(
+                "chat_memory_conversation_id", "report-" + report.getId(),
+                "vector_store_filter_expression", ragService.buildUserFilter(report.getUserId())
+            );
         } else {
             try {
                 String searchQuery = positionTitle + " " + techStack + " 技能要求 行业标准";
@@ -220,9 +258,10 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
-    private ReportVO toReportVO(Report report) {
+    private ReportVO toReportVO(Report report, String resumeName, String positionTitle) {
         ReportVO.ReportVOBuilder builder =
-            ReportVO.builder().id(report.getId()).resumeId(report.getResumeId()).positionId(report.getPositionId())
+            ReportVO.builder().id(report.getId()).resumeId(report.getResumeId()).resumeName(resumeName)
+                .positionId(report.getPositionId()).positionTitle(positionTitle)
                 .status(report.getStatus()).errorMessage(report.getErrorMessage()).createdAt(report.getCreatedAt())
                 .updatedAt(report.getUpdatedAt());
 
@@ -249,5 +288,17 @@ public class ReportServiceImpl implements ReportService {
         }
 
         return builder.build();
+    }
+
+    private String resolveResumeName(Long resumeId) {
+        if (resumeId == null) return "未知";
+        Resume resume = resumeRepository.selectById(resumeId);
+        return resume != null && resume.getName() != null ? resume.getName() : "未知";
+    }
+
+    private String resolvePositionTitle(Long positionId) {
+        if (positionId == null) return "未知";
+        TargetPosition position = positionRepository.selectById(positionId);
+        return position != null && position.getTitle() != null ? position.getTitle() : "未知";
     }
 }

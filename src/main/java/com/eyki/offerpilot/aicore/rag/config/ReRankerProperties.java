@@ -6,19 +6,20 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * Configuration for the BGE cross-encoder re-ranker.
  *
  * <p>Bound from {@code spring.ai.rag.reranker.*}; model URIs default to the
- * Xenova/bge-reranker-base ONNX export on HuggingFace and can be overridden
- * via environment variables (e.g. {@code RERANKER_MODEL_URI}) for self-hosted mirrors.</p>
+ * Xenova/bge-reranker-base ONNX export on the hf-mirror.com mirror and can be
+ * overridden via environment variables (e.g. {@code RERANKER_MODEL_URI}) for
+ * self-hosted mirrors.</p>
  */
 @ConfigurationProperties(prefix = "spring.ai.rag.reranker")
 public class ReRankerProperties {
 
     /** Cross-encoder model (ONNX, Xenova export of bge-reranker-base). */
     private String modelUri =
-        "https://huggingface.co/Xenova/bge-reranker-base/resolve/main/onnx/model_quantized.onnx";
+        "https://hf-mirror.com/Xenova/bge-reranker-base/resolve/main/onnx/model_quantized.onnx";
 
     /** Tokenizer for the cross-encoder model. */
     private String tokenizerUri =
-        "https://huggingface.co/Xenova/bge-reranker-base/resolve/main/tokenizer.json";
+        "https://hf-mirror.com/Xenova/bge-reranker-base/resolve/main/tokenizer.json";
 
     /** Local cache directory for the downloaded model files. */
     private String cacheDirectory = System.getProperty("user.home") + "/.cache/offer-pilot/reranker";

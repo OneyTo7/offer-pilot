@@ -7,8 +7,6 @@ import com.eyki.offerpilot.position.dto.PositionRequest;
 import com.eyki.offerpilot.position.dto.PositionVO;
 import com.eyki.offerpilot.position.repository.PositionRepository;
 import com.eyki.offerpilot.position.service.PositionService;
-import com.eyki.offerpilot.resume.domain.Resume;
-import com.eyki.offerpilot.resume.repository.ResumeRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Target position service implementation. Provides CRUD operations for job target positions,
- * with user-level data isolation and optional resume association.
+ * with user-level data isolation.
  */
 @Slf4j
 @Service
@@ -27,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PositionServiceImpl implements PositionService {
 
     private final PositionRepository positionRepository;
-    private final ResumeRepository resumeRepository;
     private final AuthService authService;
 
     @Override
@@ -35,17 +32,8 @@ public class PositionServiceImpl implements PositionService {
     public PositionVO create(PositionRequest request) {
         Long userId = authService.getCurrentUserEntity().getId();
 
-        // Verify resume belongs to user (optional)
-        if (request.getResumeId() != null) {
-            Resume resume = resumeRepository.selectById(request.getResumeId());
-            if (resume == null || !resume.getUserId().equals(userId)) {
-                throw BusinessException.resumeNotFound();
-            }
-        }
-
         TargetPosition position = new TargetPosition();
         position.setUserId(userId);
-        position.setResumeId(request.getResumeId());
         position.setTitle(request.getTitle());
         position.setCompany(request.getCompany());
         position.setJdText(request.getJdText());
@@ -78,15 +66,6 @@ public class PositionServiceImpl implements PositionService {
             throw BusinessException.positionNotFound();
         }
 
-        // Verify resume belongs to user (optional)
-        if (request.getResumeId() != null) {
-            Resume resume = resumeRepository.selectById(request.getResumeId());
-            if (resume == null || !resume.getUserId().equals(userId)) {
-                throw BusinessException.resumeNotFound();
-            }
-        }
-
-        position.setResumeId(request.getResumeId());
         position.setTitle(request.getTitle());
         position.setCompany(request.getCompany());
         position.setJdText(request.getJdText());
@@ -141,7 +120,7 @@ public class PositionServiceImpl implements PositionService {
     }
 
     private PositionVO toPositionVO(TargetPosition position) {
-        return PositionVO.builder().id(position.getId()).resumeId(position.getResumeId()).title(position.getTitle())
+        return PositionVO.builder().id(position.getId()).title(position.getTitle())
             .company(position.getCompany()).jdText(position.getJdText()).location(position.getLocation())
             .salaryRange(position.getSalaryRange()).isDefault(position.getIsDefault())
             .createdAt(position.getCreatedAt()).updatedAt(position.getUpdatedAt()).build();

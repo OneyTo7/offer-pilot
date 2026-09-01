@@ -1,156 +1,42 @@
-# OfferPilot（面壁）— Local Development Infrastructure
-# Start with: docker compose up -d
-# Stop with:   docker compose down
-#
-# Default credentials (overridable via .env):
-#   MySQL:      root / rootpass
-#   PostgreSQL: postgres / pgpass
-#   MinIO:      minioadmin / minioadmin
-#
-# Port mapping (host:container):
-#   MySQL      3306 → 3306
-#   PostgreSQL 5433 → 5432   (host 5433 matches dev config)
-#   MinIO API  19000 → 9000  (host 19000 matches dev config)
-#   MinIO UI   19001 → 9001
-#   Redis      6379 → 6379
+version: "3.8"
 
 services:
-  # ========== MySQL 8 — Primary business database ==========
-  mysql:
-    image: mysql:8.0
-    container_name: offer-mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
-      MYSQL_DATABASE: offer_pilot
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - offer-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
-  # ========== PostgreSQL 16 + pgvector — Vector database ==========
+  # PostgreSQL + pgvector
   postgres:
     image: pgvector/pgvector:pg16
-    container_name: offer-pgvector
-    environment:
-      POSTGRES_DB: offer_pilot_vector
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pgpass}
-    ports:
-      - "5433:5432"   # host:5433 → container:5432
-    volumes:
-      - pgvector-data:/var/lib/postgresql/data
-    networks:
-      - offer-network
+    container_name: offer-pilot-pg
     restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
-  # ========== MinIO — Object storage for resumes and files ==========
+  # MinIO 对象存储
   minio:
     image: minio/minio:latest
-    container_name: offer-minio
-    command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
-    ports:
-      - "19000:9000"  # host:19000 → container:9000 (API)
-      - "19001:9001"  # host:19001 → container:9001 (Console)
-    volumes:
-      - minio-data:/data
-    networks:
-      - offer-network
+    container_name: offer-pilot-minio
     restart: unless-stopped
+    command: server /data --console-address ":19001"
+    env_file:
+      - .env
+    ports:
+      - "19000:9000"
+      - "19001:19001"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
-
-  # ========== Redis 7 — Session cache & rate limiting (optional) ==========
-  redis:
-    image: redis:7-alpine
-    container_name: offer-redis
-    ports:
-      - "6379:6379"
     volumes:
-      - redis-data:/data
-    networks:
-      - offer-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # ========== Backend — Spring Boot 4 ==========
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: offer-backend
-    environment:
-      # Active profile
-      SPRING_PROFILES_ACTIVE: prod
-      # Database
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pgpass}
-      # AI
-      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:?DEEPSEEK_API_KEY is required}
-      BAILIAN_API_KEY: ${BAILIAN_API_KEY:-}
-      # File storage
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
-      # Auth
-      SA_TOKEN_JWT_SECRET: ${SA_TOKEN_JWT_SECRET:-change-me-in-production}
-    ports:
-      - "8080:8080"
-    networks:
-      - offer-network
-    depends_on:
-      mysql:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
-      minio:
-        condition: service_healthy
-    restart: unless-stopped
-
-  # ========== Frontend — Vue 3 + Vite (optional, separate repo) ==========
-  # frontend:
-  #   build:
-  #     context: ../offer-pilot-ui
-  #     dockerfile: Dockerfile
-  #   container_name: offer-frontend
-  #   ports:
-  #     - "80:80"
-  #   networks:
-  #     - offer-network
-  #   depends_on:
-  #     - backend
-  #   restart: unless-stopped
+      - minio_data:/data
 
 volumes:
-  mysql-data:
-  pgvector-data:
-  minio-data:
-  redis-data:
-
-networks:
-  offer-network:
-    driver: bridge
+  pgdata:
+  minio_data:

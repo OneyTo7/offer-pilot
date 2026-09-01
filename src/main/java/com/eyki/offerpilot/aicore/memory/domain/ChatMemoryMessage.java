@@ -3,6 +3,7 @@ package com.eyki.offerpilot.aicore.memory.domain;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.eyki.offerpilot.common.config.PgJsonbTypeHandler;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -24,7 +25,7 @@ public class ChatMemoryMessage {
 
     private String content;
 
-    @TableField("metadata")
+    @TableField(value = "metadata", typeHandler = PgJsonbTypeHandler.class)
     private String metadata;
 
     @TableField("created_at")

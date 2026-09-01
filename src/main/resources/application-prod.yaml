@@ -2,16 +2,10 @@
 # 数据源通过 Docker Compose 内部网络连接，无需 INFRA_HOST
 spring:
   datasource:
-    url: jdbc:mysql://mysql:3306/offer_pilot?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: ${MYSQL_ROOT_PASSWORD:rootpass}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-    vector:
-      url: jdbc:postgresql://postgres:5432/offer_pilot_vector
-      username: postgres
-      password: ${POSTGRES_PASSWORD:pgpass}
-      driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres:5432/offer_pilot
+    username: postgres
+    password: ${POSTGRES_PASSWORD:pgpass}
+    driver-class-name: org.postgresql.Driver
 
   ai:
     deepseek:

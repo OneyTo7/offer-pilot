@@ -8,10 +8,6 @@ import lombok.Data;
 @Data
 public class PositionRequest {
 
-    /** 关联简历 ID（可选，创建时可不绑定） */
-    @JsonProperty("resume_id")
-    private Long resumeId;
-
     @NotBlank(message = "职位名称不能为空")
     @Size(max = 200, message = "职位名称长度不能超过200个字符")
     private String title;
