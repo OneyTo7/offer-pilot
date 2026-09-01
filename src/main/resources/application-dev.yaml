@@ -16,7 +16,7 @@ spring:
 
   ai:
     deepseek:
-      api-key: ${DEEPSEEK_API_KEY:sk-REPLACED}
+      api-key: ${DEEPSEEK_API_KEY}
 
 minio:
   endpoint: http://${INFRA_HOST:localhost}:19000
