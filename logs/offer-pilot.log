@@ -6682,3 +6682,153 @@ cn.dev33.satoken.exception.SaTokenContextException: SaTokenContext 上下文尚�
         HikariPool-1 - Shutdown initiated...
 2026-09-01 12:57:14.264 INFO  [SpringApplicationShutdownHook] [no-trace] com.zaxxer.hikari.HikariDataSource -
         HikariPool-1 - Shutdown completed.
+2026-09-01 13:06:52.188 INFO  [http-nio-8080-exec-5] [dd6d64b4b3b84056] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=dd6d64b4b3b84056, GET/api/v1/interviews/7 InterviewController.getSession(), args=[7]
+2026-09-01 13:06:52.188 INFO  [http-nio-8080-exec-3] [c7d5ce5598da467f] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=c7d5ce5598da467f, GET/api/v1/interviews/7 InterviewController.getSession(), args=[7]
+2026-09-01 13:06:52.188 INFO  [http-nio-8080-exec-7] [d82fcfbbba4f408f] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=d82fcfbbba4f408f, GET/api/v1/auth/me AuthController.getCurrentUser(), args=[]
+2026-09-01 13:06:52.226 INFO  [http-nio-8080-exec-7] [d82fcfbbba4f408f] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=d82fcfbbba4f408f, GET/api/v1/auth/me 耗时=38ms
+2026-09-01 13:06:52.241 INFO  [http-nio-8080-exec-5] [dd6d64b4b3b84056] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=dd6d64b4b3b84056, GET/api/v1/interviews/7 耗时=53ms
+2026-09-01 13:06:52.250 INFO  [http-nio-8080-exec-2] [810ab7da43e34b07] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=810ab7da43e34b07, GET/api/v1/interviews/7/current-question InterviewController.getCurrentQuestion(), args=[7]
+2026-09-01 13:06:52.250 INFO  [http-nio-8080-exec-3] [c7d5ce5598da467f] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=c7d5ce5598da467f, GET/api/v1/interviews/7 耗时=62ms
+2026-09-01 13:06:52.254 INFO  [http-nio-8080-exec-9] [e309ac8aa7e9495f] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=e309ac8aa7e9495f, GET/api/v1/interviews/7/current-question InterviewController.getCurrentQuestion(), args=[7]
+2026-09-01 13:06:52.308 INFO  [http-nio-8080-exec-9] [e309ac8aa7e9495f] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=e309ac8aa7e9495f, GET/api/v1/interviews/7/current-question 耗时=53ms
+2026-09-01 13:06:52.308 INFO  [http-nio-8080-exec-2] [810ab7da43e34b07] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=810ab7da43e34b07, GET/api/v1/interviews/7/current-question 耗时=58ms
+2026-09-01 13:06:52.315 INFO  [http-nio-8080-exec-4] [52dabbb59e614e1f] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=52dabbb59e614e1f, GET/api/v1/interviews/7/summary InterviewController.getSummary(), args=[7]
+2026-09-01 13:06:52.315 INFO  [http-nio-8080-exec-6] [75ce79a36a2c4484] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=75ce79a36a2c4484, GET/api/v1/interviews/7/summary InterviewController.getSummary(), args=[7]
+2026-09-01 13:06:52.369 INFO  [http-nio-8080-exec-6] [75ce79a36a2c4484] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=75ce79a36a2c4484, GET/api/v1/interviews/7/summary 耗时=54ms
+2026-09-01 13:06:52.372 INFO  [http-nio-8080-exec-4] [52dabbb59e614e1f] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=52dabbb59e614e1f, GET/api/v1/interviews/7/summary 耗时=57ms
+2026-09-01 13:08:16.955 INFO  [http-nio-8080-exec-1] [fa4fbb211bf440ed] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=fa4fbb211bf440ed, GET/api/v1/interviews/7 InterviewController.getSession(), args=[7]
+2026-09-01 13:08:17.012 INFO  [http-nio-8080-exec-1] [fa4fbb211bf440ed] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=fa4fbb211bf440ed, GET/api/v1/interviews/7 耗时=57ms
+2026-09-01 13:08:17.019 INFO  [http-nio-8080-exec-8] [6d7853fdc5fd439e] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=6d7853fdc5fd439e, GET/api/v1/interviews/7/current-question InterviewController.getCurrentQuestion(), args=[7]
+2026-09-01 13:08:17.096 INFO  [http-nio-8080-exec-8] [6d7853fdc5fd439e] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=6d7853fdc5fd439e, GET/api/v1/interviews/7/current-question 耗时=76ms
+2026-09-01 13:08:17.105 INFO  [http-nio-8080-exec-10] [6cb8a6f93a394b57] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=6cb8a6f93a394b57, GET/api/v1/interviews/7/summary InterviewController.getSummary(), args=[7]
+2026-09-01 13:08:17.159 INFO  [http-nio-8080-exec-10] [6cb8a6f93a394b57] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=6cb8a6f93a394b57, GET/api/v1/interviews/7/summary 耗时=53ms
+2026-09-01 13:08:48.523 INFO  [http-nio-8080-exec-7] [ec00c682c293490d] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=ec00c682c293490d, GET/api/v1/interviews/7 InterviewController.getSession(), args=[7]
+2026-09-01 13:08:48.576 INFO  [http-nio-8080-exec-7] [ec00c682c293490d] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=ec00c682c293490d, GET/api/v1/interviews/7 耗时=52ms
+2026-09-01 13:08:48.583 INFO  [http-nio-8080-exec-5] [428eb2002adf4f00] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=428eb2002adf4f00, GET/api/v1/interviews/7/current-question InterviewController.getCurrentQuestion(), args=[7]
+2026-09-01 13:08:48.656 INFO  [http-nio-8080-exec-5] [428eb2002adf4f00] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=428eb2002adf4f00, GET/api/v1/interviews/7/current-question 耗时=72ms
+2026-09-01 13:08:48.664 INFO  [http-nio-8080-exec-3] [6921fa242f934b86] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=6921fa242f934b86, GET/api/v1/interviews/7/summary InterviewController.getSummary(), args=[7]
+2026-09-01 13:08:48.738 INFO  [http-nio-8080-exec-3] [6921fa242f934b86] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=6921fa242f934b86, GET/api/v1/interviews/7/summary 耗时=73ms
+2026-09-01 13:09:02.525 INFO  [http-nio-8080-exec-9] [37ab38a5fca14ab7] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=37ab38a5fca14ab7, GET/api/v1/interviews/7 InterviewController.getSession(), args=[7]
+2026-09-01 13:09:02.574 INFO  [http-nio-8080-exec-9] [37ab38a5fca14ab7] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=37ab38a5fca14ab7, GET/api/v1/interviews/7 耗时=48ms
+2026-09-01 13:09:02.580 INFO  [http-nio-8080-exec-2] [71cff0c99f55455c] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=71cff0c99f55455c, GET/api/v1/interviews/7/current-question InterviewController.getCurrentQuestion(), args=[7]
+2026-09-01 13:09:02.650 INFO  [http-nio-8080-exec-2] [71cff0c99f55455c] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=71cff0c99f55455c, GET/api/v1/interviews/7/current-question 耗时=70ms
+2026-09-01 13:09:02.657 INFO  [http-nio-8080-exec-6] [f85d929c44af4b66] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=f85d929c44af4b66, GET/api/v1/interviews/7/summary InterviewController.getSummary(), args=[7]
+2026-09-01 13:09:02.712 INFO  [http-nio-8080-exec-6] [f85d929c44af4b66] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=f85d929c44af4b66, GET/api/v1/interviews/7/summary 耗时=55ms
+2026-09-01 13:09:24.663 INFO  [http-nio-8080-exec-4] [abfdd5e3d1a44f0e] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=abfdd5e3d1a44f0e, GET/api/v1/interviews/7 InterviewController.getSession(), args=[7]
+2026-09-01 13:09:24.717 INFO  [http-nio-8080-exec-4] [abfdd5e3d1a44f0e] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=abfdd5e3d1a44f0e, GET/api/v1/interviews/7 耗时=53ms
+2026-09-01 13:09:24.723 INFO  [http-nio-8080-exec-1] [91214e68188640b5] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=91214e68188640b5, GET/api/v1/interviews/7/current-question InterviewController.getCurrentQuestion(), args=[7]
+2026-09-01 13:09:24.784 INFO  [http-nio-8080-exec-1] [91214e68188640b5] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=91214e68188640b5, GET/api/v1/interviews/7/current-question 耗时=61ms
+2026-09-01 13:09:24.793 INFO  [http-nio-8080-exec-8] [3c633ea533bf4268] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=3c633ea533bf4268, GET/api/v1/interviews/7/summary InterviewController.getSummary(), args=[7]
+2026-09-01 13:09:24.873 INFO  [http-nio-8080-exec-8] [3c633ea533bf4268] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=3c633ea533bf4268, GET/api/v1/interviews/7/summary 耗时=79ms
+2026-09-01 13:10:22.498 INFO  [http-nio-8080-exec-10] [a71a94582e31432e] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=a71a94582e31432e, GET/api/v1/auth/me AuthController.getCurrentUser(), args=[]
+2026-09-01 13:10:22.523 INFO  [http-nio-8080-exec-7] [10384abf86f44915] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=10384abf86f44915, GET/api/v1/interviews/7 InterviewController.getSession(), args=[7]
+2026-09-01 13:10:22.533 INFO  [http-nio-8080-exec-10] [a71a94582e31432e] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=a71a94582e31432e, GET/api/v1/auth/me 耗时=35ms
+2026-09-01 13:10:22.573 INFO  [http-nio-8080-exec-7] [10384abf86f44915] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=10384abf86f44915, GET/api/v1/interviews/7 耗时=49ms
+2026-09-01 13:10:22.580 INFO  [http-nio-8080-exec-5] [0993ce8efce54d7f] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=0993ce8efce54d7f, GET/api/v1/interviews/7/current-question InterviewController.getCurrentQuestion(), args=[7]
+2026-09-01 13:10:22.636 INFO  [http-nio-8080-exec-5] [0993ce8efce54d7f] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=0993ce8efce54d7f, GET/api/v1/interviews/7/current-question 耗时=56ms
+2026-09-01 13:10:22.641 INFO  [http-nio-8080-exec-3] [e98fcbb7a9ae462a] c.e.o.common.config.ApiLogAspect -
+        [API 请求] traceId=e98fcbb7a9ae462a, GET/api/v1/interviews/7/summary InterviewController.getSummary(), args=[7]
+2026-09-01 13:10:22.722 INFO  [http-nio-8080-exec-3] [e98fcbb7a9ae462a] c.e.o.common.config.ApiLogAspect -
+        [API 响应] traceId=e98fcbb7a9ae462a, GET/api/v1/interviews/7/summary 耗时=80ms
+2026-09-01 13:15:39.101 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5b02e0da (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:15:39.102 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.HikariPool -
+        HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m39s679ms).
+2026-09-01 13:16:07.530 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3e64bf09 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:25:17.655 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5399b53f (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:25:29.636 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.HikariPool -
+        HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=9m20s524ms).
+2026-09-01 13:42:18.113 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@76f7e599 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:42:28.123 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5ba2ab49 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:42:38.134 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2c3535db (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:42:38.134 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.HikariPool -
+        HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m8s499ms).
+2026-09-01 13:42:48.140 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@41d8dc1e (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:42:58.147 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1f446f94 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:50:32.965 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@61de26d5 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:50:32.965 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.HikariPool -
+        HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7m54s831ms).
+2026-09-01 13:50:51.755 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@171d177d (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:51:01.760 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@689a0a84 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:51:11.767 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@73943184 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:51:14.743 WARN  [http-nio-8080-exec-2] [82709bf8d0174aef] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 已过期：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyNDA3NzcwMjEsInJuU3RyIjoiUHp1clhaS1h3d3M5dUgxSFMxT1NWSUplaW1BdmVCS1IifQ.mxw66UPU8jsrRM0dSTrotyZbsfNgBeJnMIk10W6uv2s
+2026-09-01 13:51:14.744 WARN  [http-nio-8080-exec-9] [5e15a44c59cf4d28] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 已过期：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyNDA3NzcwMjEsInJuU3RyIjoiUHp1clhaS1h3d3M5dUgxSFMxT1NWSUplaW1BdmVCS1IifQ.mxw66UPU8jsrRM0dSTrotyZbsfNgBeJnMIk10W6uv2s
+2026-09-01 13:51:14.744 WARN  [http-nio-8080-exec-6] [42876d20ea6542a3] c.e.o.c.e.GlobalExceptionHandler -
+        未登录: token 已过期：eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjEsImRldmljZVR5cGUiOiJERUYiLCJlZmYiOjE3ODgyNDA3NzcwMjEsInJuU3RyIjoiUHp1clhaS1h3d3M5dUgxSFMxT1NWSUplaW1BdmVCS1IifQ.mxw66UPU8jsrRM0dSTrotyZbsfNgBeJnMIk10W6uv2s
+2026-09-01 13:57:21.569 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2075dff0 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:57:21.569 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.HikariPool -
+        HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=6m48s604ms).
+2026-09-01 13:57:34.467 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@15d9ca97 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:57:58.958 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1a9d1696 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:58:08.961 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4290734a (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:58:18.964 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@33538b3d (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-01 13:58:24.546 INFO  [SpringApplicationShutdownHook] [no-trace] o.s.boot.tomcat.GracefulShutdown -
+        Commencing graceful shutdown. Waiting for active requests to complete
+2026-09-01 13:58:24.547 INFO  [tomcat-shutdown] [no-trace] o.s.boot.tomcat.GracefulShutdown -
+        Graceful shutdown complete
+2026-09-01 13:58:24.549 INFO  [SpringApplicationShutdownHook] [no-trace] com.zaxxer.hikari.HikariDataSource -
+        HikariPool-1 - Shutdown initiated...
+2026-09-01 13:58:28.968 WARN  [HikariPool-1:housekeeper] [no-trace] com.zaxxer.hikari.pool.PoolBase -
+        HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@72833644 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
