@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 知识库管理 — REST 接口层。
@@ -37,6 +39,16 @@ public class KnowledgeController {
     public ApiResult<KnowledgeDocumentVO> create(@Valid @RequestBody KnowledgeUploadRequest request) {
         KnowledgeDocumentVO doc = knowledgeService.create(request);
         return ApiResult.success("知识文档创建成功", doc);
+    }
+
+    /**
+     * 上传知识库文件（Markdown / 纯 TXT），自动解析并索引到向量库。
+     */
+    @PostMapping("/upload")
+    public ApiResult<KnowledgeDocumentVO> upload(@RequestParam("file") MultipartFile file,
+        @RequestParam(value = "title", required = false) String title) {
+        KnowledgeDocumentVO doc = knowledgeService.upload(file, title);
+        return ApiResult.success("知识文档上传成功", doc);
     }
 
     /**

@@ -36,6 +36,9 @@ public class Report {
     @TableField("full_report")
     private String fullReport;
 
+    @TableField("analysis_data")
+    private String analysisData;
+
     private Integer status;
 
     @TableField("error_message")

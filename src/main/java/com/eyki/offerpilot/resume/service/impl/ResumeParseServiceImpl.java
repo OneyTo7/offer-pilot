@@ -1,12 +1,12 @@
 package com.eyki.offerpilot.resume.service.impl;
 
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.eyki.offerpilot.aicore.prompt.ResumeParsePrompt;
 import com.eyki.offerpilot.aicore.service.AiService;
 import com.eyki.offerpilot.resume.domain.Resume;
+import com.eyki.offerpilot.resume.dto.ResumeParseResult;
 import com.eyki.offerpilot.resume.service.ResumeParseService;
 import com.eyki.offerpilot.storage.service.FileStorageService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +34,7 @@ public class ResumeParseServiceImpl implements ResumeParseService {
 
     private final AiService aiService;
     private final FileStorageService fileStorageService;
+    private final ObjectMapper objectMapper;
 
     @Override
     public Resume parse(Resume resume) {
@@ -78,12 +79,16 @@ public class ResumeParseServiceImpl implements ResumeParseService {
             resume.setParsedText(rawText);
             log.info("简历文本提取成功: filePath={}, textLength={}字符", filePath, rawText.length());
 
-            // 3. DeepSeek AI 结构化解析
-            String aiResponse =
-                aiService.chat(ResumeParsePrompt.getSystemPrompt(), ResumeParsePrompt.buildUserPrompt(rawText));
+            // 3. DeepSeek AI 结构化解析。
+            //    走无 RAG 的 ChatClient：简历解析是纯提取场景，知识库内容注入会污染解析结果
+            //    （chatWithEntity 会经 RetrievalAugmentationAdvisor 自动检索知识库）
+            ResumeParseResult result = aiService.chatWithEntityNoRag(
+                ResumeParsePrompt.getSystemPrompt(),
+                ResumeParsePrompt.buildUserPrompt(rawText),
+                ResumeParseResult.class);
 
-            // 4. 解析 AI 返回的 JSON
-            parseAiResponse(resume, aiResponse);
+            // 4. 将解析结果回写到 Resume 实体
+            parseAiResponse(resume, result);
 
             resume.setStatus(1); // COMPLETED
             resume.setUpdatedAt(LocalDateTime.now());
@@ -173,72 +178,38 @@ public class ResumeParseServiceImpl implements ResumeParseService {
     // ========== AI 响应解析 ==========
 
     /**
-     * 解析 AI 返回的 JSON 字符串，回写到 Resume 实体的各个 JSON 字段。
+     * 将 AI 解析结果回写到 Resume 实体的各个 JSON 字段。
      */
-    private void parseAiResponse(Resume resume, String aiResponse) {
-        // 保存原始返回（调试用）
-        resume.setRawResponse(aiResponse);
-
+    private void parseAiResponse(Resume resume, ResumeParseResult result) {
         try {
-            // 清理 AI 返回：可能包含 markdown 代码块标记
-            String cleaned = cleanJsonResponse(aiResponse);
-            JSONObject root = JSONUtil.parseObj(cleaned);
+            // 保存原始返回（调试用）
+            resume.setRawResponse(objectMapper.writeValueAsString(result));
 
-            // 逐个字段提取
-            if (root.containsKey("basic_info")) {
-                resume.setBasicInfo(formatJsonField(root.get("basic_info")));
+            // 逐个字段序列化为 JSON 字符串存入实体
+            if (result.basicInfo() != null) {
+                resume.setBasicInfo(objectMapper.writeValueAsString(result.basicInfo()));
             }
-            if (root.containsKey("education")) {
-                resume.setEducation(formatJsonField(root.get("education")));
+            if (result.education() != null) {
+                resume.setEducation(objectMapper.writeValueAsString(result.education()));
             }
-            if (root.containsKey("work_experience")) {
-                resume.setWorkExperience(formatJsonField(root.get("work_experience")));
+            if (result.workExperience() != null) {
+                resume.setWorkExperience(objectMapper.writeValueAsString(result.workExperience()));
             }
-            if (root.containsKey("projects")) {
-                resume.setProjects(formatJsonField(root.get("projects")));
+            if (result.projects() != null) {
+                resume.setProjects(objectMapper.writeValueAsString(result.projects()));
             }
-            if (root.containsKey("skills")) {
-                resume.setSkills(formatJsonField(root.get("skills")));
+            if (result.skills() != null) {
+                resume.setSkills(objectMapper.writeValueAsString(result.skills()));
             }
-            if (root.containsKey("certificates")) {
-                resume.setCertificates(formatJsonField(root.get("certificates")));
+            if (result.certificates() != null) {
+                resume.setCertificates(objectMapper.writeValueAsString(result.certificates()));
             }
-            if (root.containsKey("summary")) {
-                resume.setSummary(root.getStr("summary"));
+            if (result.summary() != null) {
+                resume.setSummary(result.summary());
             }
 
         } catch (Exception e) {
-            log.warn("AI 响应 JSON 解析失败，保留 rawResponse 供调试: {}", e.getMessage());
+            log.warn("AI 响应 JSON 序列化失败: {}", e.getMessage());
         }
-    }
-
-    /**
-     * 清理 AI 返回文本：去除 markdown 代码块标记等。
-     */
-    private String cleanJsonResponse(String text) {
-        if (text == null) {
-            return "{}";
-        }
-        String cleaned = text.trim();
-        // 去除 ```json 和 ``` 标记
-        if (cleaned.startsWith("```json")) {
-            cleaned = cleaned.substring(7);
-        } else if (cleaned.startsWith("```")) {
-            cleaned = cleaned.substring(3);
-        }
-        if (cleaned.endsWith("```")) {
-            cleaned = cleaned.substring(0, cleaned.length() - 3);
-        }
-        return cleaned.trim();
-    }
-
-    /**
-     * 将对象格式化为紧凑的 JSON 字符串。
-     */
-    private String formatJsonField(Object obj) {
-        if (obj == null) {
-            return null;
-        }
-        return JSONUtil.toJsonStr(obj);
     }
 }

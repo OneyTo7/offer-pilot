@@ -11,6 +11,7 @@ import com.eyki.offerpilot.common.service.RateLimitService;
 import com.eyki.offerpilot.position.domain.TargetPosition;
 import com.eyki.offerpilot.position.repository.PositionRepository;
 import com.eyki.offerpilot.report.domain.Report;
+import com.eyki.offerpilot.report.dto.ReportAnalysisData;
 import com.eyki.offerpilot.report.dto.ReportContent;
 import com.eyki.offerpilot.report.dto.ReportRequest;
 import com.eyki.offerpilot.report.dto.ReportVO;
@@ -18,17 +19,17 @@ import com.eyki.offerpilot.report.repository.ReportRepository;
 import com.eyki.offerpilot.report.service.ReportService;
 import com.eyki.offerpilot.resume.domain.Resume;
 import com.eyki.offerpilot.resume.repository.ResumeRepository;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import org.springframework.ai.document.Document;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -160,67 +161,58 @@ public class ReportServiceImpl implements ReportService {
             name, techStack, workYears, education, summary,
             positionTitle, company, positionDesc);
 
-        // RAG: 检索知识库，获取行业标准或技能要求作为匹配度评估参考
-        try {
-            String searchQuery = positionTitle + " " + techStack + " 技能要求 行业标准";
-            List<Document> relevantDocs = ragService.search(searchQuery, report.getUserId(), 3);
-            if (!relevantDocs.isEmpty()) {
-                String ragContext = relevantDocs.stream()
-                    .map(doc -> "- " + doc.getText())
-                    .collect(Collectors.joining("\n\n"));
-                userPrompt += "\n\n知识库参考信息（可作为行业标准参考，用于评估简历匹配度）：\n" + ragContext;
+        // RAG 策略（双路径）：
+        // - 平台 key：RetrievalAugmentationAdvisor 自动检索知识库并注入行业标准参考，
+        //   通过 context 传 user_id 过滤表达式实现用户级隔离
+        // - 用户 API key：advisors 不生效，服务层手动检索拼入 prompt
+        Map<String, Object> context = null;
+        String promptToSend = userPrompt;
+        if (userApiKey == null || userApiKey.isBlank()) {
+            context = Map.of("vector_store_filter_expression", ragService.buildUserFilter(report.getUserId()));
+        } else {
+            try {
+                String searchQuery = positionTitle + " " + techStack + " 技能要求 行业标准";
+                List<Document> relevantDocs = ragService.search(searchQuery, report.getUserId(), 3);
+                if (!relevantDocs.isEmpty()) {
+                    String ragContext = relevantDocs.stream()
+                        .map(doc -> "- " + doc.getText())
+                        .collect(Collectors.joining("\n\n"));
+                    promptToSend = userPrompt + "\n\n知识库参考信息（可作为行业标准参考，用于评估简历匹配度）：\n" + ragContext;
+                }
+            } catch (Exception e) {
+                log.warn("RAG 检索报告参考失败: {}", e.getMessage());
             }
-        } catch (Exception e) {
-            log.warn("RAG 检索报告参考失败: {}", e.getMessage());
         }
 
-        String response = aiService.chat(ReportPrompt.SYSTEM_PROMPT, userPrompt, userApiKey);
-        parseAndSaveReport(report, response);
+        // Call AI with structured output via BeanOutputConverter (auto JSON Schema + markdown stripping)
+        ReportAnalysisData data = aiService.chatWithEntity(
+            ReportPrompt.SYSTEM_PROMPT, promptToSend, userApiKey, ReportAnalysisData.class, context);
+        parseAndSaveReport(report, data);
     }
 
     /**
-     * Parse AI JSON response and save structured data to the report entity.
+     * Save the structured ReportAnalysisData to the report entity.
+     * Saves the full parsed result as analysis_data for frontend rendering,
+     * while also extracting individual fields for backward compatibility.
      */
-    private void parseAndSaveReport(Report report, String response) {
+    private void parseAndSaveReport(Report report, ReportAnalysisData data) {
         try {
-            JsonNode root = objectMapper.readTree(response);
+            // Serialize clean JSON for frontend to render the rich report
+            String cleanJson = objectMapper.writeValueAsString(data);
+            report.setAnalysisData(cleanJson);
 
-            // Parse match_score
-            JsonNode scoreNode = root.get("match_score");
-            if (scoreNode != null) {
-                report.setMatchScore(BigDecimal.valueOf(scoreNode.asDouble()));
-            }
-
-            // Parse tech_stack_analysis
-            JsonNode techStackNode = root.get("tech_stack_analysis");
-            if (techStackNode != null) {
-                report.setTechStackAnalysis(objectMapper.writeValueAsString(techStackNode));
-            }
-
-            // Parse highlights
-            JsonNode highlightsNode = root.get("highlights");
-            if (highlightsNode != null && highlightsNode.isArray()) {
-                report.setHighlights(objectMapper.writeValueAsString(highlightsNode));
-            }
-
-            // Parse weaknesses
-            JsonNode weaknessesNode = root.get("weaknesses");
-            if (weaknessesNode != null && weaknessesNode.isArray()) {
-                report.setWeaknesses(objectMapper.writeValueAsString(weaknessesNode));
-            }
-
-            // Parse full_report
-            JsonNode fullReportNode = root.get("full_report");
-            if (fullReportNode != null) {
-                report.setFullReport(fullReportNode.asText());
-            }
+            // Extract individual fields for backward compatibility
+            report.setMatchScore(BigDecimal.valueOf(data.matchScore()));
+            report.setHighlights(objectMapper.writeValueAsString(data.competitiveAdvantages()));
+            report.setWeaknesses(objectMapper.writeValueAsString(data.weaknesses()));
+            report.setFullReport(data.fullReport());
 
             report.setStatus(1); // COMPLETED
             report.setUpdatedAt(LocalDateTime.now());
             reportRepository.updateById(report);
             log.info("报告 AI 生成完成: reportId={}", report.getId());
         } catch (Exception e) {
-            log.error("解析 AI 报告 JSON 失败: reportId={}, response={}", report.getId(), response, e);
+            log.error("解析 AI 报告 JSON 失败: reportId={}", report.getId(), e);
             report.setStatus(2); // FAILED
             report.setErrorMessage("报告解析失败: " + e.getMessage());
             report.setUpdatedAt(LocalDateTime.now());
@@ -251,6 +243,8 @@ public class ReportServiceImpl implements ReportService {
                 contentBuilder.weaknesses(JSONUtil.parseArray(report.getWeaknesses()).toList(String.class));
             }
             contentBuilder.fullReport(report.getFullReport());
+            // Pass through the full AI analysis data for the new rich report frontend
+            contentBuilder.analysisData(report.getAnalysisData());
             builder.content(contentBuilder.build());
         }
 

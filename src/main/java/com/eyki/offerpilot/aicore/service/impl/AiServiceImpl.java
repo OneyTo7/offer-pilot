@@ -18,6 +18,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -40,10 +41,12 @@ public class AiServiceImpl implements AiService {
     private static final Duration STREAM_TIMEOUT = Duration.ofMinutes(5);
 
     private final ChatClient chatClient;
+    private final ChatClient chatClientNoRag;
     private final ObjectMapper objectMapper;
 
-    public AiServiceImpl(ChatClient chatClient, ObjectMapper objectMapper) {
+    public AiServiceImpl(ChatClient chatClient, ChatClient chatClientNoRag, ObjectMapper objectMapper) {
         this.chatClient = chatClient;
+        this.chatClientNoRag = chatClientNoRag;
         this.objectMapper = objectMapper;
     }
 
@@ -68,7 +71,11 @@ public class AiServiceImpl implements AiService {
     @Override
     public String chat(String systemPrompt, String userPrompt, Map<String, Object> context) {
         try {
-            String response = chatClient.prompt().system(systemPrompt).user(userPrompt).call().content();
+            var spec = chatClient.prompt().system(systemPrompt).user(userPrompt);
+            if (context != null && !context.isEmpty()) {
+                spec.advisors(advisor -> context.forEach(advisor::param));
+            }
+            String response = spec.call().content();
 
             if (response == null) {
                 throw BusinessException.aiServiceError("AI 服务返回为空");
@@ -99,7 +106,11 @@ public class AiServiceImpl implements AiService {
     @Override
     public Flux<String> chatStream(String systemPrompt, String userPrompt, Map<String, Object> context) {
         try {
-            return chatClient.prompt().system(systemPrompt).user(userPrompt).stream().content().onErrorResume(e -> {
+            var spec = chatClient.prompt().system(systemPrompt).user(userPrompt);
+            if (context != null && !context.isEmpty()) {
+                spec.advisors(advisor -> context.forEach(advisor::param));
+            }
+            return spec.stream().content().onErrorResume(e -> {
                 log.error("AI 流式服务调用异常", e);
                 return Flux.error(BusinessException.aiServiceError("AI 服务调用失败: " + e.getMessage()));
             });
@@ -111,8 +122,14 @@ public class AiServiceImpl implements AiService {
 
     @Override
     public String chat(String systemPrompt, String userPrompt, String apiKey) {
+        return chat(systemPrompt, userPrompt, apiKey, null);
+    }
+
+    @Override
+    public String chat(String systemPrompt, String userPrompt, String apiKey, Map<String, Object> context) {
         if (apiKey == null || apiKey.isBlank()) {
-            return chat(systemPrompt, userPrompt);
+            // Platform key: ChatClient path, advisors apply (RAG, memory, validation, logging)
+            return chat(systemPrompt, userPrompt, context);
         }
 
         try {
@@ -152,8 +169,14 @@ public class AiServiceImpl implements AiService {
 
     @Override
     public Flux<String> chatStream(String systemPrompt, String userPrompt, String apiKey) {
+        return chatStream(systemPrompt, userPrompt, apiKey, null);
+    }
+
+    @Override
+    public Flux<String> chatStream(String systemPrompt, String userPrompt, String apiKey, Map<String, Object> context) {
         if (apiKey == null || apiKey.isBlank()) {
-            return chatStream(systemPrompt, userPrompt);
+            // Platform key: ChatClient path, advisors apply (RAG, memory, validation, logging)
+            return chatStream(systemPrompt, userPrompt, context);
         }
 
         return Flux.create(emitter -> {
@@ -203,6 +226,67 @@ public class AiServiceImpl implements AiService {
                 emitter.error(BusinessException.aiServiceError("AI 服务调用失败: " + e.getMessage()));
             }
         });
+    }
+
+    @Override
+    public <T> T chatWithEntity(String systemPrompt, String userPrompt, String apiKey, Class<T> entityClass) {
+        return chatWithEntity(systemPrompt, userPrompt, apiKey, entityClass, null);
+    }
+
+    @Override
+    public <T> T chatWithEntity(String systemPrompt, String userPrompt, String apiKey, Class<T> entityClass,
+        Map<String, Object> context) {
+        if (apiKey == null || apiKey.isBlank()) {
+            // Platform key: ChatClient.entity() handles everything internally
+            // (creates BeanOutputConverter, appends JSON Schema, calls LLM, parses response)
+            try {
+                var spec = chatClient.prompt().system(systemPrompt).user(userPrompt);
+                if (context != null && !context.isEmpty()) {
+                    spec.advisors(advisor -> context.forEach(advisor::param));
+                }
+                T result = spec.call().entity(entityClass);
+                if (result == null) {
+                    throw BusinessException.aiServiceError("AI 结构化输出返回为空");
+                }
+                return result;
+            } catch (BusinessException e) {
+                throw e;
+            } catch (Exception e) {
+                log.error("AI 结构化输出调用异常 (平台 Key)", e);
+                throw BusinessException.aiServiceError("AI 服务调用失败: " + e.getMessage());
+            }
+        } else {
+            // User API key: use BeanOutputConverter manually
+            try {
+                BeanOutputConverter<T> converter = new BeanOutputConverter<>(entityClass);
+                String format = converter.getFormat();
+                String fullSystemPrompt = systemPrompt + "\n\n" + format;
+                String response = chat(fullSystemPrompt, userPrompt, apiKey);
+                return converter.convert(response);
+            } catch (BusinessException e) {
+                throw e;
+            } catch (Exception e) {
+                log.error("AI 结构化输出解析失败 (用户 API Key)", e);
+                throw BusinessException.aiServiceError("AI 响应解析失败: " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public <T> T chatWithEntityNoRag(String systemPrompt, String userPrompt, Class<T> entityClass) {
+        // Uses the dedicated no-RAG ChatClient (SafeValid → ReReading → Log only)
+        try {
+            T result = chatClientNoRag.prompt().system(systemPrompt).user(userPrompt).call().entity(entityClass);
+            if (result == null) {
+                throw BusinessException.aiServiceError("AI 结构化输出返回为空");
+            }
+            return result;
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("AI 结构化输出调用异常 (无 RAG)", e);
+            throw BusinessException.aiServiceError("AI 服务调用失败: " + e.getMessage());
+        }
     }
 
     // ========== Helper methods ==========

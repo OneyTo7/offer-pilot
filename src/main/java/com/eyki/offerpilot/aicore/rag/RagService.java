@@ -85,6 +85,15 @@ public class RagService {
     }
 
     /**
+     * Build a user-scoped filter expression, e.g. for the {@code vector_store_filter_expression}
+     * context param consumed by RetrievalAugmentationAdvisor (platform-key ChatClient path).
+     */
+    public Filter.Expression buildUserFilter(Long userId) {
+        FilterExpressionBuilder builder = new FilterExpressionBuilder();
+        return builder.eq("user_id", userId.toString()).build();
+    }
+
+    /**
      * Delete all documents for a given user.
      */
     public void deleteByUserId(Long userId) {

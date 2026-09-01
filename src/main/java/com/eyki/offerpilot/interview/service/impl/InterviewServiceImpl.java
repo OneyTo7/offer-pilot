@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
@@ -194,27 +195,39 @@ public class InterviewServiceImpl implements InterviewService {
             ctx.session.getCurrentRound(), interviewRound.getName(),
             ctx.question.getQuestionText(), ctx.question.getUserAnswer());
 
-        // RAG: 检索知识库，获取与当前题目相关的参考答案作为评分依据
-        String ragSuffix = "";
-        try {
-            List<Document> relevantDocs = ragService.search(ctx.question.getQuestionText(), userId, 3);
-            if (!relevantDocs.isEmpty()) {
-                String ragContext = relevantDocs.stream()
-                    .map(doc -> "- " + doc.getText())
-                    .collect(Collectors.joining("\n\n"));
-                ragSuffix = "\n\n知识库参考信息（可用于参考答案和评分参考）：\n" + ragContext;
+        // RAG + 记忆策略（双路径）：
+        // - 平台 key：RetrievalAugmentationAdvisor 自动检索知识库（user_id 过滤隔离），
+        //   MessageChatMemoryAdvisor 按 conversation_id 注入前序问答，使反馈评分连贯
+        // - 用户 API key：advisors 不生效，服务层手动检索知识库拼入 prompt
+        Map<String, Object> context;
+        String finalUserPrompt;
+        if (userApiKey == null || userApiKey.isBlank()) {
+            context = Map.of(
+                "vector_store_filter_expression", ragService.buildUserFilter(userId),
+                "conversation_id", ctx.session.getId().toString());
+            finalUserPrompt = userPrompt;
+        } else {
+            context = null;
+            String ragSuffix = "";
+            try {
+                List<Document> relevantDocs = ragService.search(ctx.question.getQuestionText(), userId, 3);
+                if (!relevantDocs.isEmpty()) {
+                    String ragContext = relevantDocs.stream()
+                        .map(doc -> "- " + doc.getText())
+                        .collect(Collectors.joining("\n\n"));
+                    ragSuffix = "\n\n知识库参考信息（可用于参考答案和评分参考）：\n" + ragContext;
+                }
+            } catch (Exception e) {
+                log.warn("RAG 检索反馈参考失败: {}", e.getMessage());
             }
-        } catch (Exception e) {
-            log.warn("RAG 检索反馈参考失败: {}", e.getMessage());
+            finalUserPrompt = userPrompt + ragSuffix;
         }
-
-        String finalUserPrompt = userPrompt + ragSuffix;
 
         CompletableFuture.runAsync(() -> {
             try {
                 StringBuilder fullFeedback = new StringBuilder();
 
-                aiService.chatStream(QuestionFeedbackPrompt.SYSTEM_PROMPT, finalUserPrompt, userApiKey)
+                aiService.chatStream(QuestionFeedbackPrompt.SYSTEM_PROMPT, finalUserPrompt, userApiKey, context)
                     .doOnNext(token -> {
                         try {
                             fullFeedback.append(token);
@@ -481,28 +494,51 @@ public class InterviewServiceImpl implements InterviewService {
             // Add previous questions context to avoid repetition
             String fullPrompt = userPrompt + "\n\n已提出的问题（请勿重复）:\n" + previousQuestionsText;
 
-            // RAG: 检索知识库，根据简历技能栈+职位+轮次搜索相关题目参考
-            try {
-                String searchQuery = String.format("%s %s %s",
-                    techStack.length() > 100 ? techStack.substring(0, 100) : techStack,
-                    positionTitle, interviewRound.getDescription());
-                List<Document> relevantDocs = ragService.search(searchQuery, session.getUserId(), 3);
-                if (!relevantDocs.isEmpty()) {
-                    String ragContext = relevantDocs.stream()
-                        .map(doc -> "- " + doc.getText())
-                        .collect(Collectors.joining("\n\n"));
-                    fullPrompt += "\n\n以下知识库内容可供参考，请据此提出更有针对性的面试题：\n" + ragContext;
-                }
-            } catch (Exception e) {
-                log.warn("RAG 检索知识库失败，跳过: {}", e.getMessage());
-            }
-
             // Use user's own API key if configured
             String userApiKey = authService.getCurrentUserEntity().getApiKey();
-            String response = aiService.chat(InterviewPrompt.SYSTEM_PROMPT, fullPrompt, userApiKey);
+
+            // RAG 策略（双路径）：
+            // - 平台 key：RetrievalAugmentationAdvisor 自动检索知识库（user_id 过滤隔离），
+            //   根据简历技能栈+职位+轮次生成更有针对性的面试题
+            // - 用户 API key：advisors 不生效，服务层手动检索拼入 prompt
+            Map<String, Object> context;
+            String promptToSend;
+            if (userApiKey == null || userApiKey.isBlank()) {
+                context = Map.of("vector_store_filter_expression", ragService.buildUserFilter(session.getUserId()));
+                promptToSend = fullPrompt;
+            } else {
+                context = null;
+                String ragSuffix = "";
+                try {
+                    String searchQuery = String.format("%s %s %s",
+                        techStack.length() > 100 ? techStack.substring(0, 100) : techStack,
+                        positionTitle, interviewRound.getDescription());
+                    List<Document> relevantDocs = ragService.search(searchQuery, session.getUserId(), 3);
+                    if (!relevantDocs.isEmpty()) {
+                        String ragContext = relevantDocs.stream()
+                            .map(doc -> "- " + doc.getText())
+                            .collect(Collectors.joining("\n\n"));
+                        ragSuffix = "\n\n以下知识库内容可供参考，请据此提出更有针对性的面试题：\n" + ragContext;
+                    }
+                } catch (Exception e) {
+                    log.warn("RAG 检索知识库失败，跳过: {}", e.getMessage());
+                }
+                promptToSend = fullPrompt + ragSuffix;
+            }
+
+            String response = aiService.chat(InterviewPrompt.SYSTEM_PROMPT, promptToSend, userApiKey, context);
             if (response != null && !response.isBlank()) {
-                // Clean up — remove quotes that the AI might wrap the question in
+                // Clean up — remove markdown code blocks and wrapping quotes
                 String cleaned = response.trim();
+                if (cleaned.startsWith("```")) {
+                    int firstNewline = cleaned.indexOf('\n');
+                    if (firstNewline > 0) {
+                        cleaned = cleaned.substring(firstNewline).trim();
+                    }
+                }
+                if (cleaned.endsWith("```")) {
+                    cleaned = cleaned.substring(0, cleaned.length() - 3).trim();
+                }
                 if (cleaned.startsWith("\"") && cleaned.endsWith("\"")) {
                     cleaned = cleaned.substring(1, cleaned.length() - 1);
                 }

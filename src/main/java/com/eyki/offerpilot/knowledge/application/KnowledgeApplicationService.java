@@ -1,8 +1,10 @@
 package com.eyki.offerpilot.knowledge.application;
 
+import com.eyki.offerpilot.aicore.rag.KnowledgeEtlService;
 import com.eyki.offerpilot.aicore.rag.RagService;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
+import com.eyki.offerpilot.common.model.ErrorCode;
 import com.eyki.offerpilot.knowledge.application.assembler.KnowledgeAssembler;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeDocumentDetailVO;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeDocumentVO;
@@ -12,14 +14,19 @@ import com.eyki.offerpilot.knowledge.application.dto.KnowledgeUploadRequest;
 import com.eyki.offerpilot.knowledge.domain.ContentType;
 import com.eyki.offerpilot.knowledge.domain.KnowledgeDocument;
 import com.eyki.offerpilot.knowledge.domain.KnowledgeDocumentRepository;
+import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 知识库 — 应用服务。
@@ -37,10 +44,14 @@ public class KnowledgeApplicationService {
     private static final String META_USER_ID = "user_id";
     private static final String META_SOURCE = "source";
 
+    /** 知识库文件大小上限：5MB */
+    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024L;
+
     private final KnowledgeDocumentRepository repository;
     private final KnowledgeAssembler assembler;
     private final AuthService authService;
     private final RagService ragService;
+    private final KnowledgeEtlService etlService;
 
     /**
      * 创建知识文档。
@@ -76,6 +87,75 @@ public class KnowledgeApplicationService {
         repository.save(doc);
 
         log.info("知识文档创建成功: docId={}, userId={}, title={}, status={}", doc.getId(), userId, doc.getTitle(),
+            doc.getStatus().getDescription());
+        return assembler.toVO(doc);
+    }
+
+    /**
+     * 上传知识库文件（Markdown / 纯 TXT）。
+     *
+     * ETL 流程：文件 → DocumentReader 解析（Markdown/Tika）→ TokenTextSplitter 分块 → pgvector 索引，
+     * 解析出的全文同时存入 MySQL 供详情展示。索引失败不阻断流程，状态标记 FAILED 供前端展示。
+     */
+    @Transactional
+    public KnowledgeDocumentVO upload(MultipartFile file, String title) {
+        Long userId = authService.getCurrentUserEntity().getId();
+        String filename = file.getOriginalFilename() == null ? "" : file.getOriginalFilename();
+        String lower = filename.toLowerCase(Locale.ROOT);
+
+        // 校验：仅支持 Markdown 和纯 TXT
+        boolean supported = lower.endsWith(".md") || lower.endsWith(".markdown") || lower.endsWith(".txt");
+        if (!supported) {
+            throw BusinessException.badRequest("仅支持 Markdown (.md) 和纯文本 (.txt) 文件");
+        }
+        if (file.isEmpty()) {
+            throw BusinessException.badRequest("文件内容为空");
+        }
+        if (file.getSize() > MAX_FILE_SIZE) {
+            throw BusinessException.badRequest("文件大小不能超过 5MB");
+        }
+
+        // 1. ETL Extract：按扩展名选择 DocumentReader 解析文件
+        List<Document> parsedDocs;
+        try {
+            Resource resource = new InputStreamResource(new ByteArrayInputStream(file.getBytes())) {
+                @Override
+                public String getFilename() {
+                    return filename;
+                }
+            };
+            parsedDocs = etlService.extract(resource, filename);
+            if (parsedDocs.isEmpty()) {
+                throw BusinessException.of(ErrorCode.DOCUMENT_PARSE_ERROR, "文件内容为空，无法解析");
+            }
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("知识库文件解析失败: filename={}", filename, e);
+            throw BusinessException.of(ErrorCode.DOCUMENT_PARSE_ERROR, "文件解析失败: " + e.getMessage());
+        }
+
+        // 2. 领域实体创建 + 持久化（content 为解析后的全文）
+        String docTitle = title != null && !title.isBlank() ? title : filename;
+        String content = parsedDocs.stream().map(Document::getText).collect(Collectors.joining("\n\n"));
+        KnowledgeDocument doc = KnowledgeDocument.create(userId, docTitle, content, ContentType.FILE);
+        repository.save(doc);
+
+        // 3. ETL Transform + Load：分块索引到 pgvector（保留 reader 结构分块）
+        try {
+            Map<String, Object> metadata =
+                Map.of(META_TITLE, doc.getTitle(), META_SOURCE, "knowledge_base");
+            etlService.index(parsedDocs, userId, doc.getId().toString(), metadata);
+            doc.markIndexed();
+        } catch (Exception e) {
+            log.error("知识库文件索引失败: docId={}, filename={}", doc.getId(), filename, e);
+            doc.markFailed(e.getMessage() != null ? e.getMessage() : "索引异常");
+        }
+
+        // 4. 更新索引状态
+        repository.save(doc);
+
+        log.info("知识库文件上传成功: docId={}, userId={}, filename={}, status={}", doc.getId(), userId, filename,
             doc.getStatus().getDescription());
         return assembler.toVO(doc);
     }

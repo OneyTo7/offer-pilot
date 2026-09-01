@@ -8,11 +8,17 @@ import org.springframework.ai.chat.client.advisor.api.CallAdvisor;
 import org.springframework.ai.chat.client.advisor.api.CallAdvisorChain;
 import org.springframework.ai.chat.client.advisor.api.StreamAdvisor;
 import org.springframework.ai.chat.client.advisor.api.StreamAdvisorChain;
+import org.springframework.ai.chat.messages.SystemMessage;
+import org.springframework.ai.chat.prompt.Prompt;
 import reactor.core.publisher.Flux;
 
 /**
- * Advisor that adds a "re-reading" instruction to the system prompt. Improves reasoning quality by asking the model to
+ * Advisor that appends a "re-reading" instruction to the system prompt. Improves reasoning quality by asking the model to
  * read the question twice before answering.
+ *
+ * <p>Implemented via {@link Prompt#augmentSystemMessage(java.util.function.Function)}: if a system message exists it is
+ * transformed in place; otherwise a new one is prepended — preserving the original message order and request context
+ * (copied via {@code request.mutate()}).</p>
  */
 public class ReReadingAdvisor implements CallAdvisor, StreamAdvisor {
 
@@ -38,19 +44,21 @@ public class ReReadingAdvisor implements CallAdvisor, StreamAdvisor {
 
     @Override
     public ChatClientResponse adviseCall(ChatClientRequest request, CallAdvisorChain chain) {
-        ChatClientRequest modified = appendSystemInstruction(request);
-        return chain.nextCall(modified);
+        return chain.nextCall(appendSystemInstruction(request));
     }
 
     @Override
     public Flux<ChatClientResponse> adviseStream(ChatClientRequest request, StreamAdvisorChain chain) {
-        ChatClientRequest modified = appendSystemInstruction(request);
-        return chain.nextStream(modified);
+        return chain.nextStream(appendSystemInstruction(request));
     }
 
+    /**
+     * Appends the re-reading instruction to the system message via {@link Prompt#augmentSystemMessage(java.util.function.Function)}.
+     * Uses {@code request.mutate()} to copy all existing request state (context, etc.) before modifying the prompt.
+     */
     private ChatClientRequest appendSystemInstruction(ChatClientRequest request) {
-        String currentContent = request.prompt().getContents();
-        return ChatClientRequest.builder()
-            .prompt(new org.springframework.ai.chat.prompt.Prompt(currentContent + RE_READING_INSTRUCTION)).build();
+        Prompt modifiedPrompt = request.prompt().augmentSystemMessage(
+            sm -> new SystemMessage(sm.getText() + RE_READING_INSTRUCTION));
+        return request.mutate().prompt(modifiedPrompt).build();
     }
 }

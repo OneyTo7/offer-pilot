@@ -19,19 +19,35 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
 
-  # Spring AI - DeepSeek (OpenAI 兼容 API)
+  # Spring AI - DeepSeek Chat Model
   ai:
-    openai:
-      base-url: https://api.deepseek.com
+    deepseek:
+      api-key: ${DEEPSEEK_API_KEY}
       chat:
-        model: deepseek-chat
-        temperature: 0.7
+        options:
+          model: deepseek-chat
+          temperature: 0.7
     vectorstore:
       pgvector:
         index-type: HNSW
         distance-type: COSINE
         dimension: 512
         initialize-schema: true
+
+    # Local embedding model (ONNX + BGE) for pgvector, no API key needed
+    embedding:
+      transformer:
+        onnx:
+          model-uri: ${ONNX_MODEL_URI:https://huggingface.co/BAAI/bge-small-zh-v1.5/resolve/main/onnx/model.onnx}
+        tokenizer:
+          uri: ${ONNX_TOKENIZER_URI:https://huggingface.co/BAAI/bge-small-zh-v1.5/resolve/main/tokenizer.json}
+
+    # Cross-encoder re-ranker (BGE-reranker ONNX) for post-retrieval re-ranking
+    rag:
+      reranker:
+        model-uri: ${RERANKER_MODEL_URI:https://huggingface.co/Xenova/bge-reranker-base/resolve/main/onnx/model_quantized.onnx}
+        tokenizer-uri: ${RERANKER_TOKENIZER_URI:https://huggingface.co/Xenova/bge-reranker-base/resolve/main/tokenizer.json}
+        top-k: 5
 
 # MyBatis-Plus
 mybatis-plus:

@@ -15,7 +15,7 @@ spring:
       driver-class-name: org.postgresql.Driver
 
   ai:
-    openai:
+    deepseek:
       api-key: ${DEEPSEEK_API_KEY:sk-REPLACED}
 
 minio:

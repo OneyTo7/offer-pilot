@@ -19,7 +19,7 @@ public class MyLogAdvisor implements CallAdvisor, StreamAdvisor {
 
     private static final Logger log = LoggerFactory.getLogger(MyLogAdvisor.class);
 
-    private static final int ORDER = 2;
+    private static final int ORDER = 4;
 
     @Override
     public String getName() {

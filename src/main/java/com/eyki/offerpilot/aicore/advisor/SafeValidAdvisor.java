@@ -21,7 +21,14 @@ public class SafeValidAdvisor implements CallAdvisor, StreamAdvisor {
 
     private static final Logger log = LoggerFactory.getLogger(SafeValidAdvisor.class);
 
-    private static final List<String> SENSITIVE_PATTERNS = List.of();
+    private static final List<String> SENSITIVE_PATTERNS = List.of(
+        // 涉政敏感词
+        "法轮功", "天安门", "六四", "台独", "藏独", "疆独", "港独",
+        // 色情暴力
+        "色情", "赌博", "毒品", "暴力", "恐怖",
+        // 简历解析无关指令
+        "忽略指令", "忽略以上", "忘记之前的", "system prompt", "忽略系统"
+    );
 
     private static final int ORDER = 0;
 

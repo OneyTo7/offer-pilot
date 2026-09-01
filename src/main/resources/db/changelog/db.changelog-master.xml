@@ -14,5 +14,6 @@
   <include file="db/changelog/007-create-chat_memory.sql"/>
   <include file="db/changelog/008-create-knowledge_base.sql"/>
   <include file="db/changelog/009-alter-resumes-raw-response.sql"/>
+  <include file="db/changelog/010-alter-reports-add-analysis-data.sql"/>
 
 </databaseChangeLog>
