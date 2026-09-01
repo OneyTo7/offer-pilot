@@ -9,6 +9,10 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
+/**
+ * AI service implementation. Wraps Spring AI's ChatClient to provide synchronous
+ * and streaming LLM invocations. Uses DeepSeek via OpenAI-compatible API.
+ */
 @Service
 public class AiServiceImpl implements AiService {
 

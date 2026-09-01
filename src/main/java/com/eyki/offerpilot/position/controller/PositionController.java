@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Target position controller — CRUD for job target positions linked to a resume.
+ * Each position includes the job title, company, JD text, location, and salary range.
+ */
 @RestController
 @RequestMapping("/api/v1/positions")
 @RequiredArgsConstructor

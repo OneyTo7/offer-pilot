@@ -20,7 +20,7 @@ CREATE TABLE resumes
 
     -- 摘要 & 调试
     summary         TEXT                  DEFAULT NULL COMMENT 'AI 生成的简历摘要',
-    raw_response    JSON                  DEFAULT NULL COMMENT 'AI 解析原始返回（调试用）',
+    raw_response    LONGTEXT              DEFAULT NULL COMMENT 'AI 解析原始返回（调试用，可能含 markdown 代码块）',
 
     -- 状态 & 标记
     is_default      TINYINT               DEFAULT 0 COMMENT '0-否 1-默认简历',

@@ -25,6 +25,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Authentication service implementation. Handles registration (BCrypt password hashing),
+ * login, dual-token management (Sa-Token access + in-memory refresh token), logout,
+ * and profile/API key updates.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class AnswerRequest {
 
-    @NotNull(message = "会话 ID 不能为空")
+    /** sessionId is set from URL path by the controller, not from request body */
     private Long sessionId;
 
     @NotNull(message = "题目 ID 不能为空")

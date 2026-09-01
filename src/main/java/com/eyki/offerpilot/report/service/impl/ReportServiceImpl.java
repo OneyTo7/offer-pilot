@@ -22,6 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Report service implementation. Generates AI-powered resume-vs-position match reports
+ * (currently returns stub data until AI integration is complete). Provides CRUD operations
+ * with user-level data isolation.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -56,8 +61,8 @@ public class ReportServiceImpl implements ReportService {
         report.setUpdatedAt(LocalDateTime.now());
         reportRepository.insert(report);
 
-        // TODO: Phase 5 — async AI report generation via AiService
-        // For now, generate stub report immediately
+        // Uses stub report for now. When AI report generation is ready,
+        // replace with an async call to AiService.chat() and update status to COMPLETED.
         generateStubReport(report);
 
         log.info("报告创建成功: reportId={}, userId={}", report.getId(), userId);

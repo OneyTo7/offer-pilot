@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Assessment report controller — generates and retrieves AI-powered resume-vs-position
+ * match reports. Reports include match score, tech stack analysis, highlights, and weaknesses.
+ */
 @RestController
 @RequestMapping("/api/v1/reports")
 @RequiredArgsConstructor

@@ -1,0 +1,1 @@
+ALTER TABLE resumes MODIFY COLUMN raw_response LONGTEXT DEFAULT NULL COMMENT 'AI 解析原始返回（调试用，可能含 markdown 代码块）';

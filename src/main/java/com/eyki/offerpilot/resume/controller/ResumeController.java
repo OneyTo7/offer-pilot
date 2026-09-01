@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Resume controller — handles PDF resume upload, parsing (async via AI), detail retrieval,
+ * listing, deletion, and default resume selection.
+ */
 @RestController
 @RequestMapping("/api/v1/resumes")
 @RequiredArgsConstructor

@@ -17,6 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Target position service implementation. Provides CRUD operations for job target positions,
+ * with user-level data isolation and optional resume association.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -31,10 +35,12 @@ public class PositionServiceImpl implements PositionService {
     public PositionVO create(PositionRequest request) {
         Long userId = authService.getCurrentUserEntity().getId();
 
-        // Verify resume belongs to user
-        Resume resume = resumeRepository.selectById(request.getResumeId());
-        if (resume == null || !resume.getUserId().equals(userId)) {
-            throw BusinessException.resumeNotFound();
+        // Verify resume belongs to user (optional)
+        if (request.getResumeId() != null) {
+            Resume resume = resumeRepository.selectById(request.getResumeId());
+            if (resume == null || !resume.getUserId().equals(userId)) {
+                throw BusinessException.resumeNotFound();
+            }
         }
 
         TargetPosition position = new TargetPosition();
@@ -72,10 +78,12 @@ public class PositionServiceImpl implements PositionService {
             throw BusinessException.positionNotFound();
         }
 
-        // Verify resume belongs to user
-        Resume resume = resumeRepository.selectById(request.getResumeId());
-        if (resume == null || !resume.getUserId().equals(userId)) {
-            throw BusinessException.resumeNotFound();
+        // Verify resume belongs to user (optional)
+        if (request.getResumeId() != null) {
+            Resume resume = resumeRepository.selectById(request.getResumeId());
+            if (resume == null || !resume.getUserId().equals(userId)) {
+                throw BusinessException.resumeNotFound();
+            }
         }
 
         position.setResumeId(request.getResumeId());

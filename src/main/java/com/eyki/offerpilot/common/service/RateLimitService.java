@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * Simple rate limiter using in-memory ConcurrentHashMap. Resets daily via @Scheduled.
- * TODO: Phase 8 — migrate to Redis when needed.
+ * Design note: this is an MVP implementation. For production, migrate to Redis
+ * using Redisson or Spring Data Redis to support horizontal scaling.
  */
 @Slf4j
 @Service

@@ -29,6 +29,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Resume service implementation. Handles PDF resume upload (with MinIO storage),
+ * async AI-powered parsing, detail retrieval with structured JSON fields, listing,
+ * deletion, and default resume selection.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -197,14 +202,14 @@ public class ResumeServiceImpl implements ResumeService {
             try {
                 builder.basicInfo(JSONUtil.toBean(resume.getBasicInfo(), ResumeBasicInfo.class));
             } catch (Exception e) {
-                log.warn("解析 basic_info JSON 失败: {}", e.getMessage());
+                log.warn("解析 basic_info JSON 失败", e);
             }
         }
         if (resume.getEducation() != null) {
             try {
                 builder.education(JSONUtil.parseArray(resume.getEducation()).toList(ResumeEducation.class));
             } catch (Exception e) {
-                log.warn("解析 education JSON 失败: {}", e.getMessage());
+                log.warn("解析 education JSON 失败", e);
             }
         }
         if (resume.getWorkExperience() != null) {
@@ -212,28 +217,28 @@ public class ResumeServiceImpl implements ResumeService {
                 builder.workExperience(
                     JSONUtil.parseArray(resume.getWorkExperience()).toList(ResumeWorkExperience.class));
             } catch (Exception e) {
-                log.warn("解析 work_experience JSON 失败: {}", e.getMessage());
+                log.warn("解析 work_experience JSON 失败", e);
             }
         }
         if (resume.getProjects() != null) {
             try {
                 builder.projects(JSONUtil.parseArray(resume.getProjects()).toList(ResumeProject.class));
             } catch (Exception e) {
-                log.warn("解析 projects JSON 失败: {}", e.getMessage());
+                log.warn("解析 projects JSON 失败", e);
             }
         }
         if (resume.getSkills() != null) {
             try {
                 builder.skills(JSONUtil.parseArray(resume.getSkills()).toList(ResumeSkill.class));
             } catch (Exception e) {
-                log.warn("解析 skills JSON 失败: {}", e.getMessage());
+                log.warn("解析 skills JSON 失败", e);
             }
         }
         if (resume.getCertificates() != null) {
             try {
                 builder.certificates(JSONUtil.parseArray(resume.getCertificates()).toList(ResumeCertificate.class));
             } catch (Exception e) {
-                log.warn("解析 certificates JSON 失败: {}", e.getMessage());
+                log.warn("解析 certificates JSON 失败", e);
             }
         }
 

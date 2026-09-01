@@ -1,45 +1,73 @@
 package com.eyki.offerpilot.interview.service.impl;
 
 import com.eyki.offerpilot.aicore.memory.MysqlChatMemory;
+import com.eyki.offerpilot.aicore.prompt.InterviewPrompt;
+import com.eyki.offerpilot.aicore.prompt.QuestionFeedbackPrompt;
+import com.eyki.offerpilot.aicore.service.AiService;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
 import com.eyki.offerpilot.interview.domain.InterviewQuestion;
 import com.eyki.offerpilot.interview.domain.InterviewSession;
 import com.eyki.offerpilot.interview.dto.AnswerRequest;
-import com.eyki.offerpilot.interview.dto.InterviewEvent;
+import com.eyki.offerpilot.interview.dto.InterviewQuestionVO;
 import com.eyki.offerpilot.interview.dto.InterviewSummaryVO;
 import com.eyki.offerpilot.interview.dto.SessionVO;
 import com.eyki.offerpilot.interview.dto.StartInterviewRequest;
+import com.eyki.offerpilot.interview.dto.StartRoundResponse;
 import com.eyki.offerpilot.interview.enums.InterviewRound;
 import com.eyki.offerpilot.interview.enums.QuestionStatus;
 import com.eyki.offerpilot.interview.repository.InterviewQuestionRepository;
 import com.eyki.offerpilot.interview.repository.InterviewSessionRepository;
 import com.eyki.offerpilot.interview.service.InterviewService;
 import com.eyki.offerpilot.interview.service.InterviewSessionManager;
+import com.eyki.offerpilot.position.domain.TargetPosition;
+import com.eyki.offerpilot.position.repository.PositionRepository;
+import com.eyki.offerpilot.resume.domain.Resume;
+import com.eyki.offerpilot.resume.repository.ResumeRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.concurrent.CompletableFuture;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+/**
+ * Interview service implementation. Manages the full interview lifecycle: session creation,
+ * round progression, question generation (AI-powered with resume/position context),
+ * answer submission with SSE-streamed AI feedback, skip, early end, and summary retrieval.
+ *
+ * <p>The SSE answer flow uses TransactionTemplate for synchronous DB operations followed by
+ * async AI streaming via SseEmitter. Sa-Token auth is enforced inside service methods
+ * rather than the interceptor, since the SSE async dispatch loses the ThreadLocal context.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class InterviewServiceImpl implements InterviewService {
 
-    private static final long SSE_TIMEOUT = 5 * 60 * 1000L; // 5 minutes
-
     private final InterviewSessionRepository sessionRepository;
     private final InterviewQuestionRepository questionRepository;
     private final InterviewSessionManager sessionManager;
     private final AuthService authService;
+    private final AiService aiService;
     private final MysqlChatMemory chatMemoryStore;
+    private final ObjectMapper objectMapper;
+    private final TransactionTemplate transactionTemplate;
+    private final ResumeRepository resumeRepository;
+    private final PositionRepository positionRepository;
+
+    private static final long SSE_TIMEOUT = 5 * 60 * 1000L; // 5 minutes
+    private static final Pattern SCORE_PATTERN = Pattern.compile("SCORE:\\s*(\\d+(\\.\\d+)?)", Pattern.CASE_INSENSITIVE);
 
     @Override
     @Transactional
@@ -83,8 +111,28 @@ public class InterviewServiceImpl implements InterviewService {
     }
 
     @Override
+    public InterviewQuestionVO getCurrentQuestion(Long sessionId) {
+        Long userId = authService.getCurrentUserEntity().getId();
+        InterviewSession session = sessionRepository.selectById(sessionId);
+        if (session == null || !session.getUserId().equals(userId)) {
+            throw BusinessException.interviewNotFound();
+        }
+
+        int round = session.getCurrentRound();
+        int questionIndex = session.getCurrentQuestion();
+
+        // Find the pending question for the current round and index
+        List<InterviewQuestion> questions = questionRepository.findBySessionIdAndRound(sessionId, round);
+        Optional<InterviewQuestion> currentQuestion = questions.stream()
+            .filter(q -> q.getQuestionIndex().equals(questionIndex) && q.getStatus() == QuestionStatus.PENDING.getCode())
+            .findFirst();
+
+        return currentQuestion.map(this::toQuestionVO).orElse(null);
+    }
+
+    @Override
     @Transactional
-    public SseEmitter startRound(Long sessionId) {
+    public StartRoundResponse startRound(Long sessionId) {
         Long userId = authService.getCurrentUserEntity().getId();
         InterviewSession session = sessionRepository.selectById(sessionId);
         if (session == null || !session.getUserId().equals(userId)) {
@@ -100,16 +148,98 @@ public class InterviewServiceImpl implements InterviewService {
         InterviewQuestion question = generateQuestion(session, round, 1);
         questionRepository.insert(question);
 
-        // Create SSE emitter and send the first question
+        return StartRoundResponse.builder()
+            .question(toQuestionVO(question))
+            .build();
+    }
+
+    @Override
+    public SseEmitter answer(AnswerRequest request) {
+        Long userId = authService.getCurrentUserEntity().getId();
+
+        // Phase 1: Save answer and advance to next question (synchronous, in transaction)
+        AnswerContext ctx = transactionTemplate.execute(status -> saveAnswerAndAdvance(request, userId));
+
+        // Phase 2: Create SSE emitter and stream AI feedback (async, no transaction)
         SseEmitter emitter = new SseEmitter(SSE_TIMEOUT);
+
+        assert ctx != null;
+        InterviewRound interviewRound = InterviewRound.fromCode(ctx.session.getCurrentRound());
+        String userPrompt = String.format(QuestionFeedbackPrompt.USER_PROMPT_TEMPLATE,
+            ctx.session.getCurrentRound(), interviewRound.getName(),
+            ctx.question.getQuestionText(), ctx.question.getUserAnswer());
+
         CompletableFuture.runAsync(() -> {
             try {
-                InterviewEvent event =
-                    InterviewEvent.nextQuestion(question.getId(), round, 1, question.getQuestionText());
-                emitter.send(SseEmitter.event().name(event.getType()).data(event));
-                emitter.complete();
-            } catch (IOException e) {
-                log.error("SSE 发送失败: sessionId={}", sessionId, e);
+                StringBuilder fullFeedback = new StringBuilder();
+
+                aiService.chatStream(QuestionFeedbackPrompt.SYSTEM_PROMPT, userPrompt)
+                    .doOnNext(token -> {
+                        try {
+                            fullFeedback.append(token);
+                            emitter.send(SseEmitter.event().name("feedback_token").data(token));
+                        } catch (IOException e) {
+                            log.error("SSE 发送 feedback_token 失败", e);
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .doOnComplete(() -> {
+                        try {
+                            String completeText = fullFeedback.toString();
+                            double score = parseScore(completeText);
+
+                            // Save feedback and score to DB (async, single update no transaction needed)
+                            ctx.question.setFeedback(completeText);
+                            ctx.question.setScore(BigDecimal.valueOf(score));
+                            questionRepository.updateById(ctx.question);
+
+                            // Send feedback_done event
+                            String doneJson = String.format("{\"feedback\":%s,\"score\":%s}",
+                                escapeJson(completeText), score);
+                            emitter.send(SseEmitter.event().name("feedback_done").data(doneJson));
+
+                            if (ctx.nextQuestion != null) {
+                                // Send next question as JSON string
+                                String nextQJson = objectMapper.writeValueAsString(toQuestionVO(ctx.nextQuestion));
+                                emitter.send(SseEmitter.event().name("next_question").data(nextQJson));
+                            } else {
+                                emitter.send(SseEmitter.event().name("complete").data("面试已完成！"));
+                            }
+
+                            emitter.complete();
+                        } catch (IOException e) {
+                            log.error("SSE 发送完成事件失败", e);
+                            emitter.completeWithError(e);
+                        } catch (Exception e) {
+                            log.error("SSE 事件序列化失败", e);
+                            emitter.completeWithError(e);
+                        }
+                    })
+                    .doOnError(error -> {
+                        log.error("AI 流式生成反馈失败", error);
+                        try {
+                            String stub = "抱歉，AI 反馈生成遇到问题，请稍后重试。";
+                            emitter.send(SseEmitter.event().name("feedback_token").data(stub));
+                            emitter.send(SseEmitter.event().name("feedback_done")
+                                .data("{\"feedback\":\"" + stub + "\",\"score\":70}"));
+
+                            if (ctx.nextQuestion != null) {
+                                String nextQJson = objectMapper.writeValueAsString(toQuestionVO(ctx.nextQuestion));
+                                emitter.send(SseEmitter.event().name("next_question").data(nextQJson));
+                            } else {
+                                emitter.send(SseEmitter.event().name("complete").data("面试已完成！"));
+                            }
+                            emitter.complete();
+                        } catch (IOException e2) {
+                            emitter.completeWithError(e2);
+                        } catch (Exception e2) {
+                            log.error("SSE 错误处理序列化异常", e2);
+                            emitter.completeWithError(e2);
+                        }
+                    })
+                    .subscribe();
+            } catch (Exception e) {
+                log.error("SSE 流处理异常", e);
                 emitter.completeWithError(e);
             }
         });
@@ -117,10 +247,10 @@ public class InterviewServiceImpl implements InterviewService {
         return emitter;
     }
 
-    @Override
-    @Transactional
-    public SseEmitter answer(AnswerRequest request) {
-        Long userId = authService.getCurrentUserEntity().getId();
+    /**
+     * Save answer, advance to next question, and generate the next question (all in one transaction).
+     */
+    private AnswerContext saveAnswerAndAdvance(AnswerRequest request, Long userId) {
         InterviewSession session = sessionRepository.selectById(request.getSessionId());
         if (session == null || !session.getUserId().equals(userId)) {
             throw BusinessException.interviewNotFound();
@@ -139,52 +269,30 @@ public class InterviewServiceImpl implements InterviewService {
         // Save answer
         question.setUserAnswer(request.getAnswer());
         question.setStatus(QuestionStatus.ANSWERED.getCode());
-
-        // Generate feedback (stub for now)
-        question.setFeedback(generateStubFeedback(question, session));
-        question.setScore(generateStubScore());
         question.setUpdatedAt(LocalDateTime.now());
         questionRepository.updateById(question);
 
-        // Advance to next question
+        // Advance to next question and generate it
         boolean hasNext = sessionManager.advanceQuestion(session);
         sessionRepository.updateById(session);
+        InterviewQuestion nextQuestion = null;
+        if (hasNext) {
+            int round = session.getCurrentRound();
+            int questionIndex = session.getCurrentQuestion();
+            nextQuestion = generateQuestion(session, round, questionIndex);
+            nextQuestion.setSessionId(session.getId());
+            questionRepository.insert(nextQuestion);
+        }
 
-        SseEmitter emitter = new SseEmitter(SSE_TIMEOUT);
-        CompletableFuture.runAsync(() -> {
-            try {
-                // Send feedback
-                emitter.send(SseEmitter.event().name("feedback").data(InterviewEvent.feedback(question.getFeedback())));
-
-                if (hasNext) {
-                    // Generate next question
-                    int round = session.getCurrentRound();
-                    int questionIndex = session.getCurrentQuestion();
-                    InterviewQuestion nextQuestion = generateQuestion(session, round, questionIndex);
-                    nextQuestion.setSessionId(session.getId());
-                    questionRepository.insert(nextQuestion);
-
-                    InterviewEvent event = InterviewEvent.nextQuestion(nextQuestion.getId(), round, questionIndex,
-                        nextQuestion.getQuestionText());
-                    emitter.send(SseEmitter.event().name(event.getType()).data(event));
-                } else {
-                    // Session complete
-                    emitter.send(SseEmitter.event().name("complete").data(InterviewEvent.complete("面试已完成！")));
-                }
-
-                emitter.complete();
-            } catch (IOException e) {
-                log.error("SSE 发送失败: sessionId={}", request.getSessionId(), e);
-                emitter.completeWithError(e);
-            }
-        });
-
-        return emitter;
+        return new AnswerContext(session, question, nextQuestion);
     }
+
+    /** Holds the result of the synchronous DB operations for the async SSE stream. */
+    private record AnswerContext(InterviewSession session, InterviewQuestion question, InterviewQuestion nextQuestion) {}
 
     @Override
     @Transactional
-    public SseEmitter skip(Long sessionId) {
+    public StartRoundResponse skip(Long sessionId) {
         Long userId = authService.getCurrentUserEntity().getId();
         InterviewSession session = sessionRepository.selectById(sessionId);
         if (session == null || !session.getUserId().equals(userId)) {
@@ -210,31 +318,23 @@ public class InterviewServiceImpl implements InterviewService {
         boolean hasNext = sessionManager.advanceQuestion(session);
         sessionRepository.updateById(session);
 
-        SseEmitter emitter = new SseEmitter(SSE_TIMEOUT);
-        CompletableFuture.runAsync(() -> {
-            try {
-                if (hasNext) {
-                    // Generate next question
-                    int nextRound = session.getCurrentRound();
-                    int nextIndex = session.getCurrentQuestion();
-                    InterviewQuestion nextQuestion = generateQuestion(session, nextRound, nextIndex);
-                    nextQuestion.setSessionId(session.getId());
-                    questionRepository.insert(nextQuestion);
+        if (hasNext) {
+            // Generate next question
+            int nextRound = session.getCurrentRound();
+            int nextIndex = session.getCurrentQuestion();
+            InterviewQuestion nextQuestion = generateQuestion(session, nextRound, nextIndex);
+            nextQuestion.setSessionId(session.getId());
+            questionRepository.insert(nextQuestion);
 
-                    InterviewEvent event = InterviewEvent.nextQuestion(nextQuestion.getId(), nextRound, nextIndex,
-                        nextQuestion.getQuestionText());
-                    emitter.send(SseEmitter.event().name(event.getType()).data(event));
-                } else {
-                    emitter.send(SseEmitter.event().name("complete").data(InterviewEvent.complete("面试已完成！")));
-                }
-                emitter.complete();
-            } catch (IOException e) {
-                log.error("SSE 发送失败: sessionId={}", sessionId, e);
-                emitter.completeWithError(e);
-            }
-        });
-
-        return emitter;
+            return StartRoundResponse.builder()
+                .question(toQuestionVO(nextQuestion))
+                .build();
+        } else {
+            // No more questions — session complete, return empty response
+            return StartRoundResponse.builder()
+                .question(null)
+                .build();
+        }
     }
 
     @Override
@@ -280,9 +380,8 @@ public class InterviewServiceImpl implements InterviewService {
     // ========== Helper methods ==========
 
     private InterviewQuestion generateQuestion(InterviewSession session, int round, int questionIndex) {
-        // TODO: Phase 6 — call AiService to generate real questions
         InterviewRound interviewRound = InterviewRound.fromCode(round);
-        String questionText = generateStubQuestion(round, questionIndex, interviewRound.getDescription());
+        String questionText = generateAiQuestion(session, round, questionIndex, interviewRound);
 
         InterviewQuestion question = new InterviewQuestion();
         question.setSessionId(session.getId());
@@ -293,6 +392,71 @@ public class InterviewServiceImpl implements InterviewService {
         question.setCreatedAt(LocalDateTime.now());
         question.setUpdatedAt(LocalDateTime.now());
         return question;
+    }
+
+    /**
+     * Generate a question via AI using the candidate's resume and target position for context.
+     * Falls back to the stub question bank if the AI service is unavailable.
+     */
+    private String generateAiQuestion(InterviewSession session, int round, int questionIndex,
+        InterviewRound interviewRound) {
+        try {
+            // Load resume and position data for context
+            Resume resume = resumeRepository.selectById(session.getResumeId());
+            TargetPosition position = session.getPositionId() != null
+                ? positionRepository.selectById(session.getPositionId()) : null;
+
+            String techStack = resume != null ? resume.getSummary() != null ? resume.getSummary() : "未提供" : "未提供";
+            String workYears = "未知";
+            String projectExp = "未提供";
+
+            // Try to extract structured info from resume JSON fields
+            if (resume != null && resume.getSkills() != null) {
+                techStack = resume.getSkills();
+            }
+            if (resume != null && resume.getWorkExperience() != null) {
+                projectExp = resume.getWorkExperience();
+            }
+            // Use parsed text as fallback context
+            String resumeContext = resume != null && resume.getParsedText() != null
+                ? resume.getParsedText().substring(0, Math.min(resume.getParsedText().length(), 500)) : "";
+
+            String positionTitle = position != null ? position.getTitle() : "未知";
+            String positionDesc = position != null ? position.getJdText() : "未知";
+
+            // Build context from previous questions in this round to avoid duplicates
+            List<InterviewQuestion> previousQuestions = questionRepository.findBySessionIdAndRound(session.getId(),
+                round);
+            String previousQuestionsText = previousQuestions.stream()
+                .map(q -> String.format("第 %d 题: %s", q.getQuestionIndex(), q.getQuestionText()))
+                .collect(Collectors.joining("\n"));
+
+            String userPrompt = String.format(InterviewPrompt.USER_PROMPT_TEMPLATE,
+                techStack.length() > 200 ? techStack.substring(0, 200) : techStack,
+                workYears, projectExp.length() > 300 ? projectExp.substring(0, 300) : projectExp,
+                positionTitle, positionDesc.length() > 500 ? positionDesc.substring(0, 500) : positionDesc,
+                interviewRound.getName(), round, questionIndex);
+
+            // Add previous questions context to avoid repetition
+            String fullPrompt = userPrompt + "\n\n已提出的问题（请勿重复）:\n" + previousQuestionsText;
+
+            String response = aiService.chat(InterviewPrompt.SYSTEM_PROMPT, fullPrompt);
+            if (response != null && !response.isBlank()) {
+                // Clean up — remove quotes that the AI might wrap the question in
+                String cleaned = response.trim();
+                if (cleaned.startsWith("\"") && cleaned.endsWith("\"")) {
+                    cleaned = cleaned.substring(1, cleaned.length() - 1);
+                }
+                log.info("AI 生成面试题成功: sessionId={}, round={}, questionIndex={}", session.getId(), round, questionIndex);
+                return cleaned;
+            }
+        } catch (Exception e) {
+            log.warn("AI 生成面试题失败，降级使用预设题目: sessionId={}, round={}, questionIndex={}",
+                session.getId(), round, questionIndex, e);
+        }
+
+        // Fallback to stub question
+        return generateStubQuestion(round, questionIndex, interviewRound.getDescription());
     }
 
     private String generateStubQuestion(int round, int questionIndex, String roundDescription) {
@@ -328,15 +492,26 @@ public class InterviewServiceImpl implements InterviewService {
         return String.format("【%s】请介绍一下你在相关技术领域的经验（第 %d 题）", roundDescription, questionIndex);
     }
 
-    private String generateStubFeedback(InterviewQuestion question, InterviewSession session) {
-        // TODO: Phase 6 — call AiService to generate real feedback
-        return String.format(
-            "感谢你的回答。你对这个问题有基本的理解，建议可以进一步深入实践。" + "（AI 面试反馈功能待接入，当前为模拟反馈）");
+    private double parseScore(String text) {
+        if (text == null) return 70.0;
+        Matcher matcher = SCORE_PATTERN.matcher(text);
+        if (matcher.find()) {
+            try {
+                return Double.parseDouble(matcher.group(1));
+            } catch (NumberFormatException e) {
+                log.warn("解析 SCORE 失败: {}", matcher.group(1));
+            }
+        }
+        return 70.0;
     }
 
-    private BigDecimal generateStubScore() {
-        // Generate a random-ish score between 5.0 and 9.0
-        return BigDecimal.valueOf(5.0 + Math.random() * 4.0).setScale(1, java.math.RoundingMode.HALF_UP);
+    private String escapeJson(String text) {
+        if (text == null) return "\"\"";
+        return text.replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("\n", "\\n")
+            .replace("\r", "\\r")
+            .replace("\t", "\\t");
     }
 
     private List<InterviewSummaryVO.RoundSummary> buildRoundSummaries(List<InterviewQuestion> questions) {
@@ -367,6 +542,17 @@ public class InterviewServiceImpl implements InterviewService {
             .currentQuestion(session.getCurrentQuestion()).totalQuestions(session.getTotalQuestions())
             .status(session.getStatus()).durationSeconds(session.getDurationSeconds()).startedAt(session.getStartedAt())
             .finishedAt(session.getFinishedAt()).expiredAt(session.getExpiredAt()).createdAt(session.getCreatedAt())
+            .build();
+    }
+
+    private InterviewQuestionVO toQuestionVO(InterviewQuestion question) {
+        return InterviewQuestionVO.builder()
+            .id(question.getId())
+            .text(question.getQuestionText())
+            .answer(question.getUserAnswer())
+            .feedback(question.getFeedback())
+            .score(question.getScore() != null ? question.getScore().doubleValue() : null)
+            .status(QuestionStatus.fromCode(question.getStatus()).name())
             .build();
     }
 }

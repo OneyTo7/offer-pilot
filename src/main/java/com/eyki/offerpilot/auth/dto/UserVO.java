@@ -1,5 +1,6 @@
 package com.eyki.offerpilot.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,8 @@ public class UserVO {
 
     private String nickname;
 
-    @JsonProperty("api_key")
+    /** API key is available via a dedicated endpoint, never exposed in the user profile response. */
+    @JsonIgnore
     private String apiKey;
 
     private Integer status;

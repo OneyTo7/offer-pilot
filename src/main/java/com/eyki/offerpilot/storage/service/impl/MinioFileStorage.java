@@ -16,6 +16,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+/**
+ * MinIO object storage implementation. Provides file upload, download, delete, existence check,
+ * and URL generation. Auto-creates the configured bucket on startup.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
