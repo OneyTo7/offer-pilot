@@ -555,7 +555,7 @@ public class InterviewServiceImpl implements InterviewService {
     }
 
     private String generateStubQuestion(int round, int questionIndex, String roundDescription) {
-        // Stub questions — replaced by real AI in production
+        // Fallback question bank — used only when the AI service is unavailable
         String[][] questions = {
             // Round 1: Basic technical ability
             {"请介绍一下你最熟悉的 Java 技术栈，以及为什么选择它们？", "请解释一下 Spring Boot 自动配置的原理。",

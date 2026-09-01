@@ -78,48 +78,12 @@ public class RagService {
     }
 
     /**
-     * Search with default top-K.
-     */
-    public List<Document> search(String query, Long userId) {
-        return search(query, userId, DEFAULT_TOP_K);
-    }
-
-    /**
      * Build a user-scoped filter expression, e.g. for the {@code vector_store_filter_expression}
      * context param consumed by RetrievalAugmentationAdvisor (platform-key ChatClient path).
      */
     public Filter.Expression buildUserFilter(Long userId) {
         FilterExpressionBuilder builder = new FilterExpressionBuilder();
         return builder.eq("user_id", userId.toString()).build();
-    }
-
-    /**
-     * Delete all documents for a given user.
-     */
-    public void deleteByUserId(Long userId) {
-        if (vectorStore == null) {
-            log.warn("VectorStore 不可用，跳过删除操作");
-            return;
-        }
-        FilterExpressionBuilder builder = new FilterExpressionBuilder();
-        Filter.Expression filter = builder.eq("user_id", userId.toString()).build();
-        vectorStore.delete(filter);
-        log.info("用户文档删除成功: userId={}", userId);
-    }
-
-    /**
-     * Delete documents for a specific resume.
-     */
-    public void deleteByResumeId(Long userId, String resumeId) {
-        if (vectorStore == null) {
-            log.warn("VectorStore 不可用，跳过删除操作");
-            return;
-        }
-        FilterExpressionBuilder builder = new FilterExpressionBuilder();
-        Filter.Expression filter =
-            builder.and(builder.eq("user_id", userId.toString()), builder.eq("resume_id", resumeId)).build();
-        vectorStore.delete(filter);
-        log.info("简历文档删除成功: userId={}, resumeId={}", userId, resumeId);
     }
 
     /**

@@ -37,8 +37,8 @@ class RagServiceTest {
         RagService ragService = (RagService)constructor.newInstance(emptyProvider);
 
         // search with vectorStore==null should return empty list, not throw
-        var result =
-            ragService.getClass().getMethod("search", String.class, Long.class).invoke(ragService, "test query", 1L);
+        var result = ragService.getClass().getMethod("search", String.class, Long.class, int.class)
+            .invoke(ragService, "test query", 1L, 5);
 
         assertNotNull(result);
         assertTrue(result instanceof List);

@@ -35,8 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Report service implementation. Generates AI-powered resume-vs-position match reports
- * (currently returns stub data until AI integration is complete). Provides CRUD operations
- * with user-level data isolation.
+ * with structured output (BeanOutputConverter), asynchronously after creation.
+ * Provides CRUD operations with user-level data isolation.
  */
 @Slf4j
 @Service

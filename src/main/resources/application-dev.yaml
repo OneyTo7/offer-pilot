@@ -1,4 +1,4 @@
-# 开发环境配置（默认激活）
+# 开发环境配置（CI / docker compose 部署用，本地默认激活 local 个人配置）
 # 前置条件：docker compose up -d
 # 数据源通过 INFRA_HOST 变量切换，默认 localhost
 spring:
