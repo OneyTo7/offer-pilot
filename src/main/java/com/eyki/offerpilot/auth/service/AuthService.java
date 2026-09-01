@@ -25,5 +25,7 @@ public interface AuthService {
 
     UserVO updateApiKey(UpdateApiKeyRequest request);
 
+    UserVO clearApiKey();
+
     User getCurrentUserEntity();
 }

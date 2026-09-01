@@ -11,6 +11,7 @@ import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.model.ApiResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -69,5 +70,11 @@ public class AuthController {
     public ApiResult<UserVO> updateApiKey(@Valid @RequestBody UpdateApiKeyRequest request) {
         UserVO user = authService.updateApiKey(request);
         return ApiResult.success("API Key 更新成功", user);
+    }
+
+    @DeleteMapping("/api-key")
+    public ApiResult<UserVO> clearApiKey() {
+        UserVO user = authService.clearApiKey();
+        return ApiResult.success("API Key 已清除，已切换至免费模式", user);
     }
 }

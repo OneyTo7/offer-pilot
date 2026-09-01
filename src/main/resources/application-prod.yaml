@@ -1,17 +1,26 @@
+# 生产环境配置（Docker 部署）
+# 数据源通过 Docker Compose 内部网络连接，无需 INFRA_HOST
 spring:
   datasource:
     url: jdbc:mysql://mysql:3306/offer_pilot?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
-    password: ${MYSQL_ROOT_PASSWORD}
+    password: ${MYSQL_ROOT_PASSWORD:rootpass}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
     vector:
-      url: jdbc:postgresql://postgres:5433/offer_pilot_vector
+      url: jdbc:postgresql://postgres:5432/offer_pilot_vector
       username: postgres
-      password: ${POSTGRES_PASSWORD}
+      password: ${POSTGRES_PASSWORD:pgpass}
       driver-class-name: org.postgresql.Driver
+
+  ai:
+    openai:
+      api-key: ${DEEPSEEK_API_KEY:}
 
 minio:
   endpoint: http://minio:9000
+  access-key: ${MINIO_ACCESS_KEY:minioadmin}
+  secret-key: ${MINIO_SECRET_KEY:minioadmin}
 
 logging:
   level:

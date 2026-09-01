@@ -1,19 +1,27 @@
+# 开发环境配置（默认激活）
+# 前置条件：docker compose up -d
+# 数据源通过 INFRA_HOST 变量切换，默认 localhost
 spring:
   datasource:
     url: jdbc:mysql://${INFRA_HOST:localhost}:3306/offer_pilot?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
-    password: ${MYSQL_ROOT_PASSWORD:root}
+    password: ${MYSQL_ROOT_PASSWORD:rootpass}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
     vector:
       url: jdbc:postgresql://${INFRA_HOST:localhost}:5433/offer_pilot_vector
       username: postgres
-      password: ${POSTGRES_PASSWORD:postgres}
+      password: ${POSTGRES_PASSWORD:pgpass}
       driver-class-name: org.postgresql.Driver
 
+  ai:
+    openai:
+      api-key: ${DEEPSEEK_API_KEY:sk-REPLACED}
+
 minio:
-  endpoint: http://${INFRA_HOST:localhost}:19001
-  access-key: ${MINIO_ACCESS_KEY:minio}
-  secret-key: ${MINIO_SECRET_KEY:pTmWPGK5JDinNp7a}
+  endpoint: http://${INFRA_HOST:localhost}:19000
+  access-key: ${MINIO_ACCESS_KEY:minioadmin}
+  secret-key: ${MINIO_SECRET_KEY:minioadmin}
 
 logging:
   level:

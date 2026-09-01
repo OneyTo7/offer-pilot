@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 public class RateLimitService {
 
     /** Daily report generation limit for free tier */
-    private static final int DAILY_REPORT_LIMIT = 3;
+    public static final int DAILY_REPORT_LIMIT = 3;
 
     /** Daily interview session limit for free tier */
-    private static final int DAILY_INTERVIEW_LIMIT = 1;
+    public static final int DAILY_INTERVIEW_LIMIT = 1;
 
     private final Map<String, AtomicInteger> reportCounts = new ConcurrentHashMap<>();
     private final Map<String, AtomicInteger> interviewCounts = new ConcurrentHashMap<>();

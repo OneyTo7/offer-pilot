@@ -1,11 +1,14 @@
 package com.eyki.offerpilot.interview;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import com.eyki.offerpilot.aicore.rag.RagService;
 import com.eyki.offerpilot.auth.domain.User;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
+import com.eyki.offerpilot.common.service.RateLimitService;
 import com.eyki.offerpilot.interview.domain.InterviewSession;
 import com.eyki.offerpilot.interview.dto.StartInterviewRequest;
 import com.eyki.offerpilot.interview.enums.SessionStatus;
@@ -32,6 +35,10 @@ class InterviewServiceImplTest {
     private InterviewSessionManager sessionManager;
     @Mock
     private AuthService authService;
+    @Mock
+    private RateLimitService rateLimitService;
+    @Mock
+    private RagService ragService;
 
     @InjectMocks
     private InterviewServiceImpl interviewService;
@@ -47,6 +54,8 @@ class InterviewServiceImplTest {
 
     @Test
     void createSession_shouldThrow_whenActiveSessionExists() {
+        when(rateLimitService.canStartInterview(anyLong())).thenReturn(true);
+
         InterviewSession activeSession = new InterviewSession();
         activeSession.setId(1L);
         activeSession.setStatus(SessionStatus.IN_PROGRESS.getCode());

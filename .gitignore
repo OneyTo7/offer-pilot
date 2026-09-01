@@ -21,6 +21,9 @@ target/
 
 ### NetBeans ###
 /nbproject/private/
+
+# 个人本地配置文件（免泄露 API Key）
+application-local.yaml
 /nbbuild/
 /dist/
 /nbdist/
@@ -31,6 +34,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Logs ###
+logs/
+*.log
 
 ### Environment ###
 .env

@@ -1,11 +1,15 @@
 package com.eyki.offerpilot.report;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import com.eyki.offerpilot.aicore.rag.RagService;
+import com.eyki.offerpilot.aicore.service.AiService;
 import com.eyki.offerpilot.auth.domain.User;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
+import com.eyki.offerpilot.common.service.RateLimitService;
 import com.eyki.offerpilot.position.repository.PositionRepository;
 import com.eyki.offerpilot.report.domain.Report;
 import com.eyki.offerpilot.report.dto.ReportRequest;
@@ -13,6 +17,7 @@ import com.eyki.offerpilot.report.repository.ReportRepository;
 import com.eyki.offerpilot.report.service.impl.ReportServiceImpl;
 import com.eyki.offerpilot.resume.domain.Resume;
 import com.eyki.offerpilot.resume.repository.ResumeRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +36,14 @@ class ReportServiceImplTest {
     private PositionRepository positionRepository;
     @Mock
     private AuthService authService;
+    @Mock
+    private AiService aiService;
+    @Mock
+    private RateLimitService rateLimitService;
+    @Mock
+    private ObjectMapper objectMapper;
+    @Mock
+    private RagService ragService;
 
     @InjectMocks
     private ReportServiceImpl reportService;
@@ -46,6 +59,8 @@ class ReportServiceImplTest {
 
     @Test
     void create_shouldThrow_whenResumeNotOwned() {
+        when(rateLimitService.canGenerateReport(anyLong())).thenReturn(true);
+
         Resume resume = new Resume();
         resume.setId(1L);
         resume.setUserId(2L); // different user

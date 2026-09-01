@@ -3,9 +3,12 @@ package com.eyki.offerpilot.interview.service.impl;
 import com.eyki.offerpilot.aicore.memory.MysqlChatMemory;
 import com.eyki.offerpilot.aicore.prompt.InterviewPrompt;
 import com.eyki.offerpilot.aicore.prompt.QuestionFeedbackPrompt;
+import com.eyki.offerpilot.aicore.rag.RagService;
 import com.eyki.offerpilot.aicore.service.AiService;
+import com.eyki.offerpilot.auth.domain.User;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
+import com.eyki.offerpilot.common.service.RateLimitService;
 import com.eyki.offerpilot.interview.domain.InterviewQuestion;
 import com.eyki.offerpilot.interview.domain.InterviewSession;
 import com.eyki.offerpilot.interview.dto.AnswerRequest;
@@ -27,10 +30,10 @@ import com.eyki.offerpilot.resume.repository.ResumeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.concurrent.CompletableFuture;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -40,6 +43,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import org.springframework.ai.document.Document;
 
 /**
  * Interview service implementation. Manages the full interview lifecycle: session creation,
@@ -60,6 +65,8 @@ public class InterviewServiceImpl implements InterviewService {
     private final InterviewSessionManager sessionManager;
     private final AuthService authService;
     private final AiService aiService;
+    private final RagService ragService;
+    private final RateLimitService rateLimitService;
     private final MysqlChatMemory chatMemoryStore;
     private final ObjectMapper objectMapper;
     private final TransactionTemplate transactionTemplate;
@@ -72,7 +79,17 @@ public class InterviewServiceImpl implements InterviewService {
     @Override
     @Transactional
     public SessionVO createSession(StartInterviewRequest request) {
-        Long userId = authService.getCurrentUserEntity().getId();
+        User user = authService.getCurrentUserEntity();
+        Long userId = user.getId();
+        boolean hasOwnApiKey = user.getApiKey() != null && !user.getApiKey().isBlank();
+
+        // Check rate limit only when user does NOT have their own API key
+        if (!hasOwnApiKey) {
+            if (!rateLimitService.canStartInterview(userId)) {
+                throw BusinessException.of(429, "今日面试次数已用完（免费版每日限 " + RateLimitService.DAILY_INTERVIEW_LIMIT + " 次）"
+                    + "，可配置自己的 DeepSeek API Key 解锁无限使用");
+            }
+        }
 
         // Check for existing active session
         List<InterviewSession> activeSessions = sessionRepository.findActiveByUserId(userId);
@@ -87,10 +104,15 @@ public class InterviewServiceImpl implements InterviewService {
         sessionManager.initSession(session);
         sessionRepository.insert(session);
 
+        // Record rate limit only for platform-key users
+        if (!hasOwnApiKey) {
+            rateLimitService.recordInterviewStart(userId);
+        }
+
         // 注册对话记忆的用户关联
         chatMemoryStore.registerConversation(session.getId().toString(), userId);
 
-        log.info("面试会话创建成功: sessionId={}, userId={}", session.getId(), userId);
+        log.info("面试会话创建成功: sessionId={}, userId={}, hasOwnApiKey={}", session.getId(), userId, hasOwnApiKey);
         return toSessionVO(session);
     }
 
@@ -157,6 +179,9 @@ public class InterviewServiceImpl implements InterviewService {
     public SseEmitter answer(AnswerRequest request) {
         Long userId = authService.getCurrentUserEntity().getId();
 
+        // Capture user's API key before the async block (Sa-Token ThreadLocal is not available in async threads)
+        String userApiKey = authService.getCurrentUserEntity().getApiKey();
+
         // Phase 1: Save answer and advance to next question (synchronous, in transaction)
         AnswerContext ctx = transactionTemplate.execute(status -> saveAnswerAndAdvance(request, userId));
 
@@ -169,11 +194,27 @@ public class InterviewServiceImpl implements InterviewService {
             ctx.session.getCurrentRound(), interviewRound.getName(),
             ctx.question.getQuestionText(), ctx.question.getUserAnswer());
 
+        // RAG: 检索知识库，获取与当前题目相关的参考答案作为评分依据
+        String ragSuffix = "";
+        try {
+            List<Document> relevantDocs = ragService.search(ctx.question.getQuestionText(), userId, 3);
+            if (!relevantDocs.isEmpty()) {
+                String ragContext = relevantDocs.stream()
+                    .map(doc -> "- " + doc.getText())
+                    .collect(Collectors.joining("\n\n"));
+                ragSuffix = "\n\n知识库参考信息（可用于参考答案和评分参考）：\n" + ragContext;
+            }
+        } catch (Exception e) {
+            log.warn("RAG 检索反馈参考失败: {}", e.getMessage());
+        }
+
+        String finalUserPrompt = userPrompt + ragSuffix;
+
         CompletableFuture.runAsync(() -> {
             try {
                 StringBuilder fullFeedback = new StringBuilder();
 
-                aiService.chatStream(QuestionFeedbackPrompt.SYSTEM_PROMPT, userPrompt)
+                aiService.chatStream(QuestionFeedbackPrompt.SYSTEM_PROMPT, finalUserPrompt, userApiKey)
                     .doOnNext(token -> {
                         try {
                             fullFeedback.append(token);
@@ -440,7 +481,25 @@ public class InterviewServiceImpl implements InterviewService {
             // Add previous questions context to avoid repetition
             String fullPrompt = userPrompt + "\n\n已提出的问题（请勿重复）:\n" + previousQuestionsText;
 
-            String response = aiService.chat(InterviewPrompt.SYSTEM_PROMPT, fullPrompt);
+            // RAG: 检索知识库，根据简历技能栈+职位+轮次搜索相关题目参考
+            try {
+                String searchQuery = String.format("%s %s %s",
+                    techStack.length() > 100 ? techStack.substring(0, 100) : techStack,
+                    positionTitle, interviewRound.getDescription());
+                List<Document> relevantDocs = ragService.search(searchQuery, session.getUserId(), 3);
+                if (!relevantDocs.isEmpty()) {
+                    String ragContext = relevantDocs.stream()
+                        .map(doc -> "- " + doc.getText())
+                        .collect(Collectors.joining("\n\n"));
+                    fullPrompt += "\n\n以下知识库内容可供参考，请据此提出更有针对性的面试题：\n" + ragContext;
+                }
+            } catch (Exception e) {
+                log.warn("RAG 检索知识库失败，跳过: {}", e.getMessage());
+            }
+
+            // Use user's own API key if configured
+            String userApiKey = authService.getCurrentUserEntity().getApiKey();
+            String response = aiService.chat(InterviewPrompt.SYSTEM_PROMPT, fullPrompt, userApiKey);
             if (response != null && !response.isBlank()) {
                 // Clean up — remove quotes that the AI might wrap the question in
                 String cleaned = response.trim();

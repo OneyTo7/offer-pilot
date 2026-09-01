@@ -20,9 +20,13 @@ public class UserVO {
 
     private String nickname;
 
-    /** API key is available via a dedicated endpoint, never exposed in the user profile response. */
+    /** Actual API key — never exposed in API responses. */
     @JsonIgnore
     private String apiKey;
+
+    /** Whether the user has configured their own API key. Exposed to frontend for UI state. */
+    @JsonProperty("has_api_key")
+    private boolean hasApiKey;
 
     private Integer status;
 

@@ -138,6 +138,18 @@ public class AuthServiceImpl implements AuthService {
         user.setApiKey(request.getApiKey());
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.updateById(user);
+        log.info("用户 API Key 已更新: userId={}", user.getId());
+        return toUserVO(user);
+    }
+
+    @Override
+    @Transactional
+    public UserVO clearApiKey() {
+        User user = getCurrentUserEntity();
+        user.setApiKey(null);
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.updateById(user);
+        log.info("用户 API Key 已清除: userId={}", user.getId());
         return toUserVO(user);
     }
 
@@ -168,6 +180,7 @@ public class AuthServiceImpl implements AuthService {
     private UserVO toUserVO(User user) {
         UserVO vo = new UserVO();
         BeanUtils.copyProperties(user, vo);
+        vo.setHasApiKey(user.getApiKey() != null && !user.getApiKey().isBlank());
         return vo;
     }
 
