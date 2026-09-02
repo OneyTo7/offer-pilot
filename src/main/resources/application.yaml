@@ -90,8 +90,8 @@ offer-pilot:
   # 社区信息
   community:
     github-url: https://github.com/OneyTo7/offer-pilot
-    wechat-qr-url: /files/community/wechat-group.jpg
-    author-wechat: lidaoqi_dev
+    wechat-qr-url: /files/community/wechat-personal.jpg
+    author-wechat: Gonnatobeme
 
 # MinIO 存储桶名
 minio:
