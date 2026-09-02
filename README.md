@@ -89,12 +89,15 @@ com.eyki.offerpilot/
 | 运行环境 | JDK 21 | 预览特性已启用 |
 | 数据库 | PostgreSQL + pgvector（向量库） | |
 | AI 模型 | DeepSeek（OpenAI 兼容 API） | |
-| 文档解析 | PDFBox + Tess4j OCR | |
+| 文档解析 | 阿里云百炼（文档智能解析） | |
 | 文件存储 | MinIO 对象存储 | |
 | 认证 | Sa-Token + JWT 双 Token | 2h Access + 7d Refresh |
 | 流式输出 | SSE (Server-Sent Events) | |
 | 构建 | Maven (wrapped) | |
-| 前端 | Vue 3 + TypeScript + Vite + Element Plus | 独立仓库 |
+| 前端 | Vue 3 + TypeScript + Vite + Element Plus | 独立仓库 `offer-pilot-ui` |
+| 向量数据库 | pgvector | PostgreSQL 16 扩展，512 维 |
+| 向量嵌入 | BGE bge-small-zh-v1.5 (ONNX) | 本地模型，无需 API Key |
+| 向量重排 | BGE bge-reranker-base (ONNX) | 本地模型，交叉编码器 |
 
 ---
 
@@ -112,7 +115,7 @@ com.eyki.offerpilot/
 docker compose up -d
 ```
 
-启动 MySQL 8、PostgreSQL 16 (pgvector)、MinIO、Redis。
+启动 PostgreSQL 16 (pgvector)、MinIO。
 
 ### 2. 启动后端
 
@@ -208,6 +211,14 @@ offer-pilot-ui/             # 前端项目（独立仓库）
 | Interview | POST | `/interviews/{id}/skip` | 跳过题目 |
 | Interview | POST | `/interviews/{id}/end` | 结束面试 |
 | Interview | GET | `/interviews/{id}/summary` | 面试总结 |
+| Knowledge | POST | `/knowledge` | 创建知识文档（文本） |
+| Knowledge | POST | `/knowledge/upload` | 上传知识库文件（Markdown/TXT） |
+| Knowledge | GET | `/knowledge` | 知识文档列表 |
+| Knowledge | GET | `/knowledge/{id}` | 知识文档详情 |
+| Knowledge | GET | `/knowledge/{id}/chunks` | 查看文档分片 |
+| Knowledge | DELETE | `/knowledge/{id}` | 删除文档 |
+| Knowledge | POST | `/knowledge/search` | 语义搜索知识库 |
+| File | GET | `/files/{*filePath}` | 文件下载（MinIO 代理） |
 | AI | GET | `/ai/info` | 大模型配置信息（API Key 状态、用量、套餐、社区） |
 | Health | GET | `/api/health` | 健康检查 |
 
