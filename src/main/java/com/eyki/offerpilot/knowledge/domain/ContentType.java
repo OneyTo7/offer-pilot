@@ -3,11 +3,11 @@ package com.eyki.offerpilot.knowledge.domain;
 /**
  * 内容类型 — Value Object。
  *
- * 限定知识文档的三种来源：纯文本、文件上传、URL。
+ * 限定知识文档的两种来源：纯文本、文件上传。
  */
 public enum ContentType {
 
-    TEXT("text"), FILE("file"), URL("url");
+    TEXT("text"), FILE("file");
 
     private final String value;
 

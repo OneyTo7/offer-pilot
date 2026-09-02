@@ -5,7 +5,7 @@ spring:
   application:
     name: offer-pilot
   profiles:
-    active: local
+    active: dev
 
   # Jackson 全局配置
   jackson:
@@ -74,13 +74,13 @@ sa-token:
   is-share: false
   token-style: uuid
   is-log: false
-  jwt-secret-key: ${SA_TOKEN_JWT_SECRET:42f97917310ccf833d3ade0bd8510c8a62effb4afd3db88648bf6c9cf090a87d}
+  jwt-secret-key: ${SA_TOKEN_JWT_SECRET:change-me-in-production}
 
 # OfferPilot 自定义配置
 offer-pilot:
   # API Key 加密密钥（AES-256-GCM），要求 64 字符十六进制字符串
   api-key-encryption:
-    secret: ${API_KEY_ENCRYPTION_SECRET:2117799dd2ba92d68b04e71c30f60e3d992b6b270de34dce7ee5b427c0f62228}
+    secret: ${API_KEY_ENCRYPTION_SECRET:0000000000000000000000000000000000000000000000000000000000000000}
   # 免费版套餐限制
   plan:
     free:
@@ -89,7 +89,7 @@ offer-pilot:
       daily-interviews: 1
   # 社区信息
   community:
-    github-url: https://github.com/lidaoqi/offer-pilot
+    github-url: https://github.com/OneyTo7/offer-pilot
     wechat-qr-url: /files/community/wechat-group.jpg
     author-wechat: lidaoqi_dev
 

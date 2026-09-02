@@ -2,6 +2,7 @@ package com.eyki.offerpilot.common.util;
 
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -66,7 +67,8 @@ public class AesGcmEncryptor {
         }
         try {
             byte[] iv = new byte[GCM_IV_LENGTH];
-            SecureRandom.getInstanceStrong().nextBytes(iv);
+            // new SecureRandom() 使用 /dev/urandom（非阻塞），避免 headless 服务启动时挂起
+            new SecureRandom().nextBytes(iv);
 
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_LENGTH, iv);

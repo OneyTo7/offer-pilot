@@ -132,6 +132,21 @@ public class ApiKeyRoutingAdvisor implements CallAdvisor, StreamAdvisor {
         }
         // 用户 key：直连 DeepSeek 流式接口，SSE 逐 chunk 转发
         return Flux.create(emitter -> {
+            // 使用数组持有 response 引用，以便在取消时关闭连接
+            final HttpResponse<InputStream>[] responseRef = new HttpResponse[1];
+
+            emitter.onCancel(() -> {
+                log.info("AI 流式请求被取消 (用户 API Key)");
+                if (responseRef[0] != null && responseRef[0].body() != null) {
+                    try { responseRef[0].body().close(); } catch (Exception ignored) {}
+                }
+            });
+            emitter.onDispose(() -> {
+                if (responseRef[0] != null && responseRef[0].body() != null) {
+                    try { responseRef[0].body().close(); } catch (Exception ignored) {}
+                }
+            });
+
             try {
                 String jsonBody = buildRequestBody(request.prompt(), true);
                 HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -144,6 +159,7 @@ public class ApiKeyRoutingAdvisor implements CallAdvisor, StreamAdvisor {
 
                 HttpResponse<InputStream> response = httpClient.send(httpRequest,
                     HttpResponse.BodyHandlers.ofInputStream());
+                responseRef[0] = response;
 
                 if (response.statusCode() != 200) {
                     String errorBody = new String(response.body().readAllBytes(), StandardCharsets.UTF_8);
@@ -160,6 +176,11 @@ public class ApiKeyRoutingAdvisor implements CallAdvisor, StreamAdvisor {
                     new InputStreamReader(response.body(), StandardCharsets.UTF_8))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
+                        // 检查 emitter 是否已被取消（客户端断开）
+                        if (emitter.isCancelled()) {
+                            log.info("SSE 客户端已断开，停止读取流式响应");
+                            return;
+                        }
                         if (!line.startsWith("data: ")) {
                             continue;
                         }

@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://postgres:5432/offer_pilot
     username: postgres
-    password: ${POSTGRES_PASSWORD:pgpass}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   ai:
@@ -13,8 +13,8 @@ spring:
 
 minio:
   endpoint: http://minio:9000
-  access-key: ${MINIO_ACCESS_KEY:minioadmin}
-  secret-key: ${MINIO_SECRET_KEY:minioadmin}
+  access-key: ${MINIO_ACCESS_KEY}
+  secret-key: ${MINIO_SECRET_KEY}
 
 logging:
   level:

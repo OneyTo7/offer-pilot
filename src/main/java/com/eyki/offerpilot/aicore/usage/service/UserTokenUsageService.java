@@ -37,8 +37,12 @@ public class UserTokenUsageService {
      * @param promptTokens     输入 token 数
      * @param completionTokens 输出 token 数
      */
+    /**
+     * 同步锁防竞态：MVP 单实例部署时，两个并发请求可能同时 findByUserIdAndDate 为空
+     * 导致重复插入（token 用量丢失）。用 synchronized 加锁，后续迁移到 Redis 可替换。
+     */
     @Transactional
-    public void record(Long userId, int promptTokens, int completionTokens) {
+    public synchronized void record(Long userId, int promptTokens, int completionTokens) {
         try {
             LocalDate today = LocalDate.now();
             int totalTokens = promptTokens + completionTokens;

@@ -1,7 +1,9 @@
 package com.eyki.offerpilot.aicore.rag;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.document.Document;
@@ -51,6 +53,17 @@ public class KnowledgeEtlService {
     public List<Document> extract(Resource resource, String filename) {
         DocumentReader reader = selectReader(resource, filename);
         List<Document> documents = reader.get();
+
+        // MarkdownDocumentReader 把标题放入 metadata["title"]，正文 content 不含题目；
+        // 将标题拼接回 content，保证"题目+答案"在同一个分片（Tika 解析的文档无 title，原样返回）。
+        documents = documents.stream().map(doc -> {
+            Object title = doc.getMetadata().get("title");
+            if (title == null || title.toString().isBlank()) {
+                return doc;
+            }
+            return new Document(title + "\n\n" + doc.getText(), new HashMap<>(doc.getMetadata()));
+        }).collect(Collectors.toList());
+
         log.info("ETL Extract 完成: filename={}, reader={}, documents={}", filename,
             reader.getClass().getSimpleName(), documents.size());
         return documents;

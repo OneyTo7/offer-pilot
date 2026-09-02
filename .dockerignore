@@ -1,0 +1,32 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Build
+target/
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Config with secrets
+application-local.yaml
+application-local.yml
+
+# Environment
+.env
+.env.local
+
+# Maven wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# Claude
+.claude/

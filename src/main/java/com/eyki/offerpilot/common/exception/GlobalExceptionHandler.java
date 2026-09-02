@@ -23,8 +23,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResult<?>> handleBusinessException(BusinessException e) {
         log.warn("业务异常: code={}, msg={}", e.getCode(), e.getMessage());
         ApiResult<?> body = ApiResult.error(e.getCode(), e.getMessage()).withTraceId(TraceIdUtil.getTraceId());
-        // 401 类错误返回 HTTP 401，方便前端拦截器判断
-        HttpStatus status = e.getCode() == ErrorCode.UNAUTHORIZED ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST;
+        // 按业务状态码映射 HTTP 状态码，方便前端拦截器区分
+        HttpStatus status = switch (e.getCode()) {
+            case 401 -> HttpStatus.UNAUTHORIZED;
+            case 403 -> HttpStatus.FORBIDDEN;
+            case 404 -> HttpStatus.NOT_FOUND;
+            case 429 -> HttpStatus.TOO_MANY_REQUESTS;
+            default -> HttpStatus.BAD_REQUEST;
+        };
         return ResponseEntity.status(status).body(body);
     }
 

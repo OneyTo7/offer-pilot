@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
@@ -123,5 +125,21 @@ public class AiCoreConfig {
 
             return advisorBuilder.build();
         }).orElse(null);
+    }
+
+    /**
+     * SSE 面试回答异步流处理线程池。独立于公共 ForkJoinPool，避免 AI 流式反馈阻塞其他并行任务。
+     * 使用虚拟线程（Java 21），适合 IO 密集型 SSE 流处理。
+     */
+    @Bean(name = "sseTaskExecutor", destroyMethod = "close")
+    public Executor sseTaskExecutor() {
+        return Executors.newThreadPerTaskExecutor(
+            Thread.ofVirtual().name("sse-").factory());
+    }
+
+    @Bean(name = "reportTaskExecutor", destroyMethod = "close")
+    public Executor reportTaskExecutor() {
+        return Executors.newThreadPerTaskExecutor(
+            Thread.ofVirtual().name("report-").factory());
     }
 }

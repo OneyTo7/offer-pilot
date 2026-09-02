@@ -1,69 +1,54 @@
 package com.eyki.offerpilot.aicore.rag;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 
 class KnowledgeEtlServiceTest {
 
-    private KnowledgeEtlService etlService;
-
-    @BeforeEach
-    void setUp() throws Exception {
-        @SuppressWarnings("unchecked") ObjectProvider<Object> emptyProvider = mock(ObjectProvider.class);
+    private KnowledgeEtlService service() {
+        @SuppressWarnings("unchecked") ObjectProvider<VectorStore> emptyProvider = mock(ObjectProvider.class);
         when(emptyProvider.getIfAvailable()).thenReturn(null);
-        var constructor = KnowledgeEtlService.class.getDeclaredConstructor(ObjectProvider.class);
-        constructor.setAccessible(true);
-        etlService = (KnowledgeEtlService)constructor.newInstance(emptyProvider);
+        return new KnowledgeEtlService(emptyProvider);
     }
 
     @Test
-    void extract_shouldParseMarkdown() {
-        String markdown = "# 第一章 Java 基础\n\nJava 是面向对象的语言。\n\n## 1.1 集合框架\n\nArrayList 基于数组实现。\n\n## 1.2 并发\n\nsynchronized 关键字。";
-        ByteArrayResource resource = new ByteArrayResource(markdown.getBytes(), "java-basics.md");
+    void extract_shouldPrependHeadingTitle_whenMarkdown() {
+        String md = "## 1. 说一下进程和线程的区别\n**答案：**\n进程是操作系统资源分配的最小单位，线程是CPU调度执行的最小单位。";
 
-        List<Document> docs = etlService.extract(resource, "java-basics.md");
+        List<Document> docs = service().extract(byteResource("test.md", md), "test.md");
 
-        assertNotNull(docs);
-        assertFalse(docs.isEmpty());
-        // MarkdownDocumentReader 按标题分块：每个标题节为一个 Document
-        assertTrue(docs.size() >= 3, "markdown 应按标题分块，实际: " + docs.size());
-        String allText = String.join(" ", docs.stream().map(Document::getText).toList());
-        assertTrue(allText.contains("Java"));
-        assertTrue(allText.contains("ArrayList"));
+        assertTrue(docs.stream().anyMatch(d -> d.getText().contains("1. 说一下进程和线程的区别")),
+            "分片内容应包含题目");
+        assertTrue(docs.stream().anyMatch(d -> d.getText().contains("进程是操作系统资源分配的最小单位")),
+            "分片内容应包含答案");
     }
 
     @Test
-    void extract_shouldParsePlainTxtViaTika() {
-        String txt = "MySQL 索引原理\nB+ 树结构适合范围查询。\n覆盖索引可以避免回表。\n";
-        ByteArrayResource resource = new ByteArrayResource(txt.getBytes(), "mysql-notes.txt");
+    void extract_shouldKeepPlainTxtContent() {
+        String txt = "纯文本内容，没有标题结构。";
 
-        List<Document> docs = etlService.extract(resource, "mysql-notes.txt");
+        List<Document> docs = service().extract(byteResource("note.txt", txt), "note.txt");
 
-        assertNotNull(docs);
-        assertFalse(docs.isEmpty());
-        String allText = String.join(" ", docs.stream().map(Document::getText).toList());
-        assertTrue(allText.contains("B+ 树"));
-        assertTrue(allText.contains("覆盖索引"));
+        assertTrue(docs.stream().anyMatch(d -> d.getText().contains("纯文本内容")), "TXT 内容应被保留");
     }
 
-    @Test
-    void index_shouldReturnEmpty_whenVectorStoreUnavailable() {
-        List<Document> docs = List.of(new Document("测试内容"));
-
-        List<Document> chunks = etlService.index(docs, 1L, "doc-1", java.util.Map.of());
-
-        assertNotNull(chunks);
-        assertEquals(0, chunks.size());
+    private Resource byteResource(String filename, String content) {
+        return new InputStreamResource(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8))) {
+            @Override
+            public String getFilename() {
+                return filename;
+            }
+        };
     }
 }

@@ -1,6 +1,5 @@
 package com.eyki.offerpilot.report.service.impl;
 
-import cn.hutool.json.JSONUtil;
 import com.eyki.offerpilot.aicore.prompt.ReportPrompt;
 import com.eyki.offerpilot.aicore.rag.RagService;
 import com.eyki.offerpilot.aicore.service.AiService;
@@ -20,6 +19,7 @@ import com.eyki.offerpilot.report.repository.ReportRepository;
 import com.eyki.offerpilot.report.service.ReportService;
 import com.eyki.offerpilot.resume.domain.Resume;
 import com.eyki.offerpilot.resume.repository.ResumeRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -55,6 +56,7 @@ public class ReportServiceImpl implements ReportService {
     private final RateLimitService rateLimitService;
     private final UserTokenUsageService tokenUsageService;
     private final ObjectMapper objectMapper;
+    private final Executor reportTaskExecutor;
 
     @Override
     @Transactional
@@ -109,7 +111,7 @@ public class ReportServiceImpl implements ReportService {
                 finalReport.setErrorMessage("AI 生成失败: " + e.getMessage());
                 reportRepository.updateById(finalReport);
             }
-        });
+        }, reportTaskExecutor);
 
         log.info("报告创建成功: reportId={}, userId={}, hasOwnApiKey={}", report.getId(), userId, hasOwnApiKey);
         return toReportVO(report, resume.getName(), position.getTitle());
@@ -257,14 +259,28 @@ public class ReportServiceImpl implements ReportService {
                 contentBuilder.matchScore(report.getMatchScore().doubleValue());
             }
             if (report.getTechStackAnalysis() != null) {
-                contentBuilder.techStackAnalysis(
-                    JSONUtil.toBean(report.getTechStackAnalysis(), ReportContent.TechStackAnalysis.class));
+                try {
+                    contentBuilder.techStackAnalysis(
+                        objectMapper.readValue(report.getTechStackAnalysis(), ReportContent.TechStackAnalysis.class));
+                } catch (Exception e) {
+                    log.warn("解析 techStackAnalysis JSON 失败: reportId={}", report.getId(), e);
+                }
             }
             if (report.getHighlights() != null) {
-                contentBuilder.highlights(JSONUtil.parseArray(report.getHighlights()).toList(String.class));
+                try {
+                    contentBuilder.highlights(
+                        objectMapper.readValue(report.getHighlights(), new TypeReference<List<String>>() {}));
+                } catch (Exception e) {
+                    log.warn("解析 highlights JSON 失败: reportId={}", report.getId(), e);
+                }
             }
             if (report.getWeaknesses() != null) {
-                contentBuilder.weaknesses(JSONUtil.parseArray(report.getWeaknesses()).toList(String.class));
+                try {
+                    contentBuilder.weaknesses(
+                        objectMapper.readValue(report.getWeaknesses(), new TypeReference<List<String>>() {}));
+                } catch (Exception e) {
+                    log.warn("解析 weaknesses JSON 失败: reportId={}", report.getId(), e);
+                }
             }
             contentBuilder.fullReport(report.getFullReport());
             // Pass through the full AI analysis data for the new rich report frontend

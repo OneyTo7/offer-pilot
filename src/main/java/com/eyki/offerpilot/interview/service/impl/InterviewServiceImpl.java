@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -74,6 +75,7 @@ public class InterviewServiceImpl implements InterviewService {
     private final TransactionTemplate transactionTemplate;
     private final ResumeRepository resumeRepository;
     private final PositionRepository positionRepository;
+    private final Executor sseTaskExecutor;
 
     private static final long SSE_TIMEOUT = 5 * 60 * 1000L; // 5 minutes
     private static final Pattern SCORE_PATTERN = Pattern.compile("SCORE:\\s*(\\d+(\\.\\d+)?)", Pattern.CASE_INSENSITIVE);
@@ -223,6 +225,8 @@ public class InterviewServiceImpl implements InterviewService {
                             emitter.send(SseEmitter.event().name("feedback_token").data(token));
                         } catch (IOException e) {
                             log.error("SSE 发送 feedback_token 失败", e);
+                            // 客户端断开时停止流
+                            emitter.completeWithError(e);
                             throw new RuntimeException(e);
                         }
                     })
@@ -280,12 +284,21 @@ public class InterviewServiceImpl implements InterviewService {
                             emitter.completeWithError(e2);
                         }
                     })
+                    .doFinally(signal -> {
+                        // 无论完成、出错还是取消，确保资源释放
+                        // emitter.complete() 在已完成的 emitter 上调用是安全的（幂等）
+                        try {
+                            emitter.complete();
+                        } catch (Exception ignored) {
+                            // 已完成的 emitter 忽略
+                        }
+                    })
                     .subscribe();
             } catch (Exception e) {
                 log.error("SSE 流处理异常", e);
                 emitter.completeWithError(e);
             }
-        });
+        }, sseTaskExecutor);
 
         return emitter;
     }
