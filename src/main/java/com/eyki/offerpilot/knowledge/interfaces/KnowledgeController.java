@@ -2,14 +2,17 @@ package com.eyki.offerpilot.knowledge.interfaces;
 
 import com.eyki.offerpilot.common.model.ApiResult;
 import com.eyki.offerpilot.knowledge.application.KnowledgeApplicationService;
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeChunkVO;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeDocumentDetailVO;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeDocumentVO;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeSearchRequest;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeSearchResult;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeUploadRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * 职责：HTTP 请求解析、响应包装、参数校验。 不包含业务逻辑，直接委派给 Application Service。
  */
+@Validated
 @RestController
 @RequestMapping("/api/v1/knowledge")
 @RequiredArgsConstructor
@@ -46,7 +50,7 @@ public class KnowledgeController {
      */
     @PostMapping("/upload")
     public ApiResult<KnowledgeDocumentVO> upload(@RequestParam("file") MultipartFile file,
-        @RequestParam(value = "title", required = false) String title) {
+        @RequestParam(value = "title", required = false) @Size(max = 255, message = "标题长度不能超过 255 字符") String title) {
         KnowledgeDocumentVO doc = knowledgeService.upload(file, title);
         return ApiResult.success("知识文档上传成功", doc);
     }
@@ -67,6 +71,15 @@ public class KnowledgeController {
     public ApiResult<KnowledgeDocumentDetailVO> getDetail(@PathVariable Long id) {
         KnowledgeDocumentDetailVO detail = knowledgeService.getDetail(id);
         return ApiResult.success(detail);
+    }
+
+    /**
+     * 查看知识文档的全部分片（来自 pgvector）。
+     */
+    @GetMapping("/{id}/chunks")
+    public ApiResult<List<KnowledgeChunkVO>> listChunks(@PathVariable Long id) {
+        List<KnowledgeChunkVO> chunks = knowledgeService.listChunks(id);
+        return ApiResult.success(chunks);
     }
 
     /**

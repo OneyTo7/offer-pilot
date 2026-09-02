@@ -114,10 +114,10 @@
       <artifactId>spring-ai-starter-model-transformers</artifactId>
     </dependency>
 
-    <!-- Spring AI - pgvector Vector Store -->
+    <!-- Spring AI - pgvector Vector Store（starter 含自动配置，才会创建 VectorStore bean 并初始化 schema） -->
     <dependency>
       <groupId>org.springframework.ai</groupId>
-      <artifactId>spring-ai-pgvector-store</artifactId>
+      <artifactId>spring-ai-starter-vector-store-pgvector</artifactId>
     </dependency>
 
     <!-- MinIO -->

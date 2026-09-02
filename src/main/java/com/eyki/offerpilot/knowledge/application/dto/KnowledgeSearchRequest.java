@@ -1,5 +1,7 @@
 package com.eyki.offerpilot.knowledge.application.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -12,6 +14,8 @@ public class KnowledgeSearchRequest {
     @NotBlank(message = "搜索关键词不能为空")
     private String query;
 
-    /** 返回结果数量上限，默认 5 */
+    /** 返回结果数量上限，默认 5（上限 50，防止全量检索拖垮 pgvector） */
+    @Min(value = 1, message = "topK 最小为 1")
+    @Max(value = 50, message = "topK 最大为 50")
     private Integer topK = 5;
 }

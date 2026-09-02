@@ -6,6 +6,7 @@ import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
 import com.eyki.offerpilot.common.model.ErrorCode;
 import com.eyki.offerpilot.knowledge.application.assembler.KnowledgeAssembler;
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeChunkVO;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeDocumentDetailVO;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeDocumentVO;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeSearchRequest;
@@ -176,6 +177,20 @@ public class KnowledgeApplicationService {
         KnowledgeDocument doc =
             repository.findByUserIdAndId(userId, id).orElseThrow(() -> BusinessException.notFound("知识文档不存在"));
         return assembler.toDetailVO(doc);
+    }
+
+    /**
+     * 查看知识文档的全部分片（来自 pgvector vector_store）。
+     *
+     * 先校验文档归属（防止越权），再按 user_id + document_id 查询分片。
+     */
+    public List<KnowledgeChunkVO> listChunks(Long id) {
+        Long userId = authService.getCurrentUserEntity().getId();
+        KnowledgeDocument doc =
+            repository.findByUserIdAndId(userId, id).orElseThrow(() -> BusinessException.notFound("知识文档不存在"));
+
+        return ragService.listChunks(doc.getId().toString(), userId).stream().map(assembler::toChunkVO)
+            .collect(Collectors.toList());
     }
 
     /**

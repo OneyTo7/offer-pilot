@@ -8,8 +8,11 @@ import com.eyki.offerpilot.common.util.TraceIdUtil;
 import jakarta.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
@@ -17,9 +20,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
-    public ApiResult<?> handleBusinessException(BusinessException e) {
+    public ResponseEntity<ApiResult<?>> handleBusinessException(BusinessException e) {
         log.warn("业务异常: code={}, msg={}", e.getCode(), e.getMessage());
-        return ApiResult.error(e.getCode(), e.getMessage()).withTraceId(TraceIdUtil.getTraceId());
+        ApiResult<?> body = ApiResult.error(e.getCode(), e.getMessage()).withTraceId(TraceIdUtil.getTraceId());
+        // 401 类错误返回 HTTP 401，方便前端拦截器判断
+        HttpStatus status = e.getCode() == ErrorCode.UNAUTHORIZED ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST;
+        return ResponseEntity.status(status).body(body);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -38,6 +44,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotLoginException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ApiResult<?> handleNotLogin(NotLoginException e) {
         log.warn("未登录: {}", e.getMessage());
         return ApiResult.error(ErrorCode.UNAUTHORIZED, "未登录或登录已过期，请重新登录")

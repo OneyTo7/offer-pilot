@@ -2,6 +2,7 @@ package com.eyki.offerpilot.resume.service.impl;
 
 import com.eyki.offerpilot.aicore.prompt.ResumeParsePrompt;
 import com.eyki.offerpilot.aicore.service.AiService;
+import com.eyki.offerpilot.common.exception.BusinessException;
 import com.eyki.offerpilot.resume.domain.Resume;
 import com.eyki.offerpilot.resume.dto.ResumeParseResult;
 import com.eyki.offerpilot.resume.service.ResumeParseService;
@@ -13,6 +14,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
@@ -82,10 +84,12 @@ public class ResumeParseServiceImpl implements ResumeParseService {
             // 3. DeepSeek AI 结构化解析。
             //    走无 RAG 的 ChatClient：简历解析是纯提取场景，知识库内容注入会污染解析结果
             //    （chatWithEntity 会经 RetrievalAugmentationAdvisor 自动检索知识库）
+            //    context 传 user_id 激活 TokenUsageAdvisor：前置额度校验 + 后置用量累计
             ResumeParseResult result = aiService.chatWithEntityNoRag(
                 ResumeParsePrompt.getSystemPrompt(),
                 ResumeParsePrompt.buildUserPrompt(rawText),
-                ResumeParseResult.class);
+                ResumeParseResult.class,
+                Map.of("user_id", resume.getUserId()));
 
             // 4. 将解析结果回写到 Resume 实体
             parseAiResponse(resume, result);
@@ -97,7 +101,9 @@ public class ResumeParseServiceImpl implements ResumeParseService {
         } catch (Exception e) {
             log.error("简历解析失败: resumeId={}", resume.getId(), e);
             resume.setStatus(2);
-            resume.setFailReason("解析异常: " + e.getMessage());
+            // 业务异常（如 token 额度不足 429）直接透出业务消息，其余加前缀
+            resume.setFailReason(
+                e instanceof BusinessException be ? be.getMessage() : "解析异常: " + e.getMessage());
             resume.setUpdatedAt(LocalDateTime.now());
         } finally {
             // 清理临时文件

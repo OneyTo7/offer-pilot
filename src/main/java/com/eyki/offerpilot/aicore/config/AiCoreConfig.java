@@ -1,11 +1,15 @@
 package com.eyki.offerpilot.aicore.config;
 
+import com.eyki.offerpilot.aicore.advisor.ApiKeyRoutingAdvisor;
 import com.eyki.offerpilot.aicore.advisor.MyLogAdvisor;
 import com.eyki.offerpilot.aicore.advisor.ReReadingAdvisor;
 import com.eyki.offerpilot.aicore.advisor.SafeValidAdvisor;
+import com.eyki.offerpilot.aicore.advisor.TokenUsageAdvisor;
 import com.eyki.offerpilot.aicore.memory.PgChatMemory;
 import com.eyki.offerpilot.aicore.rag.BgeCrossEncoderReRanker;
 import com.eyki.offerpilot.aicore.rag.config.ReRankerProperties;
+import com.eyki.offerpilot.aicore.usage.service.UserTokenUsageService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +28,12 @@ import org.springframework.context.annotation.Configuration;
  * AI Core configuration. Sets up the ChatClient with the Advisor Chain:
  * <pre>
  * SafeValidAdvisor (order=0) → 输入安全校验
+ * TokenUsageAdvisor (order=0) → 前置 token 额度校验 + 后置用量累计
  * ReReadingAdvisor (order=1) → 提示词增强
  * MessageChatMemoryAdvisor (order=2) → 对话记忆自动注入
  * RetrievalAugmentationAdvisor (order=3) → 自动 RAG 检索+增强（当 pgvector 可用时）
  * MyLogAdvisor (order=4) → 请求耗时日志
+ * ApiKeyRoutingAdvisor (order=5) → 用户自备 key 时拦截模型调用、直连 DeepSeek（其余透传）
  * </pre>
  */
 @Configuration
@@ -47,13 +53,17 @@ public class AiCoreConfig {
     @Bean
     public ChatClient chatClient(ChatClient.Builder builder,
                                   Optional<RetrievalAugmentationAdvisor> ragAdvisor,
-                                  MessageChatMemoryAdvisor memoryAdvisor) {
+                                  MessageChatMemoryAdvisor memoryAdvisor,
+                                  UserTokenUsageService tokenUsageService,
+                                  ObjectMapper objectMapper) {
         List<Advisor> advisors = new ArrayList<>();
         advisors.add(new SafeValidAdvisor());
+        advisors.add(new TokenUsageAdvisor(tokenUsageService));
         advisors.add(new ReReadingAdvisor());
         advisors.add(memoryAdvisor);
         ragAdvisor.ifPresent(advisors::add);
         advisors.add(new MyLogAdvisor());
+        advisors.add(new ApiKeyRoutingAdvisor(objectMapper));
         return builder.defaultAdvisors(advisors.toArray(new Advisor[0])).build();
     }
 
@@ -62,11 +72,14 @@ public class AiCoreConfig {
      * <p>RetrievalAugmentationAdvisor has no per-call disable switch — it runs on every
      * ChatClient invocation. Resume parsing must not be augmented with knowledge-base
      * content (it would pollute the structured extraction), so it uses this dedicated
-     * client instead. Spring AI's recommended pattern for different advisor sets per use case.</p>
+     * client instead. Spring AI's recommended pattern for different advisor sets per use case.
+     * TokenUsageAdvisor 同样挂载，简历解析的 token 用量校验与累计与其他路径一致。</p>
      */
     @Bean
-    public ChatClient chatClientNoRag(ChatClient.Builder builder) {
-        return builder.defaultAdvisors(new SafeValidAdvisor(), new ReReadingAdvisor(), new MyLogAdvisor()).build();
+    public ChatClient chatClientNoRag(ChatClient.Builder builder, UserTokenUsageService tokenUsageService,
+        ObjectMapper objectMapper) {
+        return builder.defaultAdvisors(new SafeValidAdvisor(), new TokenUsageAdvisor(tokenUsageService),
+            new ReReadingAdvisor(), new MyLogAdvisor(), new ApiKeyRoutingAdvisor(objectMapper)).build();
     }
 
     /**

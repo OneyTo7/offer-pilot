@@ -1,5 +1,7 @@
 package com.eyki.offerpilot.aicore.rag;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.Filter;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,13 +30,24 @@ public class RagService {
     private static final int CHUNK_SIZE = 500;
     private static final int CHUNK_OVERLAP = 50;
 
+    /** pgvector 表名，需与 PgVectorStore 默认值一致（schemaName=public, tableName=vector_store） */
+    private static final String VECTOR_STORE_TABLE = "public.vector_store";
+
+    /** metadata 中记录分片顺序的 key（写入时按 0..n 递增；旧数据可能缺失） */
+    private static final String META_CHUNK_INDEX = "chunk_index";
+
     private final VectorStore vectorStore;
     private final TokenTextSplitter textSplitter;
+    private final JdbcTemplate jdbcTemplate;
+    private final ObjectMapper objectMapper;
 
-    public RagService(ObjectProvider<VectorStore> vectorStoreProvider) {
+    public RagService(ObjectProvider<VectorStore> vectorStoreProvider, JdbcTemplate jdbcTemplate,
+        ObjectMapper objectMapper) {
         this.vectorStore = vectorStoreProvider.getIfAvailable();
         this.textSplitter =
             TokenTextSplitter.builder().withChunkSize(CHUNK_SIZE).withMinChunkSizeChars(CHUNK_OVERLAP).build();
+        this.jdbcTemplate = jdbcTemplate;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -46,16 +60,54 @@ public class RagService {
         }
         List<Document> chunks = textSplitter.apply(List.of(new Document(text, metadata)));
 
-        // Add user_id to each chunk's metadata for filtering
-        chunks.forEach(chunk -> {
-            chunk.getMetadata().put("user_id", userId.toString());
+        // Add user_id to each chunk's metadata for filtering; chunk_index preserves document order
+        for (int i = 0; i < chunks.size(); i++) {
+            Map<String, Object> meta = chunks.get(i).getMetadata();
+            meta.put("user_id", userId.toString());
+            meta.put(META_CHUNK_INDEX, i);
             if (resumeId != null) {
-                chunk.getMetadata().put("resume_id", resumeId);
+                meta.put("resume_id", resumeId);
             }
-        });
+        }
 
         vectorStore.add(chunks);
         log.info("文档索引成功: userId={}, chunks={}, resumeId={}", userId, chunks.size(), resumeId);
+    }
+
+    /**
+     * List all chunks of a knowledge document (user-scoped), in chunk order.
+     *
+     * <p>Queries {@code vector_store} directly since the VectorStore API offers no
+     * "list by metadata" operation. Old chunks without a {@code chunk_index} sort last.</p>
+     *
+     * @return the chunks, each carrying its pgvector row id in {@code metadata["vector_store_id"]}
+     */
+    public List<Document> listChunks(String documentId, Long userId) {
+        if (vectorStore == null) {
+            log.warn("VectorStore 不可用，跳过分片查询");
+            return List.of();
+        }
+        String sql = "SELECT id, content, metadata FROM " + VECTOR_STORE_TABLE
+            + " WHERE metadata->>'user_id' = ? AND metadata->>'document_id' = ?"
+            + " ORDER BY (metadata->>'chunk_index')::int NULLS LAST, id";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Document doc = new Document(rs.getString("content"), parseMetadata(rs.getString("metadata")));
+            doc.getMetadata().put("vector_store_id", rs.getString("id"));
+            return doc;
+        }, userId.toString(), documentId);
+    }
+
+    private Map<String, Object> parseMetadata(String json) {
+        if (json == null || json.isBlank()) {
+            return Map.of();
+        }
+        try {
+            return objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {
+            });
+        } catch (Exception e) {
+            log.warn("解析 vector_store metadata 失败，忽略: {}", e.getMessage());
+            return Map.of();
+        }
     }
 
     /**

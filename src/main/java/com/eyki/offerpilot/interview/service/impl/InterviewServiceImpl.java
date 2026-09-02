@@ -5,6 +5,7 @@ import com.eyki.offerpilot.aicore.prompt.InterviewPrompt;
 import com.eyki.offerpilot.aicore.prompt.QuestionFeedbackPrompt;
 import com.eyki.offerpilot.aicore.rag.RagService;
 import com.eyki.offerpilot.aicore.service.AiService;
+import com.eyki.offerpilot.aicore.usage.service.UserTokenUsageService;
 import com.eyki.offerpilot.auth.domain.User;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
@@ -45,7 +46,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import org.springframework.ai.document.Document;
 
 /**
  * Interview service implementation. Manages the full interview lifecycle: session creation,
@@ -68,6 +68,7 @@ public class InterviewServiceImpl implements InterviewService {
     private final AiService aiService;
     private final RagService ragService;
     private final RateLimitService rateLimitService;
+    private final UserTokenUsageService tokenUsageService;
     private final PgChatMemory chatMemoryStore;
     private final ObjectMapper objectMapper;
     private final TransactionTemplate transactionTemplate;
@@ -89,6 +90,10 @@ public class InterviewServiceImpl implements InterviewService {
             if (!rateLimitService.canStartInterview(userId)) {
                 throw BusinessException.of(429, "今日面试次数已用完（免费版每日限 " + RateLimitService.DAILY_INTERVIEW_LIMIT + " 次）"
                     + "，可配置自己的 DeepSeek API Key 解锁无限使用");
+            }
+            if (!tokenUsageService.checkRemaining(userId)) {
+                throw BusinessException.of(429, "本月 Token 额度已用完（免费版每月限 "
+                    + "100K tokens），可配置自己的 DeepSeek API Key 解锁无限使用");
             }
         }
 
@@ -195,41 +200,24 @@ public class InterviewServiceImpl implements InterviewService {
             ctx.session.getCurrentRound(), interviewRound.getName(),
             ctx.question.getQuestionText(), ctx.question.getUserAnswer());
 
-        // RAG + 记忆策略（双路径）：
-        // - 平台 key：RetrievalAugmentationAdvisor 自动检索知识库（user_id 过滤隔离），
-        //   MessageChatMemoryAdvisor 按 conversation_id 注入前序问答，使反馈评分连贯
-        // - 用户 API key：advisors 不生效，服务层手动检索知识库拼入 prompt
-        Map<String, Object> context;
-        String finalUserPrompt;
-        if (userApiKey == null || userApiKey.isBlank()) {
-            context = Map.of(
-                "vector_store_filter_expression", ragService.buildUserFilter(userId),
-                "chat_memory_conversation_id", ctx.session.getId().toString(),
-                "user_id", userId);
-            finalUserPrompt = userPrompt;
-        } else {
-            context = null;
-            String ragSuffix = "";
-            try {
-                List<Document> relevantDocs = ragService.search(ctx.question.getQuestionText(), userId, 3);
-                if (!relevantDocs.isEmpty()) {
-                    String ragContext = relevantDocs.stream()
-                        .map(doc -> "- " + doc.getText())
-                        .collect(Collectors.joining("\n\n"));
-                    ragSuffix = "\n\n知识库参考信息（可用于参考答案和评分参考）：\n" + ragContext;
-                }
-            } catch (Exception e) {
-                log.warn("RAG 检索反馈参考失败: {}", e.getMessage());
-            }
-            finalUserPrompt = userPrompt + ragSuffix;
-        }
+        // RAG + 记忆策略（统一路径）：RetrievalAugmentationAdvisor 自动检索知识库（user_id 过滤隔离），
+        // MessageChatMemoryAdvisor 按 conversation_id 注入前序问答，使反馈评分连贯；
+        // 两种 key 配置行为一致（用户自备 key 时由 ApiKeyRoutingAdvisor 拦截模型调用）
+        Map<String, Object> context = Map.of(
+            "vector_store_filter_expression", ragService.buildUserFilter(userId),
+            "chat_memory_conversation_id", ctx.session.getId().toString(),
+            "user_id", userId);
 
         CompletableFuture.runAsync(() -> {
             try {
                 StringBuilder fullFeedback = new StringBuilder();
 
-                aiService.chatStream(QuestionFeedbackPrompt.SYSTEM_PROMPT, finalUserPrompt, userApiKey, context)
+                aiService.chatStream(QuestionFeedbackPrompt.SYSTEM_PROMPT, userPrompt, userApiKey, context)
                     .doOnNext(token -> {
+                        // 跳过 advisor 补发的空内容 usage 收尾 chunk
+                        if (token == null || token.isEmpty()) {
+                            return;
+                        }
                         try {
                             fullFeedback.append(token);
                             emitter.send(SseEmitter.event().name("feedback_token").data(token));
@@ -498,39 +486,15 @@ public class InterviewServiceImpl implements InterviewService {
             // Use user's own API key if configured
             String userApiKey = authService.getCurrentUserEntity().getApiKey();
 
-            // RAG 策略（双路径）：
-            // - 平台 key：RetrievalAugmentationAdvisor 自动检索知识库（user_id 过滤隔离），
-            //   根据简历技能栈+职位+轮次生成更有针对性的面试题
-            // - 用户 API key：advisors 不生效，服务层手动检索拼入 prompt
-            Map<String, Object> context;
-            String promptToSend;
-            if (userApiKey == null || userApiKey.isBlank()) {
-                context = Map.of(
-                    "chat_memory_conversation_id", "interview-q-" + session.getId(),
-                    "vector_store_filter_expression", ragService.buildUserFilter(session.getUserId()),
-                    "user_id", session.getUserId());
-                promptToSend = fullPrompt;
-            } else {
-                context = null;
-                String ragSuffix = "";
-                try {
-                    String searchQuery = String.format("%s %s %s",
-                        techStack.length() > 100 ? techStack.substring(0, 100) : techStack,
-                        positionTitle, interviewRound.getDescription());
-                    List<Document> relevantDocs = ragService.search(searchQuery, session.getUserId(), 3);
-                    if (!relevantDocs.isEmpty()) {
-                        String ragContext = relevantDocs.stream()
-                            .map(doc -> "- " + doc.getText())
-                            .collect(Collectors.joining("\n\n"));
-                        ragSuffix = "\n\n以下知识库内容可供参考，请据此提出更有针对性的面试题：\n" + ragContext;
-                    }
-                } catch (Exception e) {
-                    log.warn("RAG 检索知识库失败，跳过: {}", e.getMessage());
-                }
-                promptToSend = fullPrompt + ragSuffix;
-            }
+            // RAG 策略（统一路径）：RetrievalAugmentationAdvisor 自动检索知识库（user_id 过滤隔离），
+            // 根据简历技能栈+职位+轮次生成更有针对性的面试题；
+            // 两种 key 配置行为一致（用户自备 key 时由 ApiKeyRoutingAdvisor 拦截模型调用）
+            Map<String, Object> context = Map.of(
+                "chat_memory_conversation_id", "interview-q-" + session.getId(),
+                "vector_store_filter_expression", ragService.buildUserFilter(session.getUserId()),
+                "user_id", session.getUserId());
 
-            String response = aiService.chat(InterviewPrompt.SYSTEM_PROMPT, promptToSend, userApiKey, context);
+            String response = aiService.chat(InterviewPrompt.SYSTEM_PROMPT, fullPrompt, userApiKey, context);
             if (response != null && !response.isBlank()) {
                 // Clean up — remove markdown code blocks and wrapping quotes
                 String cleaned = response.trim();

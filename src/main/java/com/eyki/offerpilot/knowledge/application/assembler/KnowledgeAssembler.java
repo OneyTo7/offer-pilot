@@ -1,5 +1,6 @@
 package com.eyki.offerpilot.knowledge.application.assembler;
 
+import com.eyki.offerpilot.knowledge.application.dto.KnowledgeChunkVO;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeDocumentDetailVO;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeDocumentVO;
 import com.eyki.offerpilot.knowledge.application.dto.KnowledgeSearchResult;
@@ -28,6 +29,13 @@ public class KnowledgeAssembler {
             .contentType(doc.getContentType().getValue()).fileUrl(doc.getFileUrl()).chunkCount(doc.getChunkCount())
             .status(doc.getStatus().getCode()).statusDesc(doc.getStatus().getDescription())
             .failReason(doc.getFailReason()).createdAt(doc.getCreatedAt()).updatedAt(doc.getUpdatedAt()).build();
+    }
+
+    public KnowledgeChunkVO toChunkVO(Document doc) {
+        Map<String, Object> meta = doc.getMetadata();
+        Integer index = meta.get("chunk_index") != null ? (Integer)meta.get("chunk_index") : null;
+        return KnowledgeChunkVO.builder().id((String)meta.get("vector_store_id")).index(index)
+            .content(doc.getText()).metadata(meta).build();
     }
 
     public KnowledgeSearchResult toSearchResult(Document doc) {

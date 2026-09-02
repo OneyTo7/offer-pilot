@@ -3,6 +3,7 @@ package com.eyki.offerpilot.aicore.usage.service;
 import com.eyki.offerpilot.aicore.usage.domain.UserTokenUsage;
 import com.eyki.offerpilot.aicore.usage.repository.UserTokenUsageRepository;
 import com.eyki.offerpilot.common.exception.BusinessException;
+import com.eyki.offerpilot.common.model.ErrorCode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -82,6 +83,18 @@ public class UserTokenUsageService {
         log.debug("Token 额度检查: userId={}, used={}, limit={}, remaining={}",
             userId, used, freeMonthlyTokenLimit, hasRemaining);
         return hasRemaining;
+    }
+
+    /**
+     * 检查用户是否有足够的 token 额度，不足时抛 429 业务异常。
+     * 供统一 TokenUsageAdvisor 前置校验与各服务入口调用。
+     */
+    public void checkRemainingOrThrow(Long userId) {
+        if (!checkRemaining(userId)) {
+            throw BusinessException.of(ErrorCode.TOO_MANY_REQUESTS,
+                "本月 Token 额度已用完（免费版每月限 " + freeMonthlyTokenLimit + " tokens），"
+                    + "可配置自己的 DeepSeek API Key 解锁无限使用");
+        }
     }
 
     /**

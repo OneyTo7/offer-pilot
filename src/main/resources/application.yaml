@@ -30,7 +30,7 @@ spring:
     vectorstore:
       pgvector:
         index-type: HNSW
-        distance-type: COSINE
+        distance-type: COSINE_DISTANCE
         dimension: 512
         initialize-schema: true
 
@@ -74,13 +74,13 @@ sa-token:
   is-share: false
   token-style: uuid
   is-log: false
-  jwt-secret-key: ${SA_TOKEN_JWT_SECRET:offer-pilot-jwt-secret-key-change-in-production}
+  jwt-secret-key: ${SA_TOKEN_JWT_SECRET:42f97917310ccf833d3ade0bd8510c8a62effb4afd3db88648bf6c9cf090a87d}
 
 # OfferPilot 自定义配置
 offer-pilot:
   # API Key 加密密钥（AES-256-GCM），要求 64 字符十六进制字符串
   api-key-encryption:
-    secret: ${API_KEY_ENCRYPTION_SECRET:}
+    secret: ${API_KEY_ENCRYPTION_SECRET:2117799dd2ba92d68b04e71c30f60e3d992b6b270de34dce7ee5b427c0f62228}
   # 免费版套餐限制
   plan:
     free:

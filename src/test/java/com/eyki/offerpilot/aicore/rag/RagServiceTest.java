@@ -7,9 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 class RagServiceTest {
 
@@ -21,9 +23,10 @@ class RagServiceTest {
         // Should not throw when VectorStore is not available
         assertDoesNotThrow(() -> {
             // Use reflection to get constructor
-            var constructor = RagService.class.getDeclaredConstructor(ObjectProvider.class);
+            var constructor = RagService.class.getDeclaredConstructor(ObjectProvider.class, JdbcTemplate.class,
+                ObjectMapper.class);
             constructor.setAccessible(true);
-            constructor.newInstance(emptyProvider);
+            constructor.newInstance(emptyProvider, mock(JdbcTemplate.class), new ObjectMapper());
         });
     }
 
@@ -32,9 +35,11 @@ class RagServiceTest {
         @SuppressWarnings("unchecked") ObjectProvider<Object> emptyProvider = mock(ObjectProvider.class);
         when(emptyProvider.getIfAvailable()).thenReturn(null);
 
-        var constructor = RagService.class.getDeclaredConstructor(ObjectProvider.class);
+        var constructor = RagService.class.getDeclaredConstructor(ObjectProvider.class, JdbcTemplate.class,
+            ObjectMapper.class);
         constructor.setAccessible(true);
-        RagService ragService = (RagService)constructor.newInstance(emptyProvider);
+        RagService ragService = (RagService)constructor.newInstance(emptyProvider, mock(JdbcTemplate.class),
+            new ObjectMapper());
 
         // search with vectorStore==null should return empty list, not throw
         var result = ragService.getClass().getMethod("search", String.class, Long.class, int.class)

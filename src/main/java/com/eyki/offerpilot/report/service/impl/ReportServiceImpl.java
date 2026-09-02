@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.eyki.offerpilot.aicore.prompt.ReportPrompt;
 import com.eyki.offerpilot.aicore.rag.RagService;
 import com.eyki.offerpilot.aicore.service.AiService;
+import com.eyki.offerpilot.aicore.usage.service.UserTokenUsageService;
 import com.eyki.offerpilot.auth.domain.User;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
@@ -32,7 +33,6 @@ import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +53,7 @@ public class ReportServiceImpl implements ReportService {
     private final AiService aiService;
     private final RagService ragService;
     private final RateLimitService rateLimitService;
+    private final UserTokenUsageService tokenUsageService;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -68,6 +69,7 @@ public class ReportServiceImpl implements ReportService {
                 throw BusinessException.of(429, "今日报告生成次数已用完（免费版每日限 " + RateLimitService.DAILY_REPORT_LIMIT + " 次）"
                     + "，可配置自己的 DeepSeek API Key 解锁无限使用");
             }
+            tokenUsageService.checkRemainingOrThrow(userId);
         }
 
         // Verify resume and position belong to user
@@ -196,36 +198,18 @@ public class ReportServiceImpl implements ReportService {
             name, techStack, workYears, education, summary,
             positionTitle, company, positionDesc);
 
-        // RAG 策略（双路径）：
-        // - 平台 key：RetrievalAugmentationAdvisor 自动检索知识库并注入行业标准参考，
-        //   通过 context 传 user_id 过滤表达式实现用户级隔离
-        // - 用户 API key：advisors 不生效，服务层手动检索拼入 prompt
-        Map<String, Object> context = null;
-        String promptToSend = userPrompt;
-        if (userApiKey == null || userApiKey.isBlank()) {
-            context = Map.of(
-                "chat_memory_conversation_id", "report-" + report.getId(),
-                "vector_store_filter_expression", ragService.buildUserFilter(report.getUserId()),
-                "user_id", report.getUserId()
-            );
-        } else {
-            try {
-                String searchQuery = positionTitle + " " + techStack + " 技能要求 行业标准";
-                List<Document> relevantDocs = ragService.search(searchQuery, report.getUserId(), 3);
-                if (!relevantDocs.isEmpty()) {
-                    String ragContext = relevantDocs.stream()
-                        .map(doc -> "- " + doc.getText())
-                        .collect(Collectors.joining("\n\n"));
-                    promptToSend = userPrompt + "\n\n知识库参考信息（可作为行业标准参考，用于评估简历匹配度）：\n" + ragContext;
-                }
-            } catch (Exception e) {
-                log.warn("RAG 检索报告参考失败: {}", e.getMessage());
-            }
-        }
+        // RAG 策略（统一路径）：RetrievalAugmentationAdvisor 自动检索知识库并注入行业标准参考，
+        // 通过 context 传 user_id 过滤表达式实现用户级隔离；两种 key 配置行为一致
+        // （用户自备 key 时由 ApiKeyRoutingAdvisor 拦截模型调用，RAG/记忆增强在路由前已完成）
+        Map<String, Object> context = Map.of(
+            "chat_memory_conversation_id", "report-" + report.getId(),
+            "vector_store_filter_expression", ragService.buildUserFilter(report.getUserId()),
+            "user_id", report.getUserId()
+        );
 
         // Call AI with structured output via BeanOutputConverter (auto JSON Schema + markdown stripping)
         ReportAnalysisData data = aiService.chatWithEntity(
-            ReportPrompt.SYSTEM_PROMPT, promptToSend, userApiKey, ReportAnalysisData.class, context);
+            ReportPrompt.SYSTEM_PROMPT, userPrompt, userApiKey, ReportAnalysisData.class, context);
         parseAndSaveReport(report, data);
     }
 

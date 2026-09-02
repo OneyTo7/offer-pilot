@@ -74,13 +74,16 @@ public class KnowledgeEtlService {
         }
 
         List<Document> chunks = textSplitter.apply(documents);
-        chunks.forEach(chunk -> {
-            chunk.getMetadata().put("user_id", userId.toString());
-            chunk.getMetadata().put("document_id", documentId);
+        // chunk_index 记录分片在文档中的顺序（0..n），供"查看分片"按序展示
+        for (int i = 0; i < chunks.size(); i++) {
+            Map<String, Object> meta = chunks.get(i).getMetadata();
+            meta.put("user_id", userId.toString());
+            meta.put("document_id", documentId);
+            meta.put("chunk_index", i);
             if (metadata != null) {
-                metadata.forEach(chunk.getMetadata()::putIfAbsent);
+                metadata.forEach(meta::putIfAbsent);
             }
-        });
+        }
 
         vectorStore.add(chunks);
         log.info("ETL Load 完成: userId={}, documentId={}, chunks={}", userId, documentId, chunks.size());

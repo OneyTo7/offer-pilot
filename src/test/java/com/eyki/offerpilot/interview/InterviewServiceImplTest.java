@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import com.eyki.offerpilot.aicore.rag.RagService;
+import com.eyki.offerpilot.aicore.usage.service.UserTokenUsageService;
 import com.eyki.offerpilot.auth.domain.User;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
@@ -39,6 +40,8 @@ class InterviewServiceImplTest {
     private RateLimitService rateLimitService;
     @Mock
     private RagService ragService;
+    @Mock
+    private UserTokenUsageService tokenUsageService;
 
     @InjectMocks
     private InterviewServiceImpl interviewService;
@@ -55,6 +58,7 @@ class InterviewServiceImplTest {
     @Test
     void createSession_shouldThrow_whenActiveSessionExists() {
         when(rateLimitService.canStartInterview(anyLong())).thenReturn(true);
+        when(tokenUsageService.checkRemaining(anyLong())).thenReturn(true);
 
         InterviewSession activeSession = new InterviewSession();
         activeSession.setId(1L);

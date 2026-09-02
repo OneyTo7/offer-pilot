@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import com.eyki.offerpilot.aicore.rag.RagService;
 import com.eyki.offerpilot.aicore.service.AiService;
+import com.eyki.offerpilot.aicore.usage.service.UserTokenUsageService;
 import com.eyki.offerpilot.auth.domain.User;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
@@ -44,6 +45,8 @@ class ReportServiceImplTest {
     private ObjectMapper objectMapper;
     @Mock
     private RagService ragService;
+    @Mock
+    private UserTokenUsageService tokenUsageService;
 
     @InjectMocks
     private ReportServiceImpl reportService;
