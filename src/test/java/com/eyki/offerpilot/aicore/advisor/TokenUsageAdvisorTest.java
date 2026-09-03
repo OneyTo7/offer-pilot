@@ -140,6 +140,8 @@ class TokenUsageAdvisorTest {
         doThrow(BusinessException.of(ErrorCode.TOO_MANY_REQUESTS, "quota exceeded"))
             .when(tokenUsageService).checkRemainingOrThrow(1L);
 
+        // 流式场景：BusinessException 从 Flux 管道传播到 blockLast，被 assertThrows 捕获。
+        // Spring AI 的 MessageAggregator 同时会记录一条 "Aggregation Error" 日志，这是正常的。
         BusinessException ex = assertThrows(BusinessException.class, () -> chatClient.prompt()
             .system("system")
             .user("user")
