@@ -11,22 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: rootpass
-          MYSQL_DATABASE: offer_pilot
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd "mysqladmin ping -h localhost"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
       postgres:
         image: pgvector/pgvector:pg16
         env:
-          POSTGRES_DB: offer_pilot_vector
+          POSTGRES_DB: offer_pilot
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: pgpass
         ports:
@@ -50,13 +38,13 @@ jobs:
       - name: Build with Maven
         run: ./mvnw package -B -DskipTests
         env:
-          MYSQL_ROOT_PASSWORD: rootpass
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/offer_pilot
           POSTGRES_PASSWORD: pgpass
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
       - name: Run tests
         run: ./mvnw test -B
         env:
-          MYSQL_ROOT_PASSWORD: rootpass
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/offer_pilot
           POSTGRES_PASSWORD: pgpass
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
