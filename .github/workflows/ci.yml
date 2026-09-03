@@ -40,11 +40,9 @@ jobs:
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/offer_pilot
           POSTGRES_PASSWORD: pgpass
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
       - name: Run tests
         run: ./mvnw test -B
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/offer_pilot
           POSTGRES_PASSWORD: pgpass
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
