@@ -31,6 +31,16 @@ public interface KnowledgeDocumentRepository {
     List<KnowledgeDocument> findByUserId(Long userId);
 
     /**
+     * 按作用域查询文档（管理员查看系统级文档）。
+     */
+    List<KnowledgeDocument> findByScope(String scope);
+
+    /**
+     * 按用户 ID 和作用域查询文档。
+     */
+    List<KnowledgeDocument> findByUserIdAndScope(Long userId, String scope);
+
+    /**
      * 按 ID 删除。
      */
     void deleteById(Long id);

@@ -5,7 +5,9 @@ spring:
   application:
     name: offer-pilot
   profiles:
-    active: dev
+    # local = 个人开发配置（gitignored，通过 application-local.yaml 覆盖）
+    # dev  = 标准开发环境（docker compose up -d，配合 application-dev.yaml）
+    active: local
 
   # Jackson 全局配置
   jackson:
@@ -19,10 +21,11 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
 
-  # Spring AI - DeepSeek Chat Model
+  # Spring AI - OpenAI-compatible (DeepSeek API)
   ai:
-    deepseek:
+    openai:
       api-key: ${DEEPSEEK_API_KEY}
+      base-url: https://api.deepseek.com
       chat:
         options:
           model: deepseek-chat
@@ -40,6 +43,8 @@ spring:
     # 可用 ONNX_MODEL_URI 环境变量替换（如量化的 model_quantized.onnx，约 23MB 更快）。
     embedding:
       transformer:
+        cache:
+          directory: ${EMBEDDING_CACHE_DIR:${user.home}/.cache/spring-ai}
         onnx:
           model-uri: ${ONNX_MODEL_URI:https://hf-mirror.com/Xenova/bge-small-zh-v1.5/resolve/main/onnx/model.onnx}
         tokenizer:
@@ -56,7 +61,7 @@ spring:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   global-config:
     db-config:
       id-type: auto
@@ -74,13 +79,13 @@ sa-token:
   is-share: false
   token-style: uuid
   is-log: false
-  jwt-secret-key: ${SA_TOKEN_JWT_SECRET:change-me-in-production}
+  jwt-secret-key: ${SA_TOKEN_JWT_SECRET}
 
 # OfferPilot 自定义配置
 offer-pilot:
   # API Key 加密密钥（AES-256-GCM），要求 64 字符十六进制字符串
   api-key-encryption:
-    secret: ${API_KEY_ENCRYPTION_SECRET:0000000000000000000000000000000000000000000000000000000000000000}
+    secret: ${API_KEY_ENCRYPTION_SECRET}
   # 免费版套餐限制
   plan:
     free:
@@ -96,6 +101,10 @@ offer-pilot:
 # MinIO 存储桶名
 minio:
   bucket: offer-pilot-files
+
+# 博查 AI 搜索 API（可选，未配置时搜索工具降级提示）
+bocha:
+  api-key: ${BOCHA_API_KEY:}
 
 # 日志级别
 logging:

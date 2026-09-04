@@ -25,6 +25,8 @@ public class User {
 
     private Integer status;
 
+    private String role;
+
     @TableField("last_login_at")
     private LocalDateTime lastLoginAt;
 

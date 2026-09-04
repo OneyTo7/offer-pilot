@@ -76,13 +76,9 @@ public class ReportServiceImpl implements ReportService {
 
         // Verify resume and position belong to user
         Resume resume = resumeRepository.selectById(request.getResumeId());
-        if (resume == null || !resume.getUserId().equals(userId)) {
-            throw BusinessException.resumeNotFound();
-        }
+        BusinessException.checkOwnership(resume != null && resume.getUserId().equals(userId), BusinessException::resumeNotFound);
         TargetPosition position = positionRepository.selectById(request.getPositionId());
-        if (position == null || !position.getUserId().equals(userId)) {
-            throw BusinessException.positionNotFound();
-        }
+        BusinessException.checkOwnership(position != null && position.getUserId().equals(userId), BusinessException::positionNotFound);
 
         Report report = new Report();
         report.setUserId(userId);
@@ -121,9 +117,7 @@ public class ReportServiceImpl implements ReportService {
     public ReportVO getDetail(Long id) {
         Long userId = authService.getCurrentUserEntity().getId();
         Report report = reportRepository.selectById(id);
-        if (report == null || !report.getUserId().equals(userId)) {
-            throw BusinessException.reportNotFound();
-        }
+        BusinessException.checkOwnership(report != null && report.getUserId().equals(userId), BusinessException::reportNotFound);
         String resumeName = resolveResumeName(report.getResumeId());
         String positionTitle = resolvePositionTitle(report.getPositionId());
         return toReportVO(report, resumeName, positionTitle);
@@ -170,9 +164,7 @@ public class ReportServiceImpl implements ReportService {
     public void delete(Long id) {
         Long userId = authService.getCurrentUserEntity().getId();
         Report report = reportRepository.selectById(id);
-        if (report == null || !report.getUserId().equals(userId)) {
-            throw BusinessException.reportNotFound();
-        }
+        BusinessException.checkOwnership(report != null && report.getUserId().equals(userId), BusinessException::reportNotFound);
         reportRepository.deleteById(id);
         log.info("报告删除成功: reportId={}", id);
     }

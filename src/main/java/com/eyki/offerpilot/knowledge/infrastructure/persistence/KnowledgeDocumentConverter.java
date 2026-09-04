@@ -17,7 +17,7 @@ public class KnowledgeDocumentConverter {
         return KnowledgeDocument.restore(po.getId(), po.getUserId(), po.getTitle(), po.getContent(),
             ContentType.fromValue(po.getContentType()), po.getFileUrl(),
             po.getChunkCount() != null ? po.getChunkCount() : 0, DocumentStatus.fromCode(po.getStatus()),
-            po.getFailReason(), po.getCreatedAt(), po.getUpdatedAt());
+            po.getFailReason(), po.getScope(), po.getCreatedAt(), po.getUpdatedAt());
     }
 
     public KnowledgeDocumentPO toPO(KnowledgeDocument domain) {
@@ -31,6 +31,7 @@ public class KnowledgeDocumentConverter {
         po.setChunkCount(domain.getChunkCount());
         po.setStatus(domain.getStatus().getCode());
         po.setFailReason(domain.getFailReason());
+        po.setScope(domain.getScope());
         po.setCreatedAt(domain.getCreatedAt());
         po.setUpdatedAt(domain.getUpdatedAt());
         return po;

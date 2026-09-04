@@ -19,7 +19,7 @@ public interface AiService {
      * <p>
      * context 支持：
      * <ul>
-     *   <li>{@code "conversation_id"} — MessageChatMemoryAdvisor 注入/保存对话历史</li>
+     *   <li>{@code "chat_memory_conversation_id"} — MessageChatMemoryAdvisor 注入/保存对话历史</li>
      *   <li>{@code "vector_store_filter_expression"} — RetrievalAugmentationAdvisor 的用户级 RAG 隔离</li>
      *   <li>{@code "user_id"} — TokenUsageAdvisor 的前置额度校验与后置用量累计</li>
      * </ul>

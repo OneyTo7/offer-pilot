@@ -20,4 +20,7 @@ public class KnowledgeUploadRequest {
 
     /** 内容类型：text（默认）/ file / url */
     private String contentType = "text";
+
+    /** 作用域：user（默认，用户级）/ system（系统级，仅管理员可用） */
+    private String scope = "user";
 }

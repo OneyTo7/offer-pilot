@@ -22,6 +22,7 @@ public class KnowledgeDocument {
     private String fileUrl;
     private int chunkCount;
     private DocumentStatus status;
+    private String scope;
     private String failReason;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -30,8 +31,10 @@ public class KnowledgeDocument {
 
     /**
      * 创建新的知识文档（新实体，id=null，status=INDEXING）。
+     *
+     * @param scope 作用域：null 或 "user" 表示用户级，"system" 表示系统级（管理员维护）
      */
-    public static KnowledgeDocument create(Long userId, String title, String content, ContentType contentType) {
+    public static KnowledgeDocument create(Long userId, String title, String content, ContentType contentType, String scope) {
         Objects.requireNonNull(userId, "userId must not be null");
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("title must not be blank");
@@ -45,6 +48,7 @@ public class KnowledgeDocument {
         doc.title = title.trim();
         doc.content = content;
         doc.contentType = contentType != null ? contentType : ContentType.TEXT;
+        doc.scope = (scope != null && scope.equals("system")) ? "system" : "user";
         doc.chunkCount = 0;
         doc.status = DocumentStatus.INDEXING;
         doc.createdAt = LocalDateTime.now();
@@ -53,11 +57,18 @@ public class KnowledgeDocument {
     }
 
     /**
+     * 创建用户级知识文档（兼容旧调用，scope 默认为 "user"）。
+     */
+    public static KnowledgeDocument create(Long userId, String title, String content, ContentType contentType) {
+        return create(userId, title, content, contentType, "user");
+    }
+
+    /**
      * 从持久化存储重建文档（供 Repository 从数据库加载时使用）。 与 {@link #create} 不同，该方法不执行创建时校验，直接还原全部字段。
      */
     public static KnowledgeDocument restore(Long id, Long userId, String title, String content, ContentType contentType,
-        String fileUrl, int chunkCount, DocumentStatus status, String failReason, LocalDateTime createdAt,
-        LocalDateTime updatedAt) {
+        String fileUrl, int chunkCount, DocumentStatus status, String failReason, String scope,
+        LocalDateTime createdAt, LocalDateTime updatedAt) {
         Objects.requireNonNull(id, "id must not be null");
         Objects.requireNonNull(userId, "userId must not be null");
         Objects.requireNonNull(title, "title must not be null");
@@ -77,6 +88,7 @@ public class KnowledgeDocument {
         doc.chunkCount = chunkCount;
         doc.status = status;
         doc.failReason = failReason;
+        doc.scope = scope;
         doc.createdAt = createdAt;
         doc.updatedAt = updatedAt;
         return doc;
@@ -166,6 +178,10 @@ public class KnowledgeDocument {
 
     public String getFailReason() {
         return failReason;
+    }
+
+    public String getScope() {
+        return scope;
     }
 
     public LocalDateTime getCreatedAt() {

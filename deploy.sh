@@ -39,7 +39,7 @@ fi
 case "${1:-up}" in
     up)
         echo ">>> 启动 $APP_NAME 基础设施..."
-        docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d mysql postgres minio
+        docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d postgres minio
         echo ">>> 等待数据库就绪（约 30 秒）..."
         sleep 30
         echo ">>> 启动 $APP_NAME 后端..."

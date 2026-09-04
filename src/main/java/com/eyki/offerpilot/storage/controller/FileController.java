@@ -1,5 +1,6 @@
 package com.eyki.offerpilot.storage.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.eyki.offerpilot.storage.service.FileStorageService;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.InputStream;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 @RestController
 @RequestMapping("/api/v1/files")
 @RequiredArgsConstructor
+@SaCheckLogin
 public class FileController {
 
     private final FileStorageService fileStorageService;

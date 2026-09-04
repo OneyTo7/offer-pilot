@@ -3,8 +3,12 @@ package com.eyki.offerpilot.aicore.memory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.eyki.offerpilot.aicore.memory.domain.ChatMemoryMessage;
 import com.eyki.offerpilot.aicore.memory.repository.ChatMemoryRecordRepository;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +19,7 @@ import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.MessageType;
 import org.springframework.ai.chat.messages.SystemMessage;
+import org.springframework.ai.chat.messages.ToolResponseMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -134,9 +139,32 @@ public class PgChatMemory implements ChatMemory {
             row.setUserId(userId);
             row.setMessageType(msg.getMessageType().name());
             row.setContent(msg.getText());
-            row.setMetadata(
-                msg.getMetadata() != null && !msg.getMetadata().isEmpty() ? cn.hutool.json.JSONUtil.toJsonStr(
-                    msg.getMetadata()) : null);
+
+            // 保存 metadata（含 tool_calls / tool_responses）
+            Map<String, Object> meta = new HashMap<>(msg.getMetadata() != null ? msg.getMetadata() : Map.of());
+            if (msg instanceof AssistantMessage assistantMsg && assistantMsg.hasToolCalls()) {
+                JSONArray toolCallsJson = new JSONArray();
+                for (var tc : assistantMsg.getToolCalls()) {
+                    JSONObject tcObj = new JSONObject();
+                    tcObj.putOnce("id", tc.id());
+                    tcObj.putOnce("type", tc.type());
+                    tcObj.putOnce("name", tc.name());
+                    tcObj.putOnce("arguments", tc.arguments());
+                    toolCallsJson.add(tcObj);
+                }
+                meta.put("tool_calls", toolCallsJson);
+            } else if (msg instanceof ToolResponseMessage toolMsg) {
+                JSONArray responsesJson = new JSONArray();
+                for (var response : toolMsg.getResponses()) {
+                    JSONObject rObj = new JSONObject();
+                    rObj.putOnce("id", response.id());
+                    rObj.putOnce("name", response.name());
+                    rObj.putOnce("responseData", response.responseData());
+                    responsesJson.add(rObj);
+                }
+                meta.put("tool_responses", responsesJson);
+            }
+            row.setMetadata(!meta.isEmpty() ? JSONUtil.toJsonStr(meta) : null);
             row.setCreatedAt(now);
             rows.add(row);
         }
@@ -146,14 +174,79 @@ public class PgChatMemory implements ChatMemory {
     private Message toMessage(ChatMemoryMessage row) {
         String content = row.getContent();
         MessageType type = MessageType.valueOf(row.getMessageType());
+        Map<String, Object> metadata = parseMetadata(row.getMetadata());
+
         return switch (type) {
             case USER -> new UserMessage(content);
-            case ASSISTANT -> new AssistantMessage(content);
-            case SYSTEM -> new SystemMessage(content);
-            default -> {
-                log.warn("未知消息类型，按 UserMessage 处理: {}", row.getMessageType());
+            case ASSISTANT -> {
+                // 检查是否有保存的 tool_calls 数据
+                Object toolCallsRaw = metadata != null ? metadata.get("tool_calls") : null;
+                if (toolCallsRaw instanceof List<?> toolCallsList && !toolCallsList.isEmpty()) {
+                    List<AssistantMessage.ToolCall> toolCalls = new ArrayList<>();
+                    for (Object item : toolCallsList) {
+                        if (item instanceof Map<?, ?> tcMap) {
+                            toolCalls.add(new AssistantMessage.ToolCall(
+                                str(tcMap, "id"),
+                                str(tcMap, "type"),
+                                str(tcMap, "name"),
+                                str(tcMap, "arguments")
+                            ));
+                        }
+                    }
+                    yield AssistantMessage.builder()
+                        .content(content)
+                        .properties(metadata)
+                        .toolCalls(toolCalls)
+                        .build();
+                }
+                yield new AssistantMessage(content);
+            }
+            case TOOL -> {
+                Object responsesRaw = metadata != null ? metadata.get("tool_responses") : null;
+                if (responsesRaw instanceof List<?> responsesList && !responsesList.isEmpty()) {
+                    List<ToolResponseMessage.ToolResponse> responses = new ArrayList<>();
+                    for (Object item : responsesList) {
+                        if (item instanceof Map<?, ?> rMap) {
+                            responses.add(new ToolResponseMessage.ToolResponse(
+                                str(rMap, "id"),
+                                str(rMap, "name"),
+                                str(rMap, "responseData")
+                            ));
+                        }
+                    }
+                    yield ToolResponseMessage.builder()
+                        .responses(responses)
+                        .metadata(metadata)
+                        .build();
+                }
+                log.debug("TOOL 消息缺少 tool_responses metadata，按 UserMessage 处理: conversationId={}", row.getConversationId());
                 yield new UserMessage(content);
             }
+            case SYSTEM -> new SystemMessage(content);
         };
+    }
+
+    /**
+     * 解析 metadata JSON 字符串为 Map。JSON 格式错误时返回空 Map。
+     */
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> parseMetadata(String metadataJson) {
+        if (metadataJson == null || metadataJson.isBlank()) {
+            return Map.of();
+        }
+        try {
+            Object parsed = JSONUtil.parse(metadataJson);
+            if (parsed instanceof Map<?, ?> map) {
+                return (Map<String, Object>) map;
+            }
+        } catch (Exception e) {
+            log.warn("解析 metadata JSON 失败: {}", metadataJson, e);
+        }
+        return Map.of();
+    }
+
+    private String str(Map<?, ?> map, String key) {
+        Object val = map.get(key);
+        return val != null ? val.toString() : "";
     }
 }

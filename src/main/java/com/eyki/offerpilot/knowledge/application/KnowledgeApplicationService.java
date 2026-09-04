@@ -62,10 +62,16 @@ public class KnowledgeApplicationService {
     @Transactional
     public KnowledgeDocumentVO create(KnowledgeUploadRequest request) {
         Long userId = authService.getCurrentUserEntity().getId();
+        String scope = request.getScope();
+
+        // 如果是系统级文档，需要管理员权限
+        if ("system".equals(scope)) {
+            checkAdmin();
+        }
 
         // 1. 领域工厂创建实体（执行业务校验）
         ContentType contentType = ContentType.fromValue(request.getContentType());
-        KnowledgeDocument doc = KnowledgeDocument.create(userId, request.getTitle(), request.getContent(), contentType);
+        KnowledgeDocument doc = KnowledgeDocument.create(userId, request.getTitle(), request.getContent(), contentType, scope);
 
         // 2. 持久化
         repository.save(doc);
@@ -74,7 +80,8 @@ public class KnowledgeApplicationService {
         try {
             Map<String, Object> metadata =
                 Map.of(META_DOCUMENT_ID, doc.getId().toString(), META_TITLE, doc.getTitle(), META_USER_ID,
-                    userId.toString(), META_SOURCE, "knowledge_base");
+                    userId.toString(), META_SOURCE, "knowledge_base",
+                    "scope", doc.getScope());
             ragService.indexDocument(doc.getContent(), userId, null, metadata);
 
             // 4. 标记索引完成
@@ -87,8 +94,8 @@ public class KnowledgeApplicationService {
         // 5. 更新持久化状态
         repository.save(doc);
 
-        log.info("知识文档创建成功: docId={}, userId={}, title={}, status={}", doc.getId(), userId, doc.getTitle(),
-            doc.getStatus().getDescription());
+        log.info("知识文档创建成功: docId={}, userId={}, title={}, scope={}, status={}", doc.getId(), userId, doc.getTitle(),
+            doc.getScope(), doc.getStatus().getDescription());
         return assembler.toVO(doc);
     }
 
@@ -99,8 +106,14 @@ public class KnowledgeApplicationService {
      * 解析出的全文同时存入 MySQL 供详情展示。索引失败不阻断流程，状态标记 FAILED 供前端展示。
      */
     @Transactional
-    public KnowledgeDocumentVO upload(MultipartFile file, String title) {
+    public KnowledgeDocumentVO upload(MultipartFile file, String title, String scope) {
         Long userId = authService.getCurrentUserEntity().getId();
+
+        // 如果是系统级文档，需要管理员权限
+        if ("system".equals(scope)) {
+            checkAdmin();
+        }
+
         String filename = file.getOriginalFilename() == null ? "" : file.getOriginalFilename();
         String lower = filename.toLowerCase(Locale.ROOT);
 
@@ -139,13 +152,14 @@ public class KnowledgeApplicationService {
         // 2. 领域实体创建 + 持久化（content 为解析后的全文）
         String docTitle = title != null && !title.isBlank() ? title : filename;
         String content = parsedDocs.stream().map(Document::getText).collect(Collectors.joining("\n\n"));
-        KnowledgeDocument doc = KnowledgeDocument.create(userId, docTitle, content, ContentType.FILE);
+        KnowledgeDocument doc = KnowledgeDocument.create(userId, docTitle, content, ContentType.FILE, scope != null ? scope : "user");
         repository.save(doc);
 
         // 3. ETL Transform + Load：分块索引到 pgvector（保留 reader 结构分块）
         try {
             Map<String, Object> metadata =
-                Map.of(META_TITLE, doc.getTitle(), META_SOURCE, "knowledge_base");
+                Map.of(META_TITLE, doc.getTitle(), META_SOURCE, "knowledge_base",
+                    "scope", doc.getScope());
             etlService.index(parsedDocs, userId, doc.getId().toString(), metadata);
             doc.markIndexed();
         } catch (Exception e) {
@@ -162,11 +176,19 @@ public class KnowledgeApplicationService {
     }
 
     /**
-     * 获取用户的知识文档列表。
+     * 获取用户的知识文档列表（仅用户级）。
      */
     public List<KnowledgeDocumentVO> listMyDocuments() {
         Long userId = authService.getCurrentUserEntity().getId();
-        return repository.findByUserId(userId).stream().map(assembler::toVO).collect(Collectors.toList());
+        return repository.findByUserIdAndScope(userId, "user").stream().map(assembler::toVO).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取系统级知识文档列表（管理员）。
+     */
+    public List<KnowledgeDocumentVO> listSystemDocuments() {
+        checkAdmin();
+        return repository.findByScope("system").stream().map(assembler::toVO).collect(Collectors.toList());
     }
 
     /**
@@ -219,5 +241,15 @@ public class KnowledgeApplicationService {
         List<Document> results = ragService.search(request.getQuery(), userId, request.getTopK());
 
         return results.stream().map(assembler::toSearchResult).collect(Collectors.toList());
+    }
+
+    /**
+     * 校验当前用户是否为管理员。
+     */
+    private void checkAdmin() {
+        com.eyki.offerpilot.auth.domain.User user = authService.getCurrentUserEntity();
+        if (!"admin".equals(user.getRole())) {
+            throw BusinessException.of(ErrorCode.FORBIDDEN, "仅管理员可执行此操作");
+        }
     }
 }

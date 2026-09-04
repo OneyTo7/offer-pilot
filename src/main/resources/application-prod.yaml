@@ -8,8 +8,8 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   ai:
-    deepseek:
-      api-key: ${DEEPSEEK_API_KEY:}
+    openai:
+      api-key: ${DEEPSEEK_API_KEY}
 
 minio:
   endpoint: http://minio:9000

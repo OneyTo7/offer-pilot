@@ -9,13 +9,26 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   ai:
-    deepseek:
+    openai:
       api-key: ${DEEPSEEK_API_KEY}
 
 minio:
   endpoint: http://${INFRA_HOST:localhost}:19000
   access-key: ${MINIO_ACCESS_KEY:minioadmin}
   secret-key: ${MINIO_SECRET_KEY:minioadmin}
+
+# Sa-Token JWT 密钥（开发环境使用默认值，生产请通过环境变量注入）
+sa-token:
+  jwt-secret-key: ${SA_TOKEN_JWT_SECRET:dev-only-key-change-in-production}
+
+# API Key 加密密钥（AES-256-GCM，64 字符十六进制字符串）
+offer-pilot:
+  api-key-encryption:
+    secret: ${API_KEY_ENCRYPTION_SECRET:0000000000000000000000000000000000000000000000000000000000000000}
+
+# 博查 AI 搜索 API（可选，未配置时搜索工具降级提示）
+bocha:
+  api-key: ${BOCHA_API_KEY:}
 
 logging:
   level:

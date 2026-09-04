@@ -40,6 +40,8 @@ public class KnowledgeDocumentPO {
     @TableField("fail_reason")
     private String failReason;
 
+    private String scope;
+
     @TableField("created_at")
     private LocalDateTime createdAt;
 

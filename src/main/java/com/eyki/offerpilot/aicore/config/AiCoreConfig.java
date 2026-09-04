@@ -9,6 +9,7 @@ import com.eyki.offerpilot.aicore.memory.PgChatMemory;
 import com.eyki.offerpilot.aicore.rag.BgeCrossEncoderReRanker;
 import com.eyki.offerpilot.aicore.rag.config.ReRankerProperties;
 import com.eyki.offerpilot.aicore.usage.service.UserTokenUsageService;
+import com.eyki.offerpilot.common.config.BochaProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ import org.springframework.context.annotation.Configuration;
  * </pre>
  */
 @Configuration
-@EnableConfigurationProperties(ReRankerProperties.class)
+@EnableConfigurationProperties({ReRankerProperties.class, BochaProperties.class})
 public class AiCoreConfig {
 
     /**
@@ -66,7 +67,9 @@ public class AiCoreConfig {
         ragAdvisor.ifPresent(advisors::add);
         advisors.add(new MyLogAdvisor());
         advisors.add(new ApiKeyRoutingAdvisor(objectMapper));
-        return builder.defaultAdvisors(advisors.toArray(new Advisor[0])).build();
+        return builder
+            .defaultAdvisors(advisors.toArray(new Advisor[0]))
+            .build();
     }
 
     /**

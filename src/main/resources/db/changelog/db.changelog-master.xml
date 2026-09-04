@@ -13,6 +13,9 @@
   <include file="db/changelog/006-create-interview_questions.sql"/>
   <include file="db/changelog/007-create-chat_memory.sql"/>
   <include file="db/changelog/008-create-knowledge_base.sql"/>
+  <include file="db/changelog/009-create-assistant_conversations.sql"/>
+  <include file="db/changelog/010-add-user-role.sql"/>
   <include file="db/changelog/011-create-user_token_usage.sql"/>
+  <include file="db/changelog/012-add-knowledge-scope.sql"/>
 
 </databaseChangeLog>

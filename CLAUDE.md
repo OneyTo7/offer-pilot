@@ -62,7 +62,8 @@ com.eyki.offerpilot/
 │   ├── prompt/      # ReportPrompt, InterviewPrompt, QuestionFeedbackPrompt
 │   ├── usage/       # UserTokenUsageService (token tracking and rate limiting)
 │   └── service/     # AiService (LLM invocation wrapper)
-├── knowledge/       # Knowledge base: document upload, Markdown/TXT parsing, vector indexing
+├── knowledge/       # Knowledge base: document upload, Markdown/TXT parsing, vector indexing, scope (user/system)
+├── assistant/       # AI Assistant: chat + web search + RAG (user + system knowledge)
 └── storage/         # File storage: MinIO integration
 ```
 
@@ -77,7 +78,11 @@ com.eyki.offerpilot/
 6. **Rate limiting:** Free tier = 3 reports/day + 1 interview/day + 100K tokens/month
 7. **SSE streaming:** Interview answer responses streamed via `text/event-stream`; dedicated virtual-thread executor
 8. **Unified response:** `ApiResult<T>` (code, message, data, traceId)
-9. **Error codes:** 200=success, 400/401/403/404/409/429/500 + custom codes (1001=AI error, 1002=parse error, 2001=interview expired)
+9. **Tool calling:** `WebSearchTool` (Bocha AI API) injected conditionally via `@Tool` annotation; AI Assistant uses it for web search when user enables toggle
+10. **AI Assistant:** ChatGPT-like chat with SSE streaming, PgChatMemory per-conversation, optional web search, RAG over user + system knowledge base
+11. **User roles:** `user` (default) and `admin`; admin can manage system-scoped knowledge documents
+12. **Knowledge scope:** Documents tagged with `scope` (user/system); AI Assistant search retrieves both user and system docs
+13. **Error codes:** 200=success, 400/401/403/404/409/429/500 + custom codes (1001=AI error, 1002=parse error, 2001=interview expired)
 
 ### API Design
 
@@ -90,7 +95,8 @@ Base path: `/api/v1`
 | Position  | `POST /positions`, `GET /positions`, `GET /positions/{id}`, `DELETE /positions/{id}`, `PUT /positions/{id}/default`                                                          |
 | Report    | `POST /reports`, `GET /reports`, `GET /reports/{id}`, `DELETE /reports/{id}`                                                                                                 |
 | Interview | `POST /interviews`, `GET /interviews`, `GET /interviews/{id}`, `POST /{id}/start-round`, `POST /{id}/answer` (SSE), `POST /{id}/skip`, `POST /{id}/end`, `GET /{id}/summary` |
-| Knowledge | `POST /knowledge`, `POST /knowledge/upload`, `GET /knowledge`, `GET /knowledge/{id}`, `GET /knowledge/{id}/chunks`, `DELETE /knowledge/{id}`, `POST /knowledge/search`        |
+| Knowledge | `POST /knowledge`, `POST /knowledge/upload`, `GET /knowledge`, `GET /knowledge/system`, `GET /knowledge/{id}`, `GET /knowledge/{id}/chunks`, `DELETE /knowledge/{id}`, `POST /knowledge/search` |
+| Assistant | `POST /assistant/conversations`, `GET /assistant/conversations`, `DELETE /assistant/conversations/{id}`, `POST /assistant/{id}/chat` (SSE), `GET /assistant/{id}/messages` |
 | AI        | `GET /ai/info`                                                                                                                                                                |
 | File      | `GET /files/{filePath}`                                                                                                                                                       |
 | Health    | `GET /api/health`                                                                                                                                                             |
@@ -104,7 +110,8 @@ Base path: `/api/v1`
 
 ### Database (tables via Liquibase)
 
-- `users` — email/password auth, optional encrypted api_key
+- `users` — email/password auth, optional encrypted api_key, role (user/admin)
+- `assistant_conversations` — AI Assistant conversations: user_id, title, status
 - `resumes` — parsed text, tech_stack, work_years, education, status
 - `target_positions` — JD, company, salary
 - `reports` — match_score, tech_stack_analysis, highlights, weaknesses (JSON)
@@ -126,4 +133,4 @@ Base path: `/api/v1`
 
 ## Current State
 
-This is a fully functional MVP with all core features implemented: resume parsing, position management, AI match reports, 3-round mock interviews with SSE streaming, knowledge base with vector search, and user API key support. The codebase is being prepared for open source release.
+This is a fully functional MVP with all core features implemented: resume parsing, position management, AI match reports, 3-round mock interviews with SSE streaming, AI Assistant (chat + web search + RAG), knowledge base with vector search (user/system scope), user role system (user/admin), and user API key support. The codebase is open source (MIT).

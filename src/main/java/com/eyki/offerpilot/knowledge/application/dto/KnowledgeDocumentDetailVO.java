@@ -20,6 +20,7 @@ public class KnowledgeDocumentDetailVO {
     private Integer status;
     private String statusDesc;
     private String failReason;
+    private String scope;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -139,6 +139,16 @@ public class RagService {
     }
 
     /**
+     * Build an assistant-scoped filter expression: returns documents belonging to the user OR
+     * system-scoped documents. This allows the AI Assistant to search both the user's own
+     * knowledge base and the system knowledge base (platform info, FAQs, etc.).
+     */
+    public Filter.Expression buildAssistantFilter(Long userId) {
+        FilterExpressionBuilder builder = new FilterExpressionBuilder();
+        return builder.or(builder.eq("user_id", userId.toString()), builder.eq("scope", "system")).build();
+    }
+
+    /**
      * Delete all chunks for a specific knowledge document.
      */
     public void deleteByDocumentId(String documentId, Long userId) {

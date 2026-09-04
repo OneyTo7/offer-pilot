@@ -51,9 +51,7 @@ public class PositionServiceImpl implements PositionService {
     public PositionVO getDetail(Long id) {
         Long userId = authService.getCurrentUserEntity().getId();
         TargetPosition position = positionRepository.selectById(id);
-        if (position == null || !position.getUserId().equals(userId)) {
-            throw BusinessException.positionNotFound();
-        }
+        BusinessException.checkOwnership(position != null && position.getUserId().equals(userId), BusinessException::positionNotFound);
         return toPositionVO(position);
     }
 
@@ -62,9 +60,7 @@ public class PositionServiceImpl implements PositionService {
     public PositionVO update(Long id, PositionRequest request) {
         Long userId = authService.getCurrentUserEntity().getId();
         TargetPosition position = positionRepository.selectById(id);
-        if (position == null || !position.getUserId().equals(userId)) {
-            throw BusinessException.positionNotFound();
-        }
+        BusinessException.checkOwnership(position != null && position.getUserId().equals(userId), BusinessException::positionNotFound);
 
         position.setTitle(request.getTitle());
         position.setCompany(request.getCompany());
@@ -89,9 +85,7 @@ public class PositionServiceImpl implements PositionService {
     public void delete(Long id) {
         Long userId = authService.getCurrentUserEntity().getId();
         TargetPosition position = positionRepository.selectById(id);
-        if (position == null || !position.getUserId().equals(userId)) {
-            throw BusinessException.positionNotFound();
-        }
+        BusinessException.checkOwnership(position != null && position.getUserId().equals(userId), BusinessException::positionNotFound);
         positionRepository.deleteById(id);
         log.info("目标职位删除成功: positionId={}", id);
     }
@@ -101,9 +95,7 @@ public class PositionServiceImpl implements PositionService {
     public void setDefault(Long id) {
         Long userId = authService.getCurrentUserEntity().getId();
         TargetPosition position = positionRepository.selectById(id);
-        if (position == null || !position.getUserId().equals(userId)) {
-            throw BusinessException.positionNotFound();
-        }
+        BusinessException.checkOwnership(position != null && position.getUserId().equals(userId), BusinessException::positionNotFound);
 
         // Clear existing default
         positionRepository.selectList(

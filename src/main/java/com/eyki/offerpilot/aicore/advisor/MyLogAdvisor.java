@@ -36,6 +36,9 @@ public class MyLogAdvisor implements CallAdvisor, StreamAdvisor {
         Instant start = Instant.now();
         String promptPreview = truncate(request.prompt().getContents(), 200);
 
+        // DEBUG: log tool callbacks
+        logToolCallbacks(request);
+
         log.info("AI 请求: prompt={}", promptPreview);
         ChatClientResponse response = chain.nextCall(request);
         Duration elapsed = Duration.between(start, Instant.now());
@@ -49,6 +52,9 @@ public class MyLogAdvisor implements CallAdvisor, StreamAdvisor {
         Instant start = Instant.now();
         String promptPreview = truncate(request.prompt().getContents(), 200);
 
+        // DEBUG: log tool callbacks
+        logToolCallbacks(request);
+
         log.info("AI 流式请求: prompt={}", promptPreview);
         Flux<ChatClientResponse> responses = chain.nextStream(request);
 
@@ -59,6 +65,21 @@ public class MyLogAdvisor implements CallAdvisor, StreamAdvisor {
             Duration elapsed = Duration.between(start, Instant.now());
             log.error("AI 流式响应异常: 耗时={}ms, error={}", elapsed.toMillis(), error.getMessage());
         });
+    }
+
+    private void logToolCallbacks(ChatClientRequest request) {
+        try {
+            var options = request.prompt().getOptions();
+            if (options instanceof org.springframework.ai.model.tool.ToolCallingChatOptions toolOpts) {
+                var callbacks = toolOpts.getToolCallbacks();
+                if (callbacks != null && !callbacks.isEmpty()) {
+                    log.debug("ToolCallbacks: count={}, names={}", callbacks.size(),
+                        callbacks.stream().map(c -> c.getToolDefinition().name()).toList());
+                }
+            }
+        } catch (Exception e) {
+            log.warn("ToolCallbacks error: {}", e.getMessage());
+        }
     }
 
     private String truncate(String text, int maxLen) {

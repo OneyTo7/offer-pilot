@@ -17,6 +17,6 @@ public class SaTokenConfigure implements WebMvcConfigurer {
         // Auth is still enforced inside the service method via StpUtil.getLoginIdAsLong().
         registry.addInterceptor(new SaInterceptor(handle -> StpUtil.checkLogin())).addPathPatterns("/api/v1/**")
             .excludePathPatterns("/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/refresh",
-                "/api/health", "/api/v1/interviews/*/answer");
+                "/api/health", "/api/v1/interviews/*/answer", "/api/v1/assistant/*/chat");
     }
 }

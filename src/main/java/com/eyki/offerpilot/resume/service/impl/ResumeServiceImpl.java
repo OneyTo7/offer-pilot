@@ -100,9 +100,7 @@ public class ResumeServiceImpl implements ResumeService {
     public ResumeDetailVO getDetail(Long id) {
         Long userId = authService.getCurrentUserEntity().getId();
         Resume resume = resumeRepository.selectById(id);
-        if (resume == null || !resume.getUserId().equals(userId)) {
-            throw BusinessException.resumeNotFound();
-        }
+        BusinessException.checkOwnership(resume != null && resume.getUserId().equals(userId), BusinessException::resumeNotFound);
         return toResumeDetailVO(resume);
     }
 
@@ -117,9 +115,7 @@ public class ResumeServiceImpl implements ResumeService {
     public void delete(Long id) {
         Long userId = authService.getCurrentUserEntity().getId();
         Resume resume = resumeRepository.selectById(id);
-        if (resume == null || !resume.getUserId().equals(userId)) {
-            throw BusinessException.resumeNotFound();
-        }
+        BusinessException.checkOwnership(resume != null && resume.getUserId().equals(userId), BusinessException::resumeNotFound);
 
         // 删除 MinIO 文件
         if (resume.getFileUrl() != null) {
@@ -139,9 +135,7 @@ public class ResumeServiceImpl implements ResumeService {
     public void setDefault(Long id) {
         Long userId = authService.getCurrentUserEntity().getId();
         Resume resume = resumeRepository.selectById(id);
-        if (resume == null || !resume.getUserId().equals(userId)) {
-            throw BusinessException.resumeNotFound();
-        }
+        BusinessException.checkOwnership(resume != null && resume.getUserId().equals(userId), BusinessException::resumeNotFound);
 
         // Clear existing default
         resumeRepository.selectList(

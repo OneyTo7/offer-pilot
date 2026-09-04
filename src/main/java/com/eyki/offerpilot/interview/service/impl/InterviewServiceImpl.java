@@ -9,6 +9,7 @@ import com.eyki.offerpilot.aicore.usage.service.UserTokenUsageService;
 import com.eyki.offerpilot.auth.domain.User;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
+import com.eyki.offerpilot.common.model.ErrorCode;
 import com.eyki.offerpilot.common.service.RateLimitService;
 import com.eyki.offerpilot.interview.domain.InterviewQuestion;
 import com.eyki.offerpilot.interview.domain.InterviewSession;
@@ -134,9 +135,7 @@ public class InterviewServiceImpl implements InterviewService {
     public SessionVO getSession(Long id) {
         Long userId = authService.getCurrentUserEntity().getId();
         InterviewSession session = sessionRepository.selectById(id);
-        if (session == null || !session.getUserId().equals(userId)) {
-            throw BusinessException.interviewNotFound();
-        }
+        BusinessException.checkOwnership(session != null && session.getUserId().equals(userId), BusinessException::interviewNotFound);
         return toSessionVO(session);
     }
 
@@ -144,9 +143,7 @@ public class InterviewServiceImpl implements InterviewService {
     public InterviewQuestionVO getCurrentQuestion(Long sessionId) {
         Long userId = authService.getCurrentUserEntity().getId();
         InterviewSession session = sessionRepository.selectById(sessionId);
-        if (session == null || !session.getUserId().equals(userId)) {
-            throw BusinessException.interviewNotFound();
-        }
+        BusinessException.checkOwnership(session != null && session.getUserId().equals(userId), BusinessException::interviewNotFound);
 
         int round = session.getCurrentRound();
         int questionIndex = session.getCurrentQuestion();
@@ -165,9 +162,7 @@ public class InterviewServiceImpl implements InterviewService {
     public StartRoundResponse startRound(Long sessionId) {
         Long userId = authService.getCurrentUserEntity().getId();
         InterviewSession session = sessionRepository.selectById(sessionId);
-        if (session == null || !session.getUserId().equals(userId)) {
-            throw BusinessException.interviewNotFound();
-        }
+        BusinessException.checkOwnership(session != null && session.getUserId().equals(userId), BusinessException::interviewNotFound);
         sessionManager.checkSessionActive(session);
 
         int round = session.getCurrentRound();
@@ -265,10 +260,16 @@ public class InterviewServiceImpl implements InterviewService {
                     .doOnError(error -> {
                         log.error("AI 流式生成反馈失败", error);
                         try {
-                            String stub = "抱歉，AI 反馈生成遇到问题，请稍后重试。";
-                            emitter.send(SseEmitter.event().name("feedback_token").data(stub));
+                            String errorMessage;
+                            if (error instanceof BusinessException be
+                                && be.getCode() == ErrorCode.API_KEY_INSUFFICIENT_BALANCE) {
+                                errorMessage = "你的 API Key 余额不足，请充值后继续使用。";
+                            } else {
+                                errorMessage = "抱歉，AI 反馈生成遇到问题，请稍后重试。";
+                            }
+                            emitter.send(SseEmitter.event().name("feedback_token").data(errorMessage));
                             emitter.send(SseEmitter.event().name("feedback_done")
-                                .data("{\"feedback\":\"" + stub + "\",\"score\":70}"));
+                                .data("{\"feedback\":\"" + errorMessage + "\",\"score\":70}"));
 
                             if (ctx.nextQuestion != null) {
                                 String nextQJson = objectMapper.writeValueAsString(toQuestionVO(ctx.nextQuestion));
@@ -308,9 +309,7 @@ public class InterviewServiceImpl implements InterviewService {
      */
     private AnswerContext saveAnswerAndAdvance(AnswerRequest request, Long userId) {
         InterviewSession session = sessionRepository.selectById(request.getSessionId());
-        if (session == null || !session.getUserId().equals(userId)) {
-            throw BusinessException.interviewNotFound();
-        }
+        BusinessException.checkOwnership(session != null && session.getUserId().equals(userId), BusinessException::interviewNotFound);
         sessionManager.checkSessionActive(session);
 
         // Find and validate the question
@@ -351,9 +350,7 @@ public class InterviewServiceImpl implements InterviewService {
     public StartRoundResponse skip(Long sessionId) {
         Long userId = authService.getCurrentUserEntity().getId();
         InterviewSession session = sessionRepository.selectById(sessionId);
-        if (session == null || !session.getUserId().equals(userId)) {
-            throw BusinessException.interviewNotFound();
-        }
+        BusinessException.checkOwnership(session != null && session.getUserId().equals(userId), BusinessException::interviewNotFound);
         sessionManager.checkSessionActive(session);
 
         // Find current question
@@ -398,9 +395,7 @@ public class InterviewServiceImpl implements InterviewService {
     public void endSession(Long sessionId) {
         Long userId = authService.getCurrentUserEntity().getId();
         InterviewSession session = sessionRepository.selectById(sessionId);
-        if (session == null || !session.getUserId().equals(userId)) {
-            throw BusinessException.interviewNotFound();
-        }
+        BusinessException.checkOwnership(session != null && session.getUserId().equals(userId), BusinessException::interviewNotFound);
 
         if (session.getStatus() != 0) {
             throw BusinessException.interviewClosed();
@@ -415,9 +410,7 @@ public class InterviewServiceImpl implements InterviewService {
     public InterviewSummaryVO getSummary(Long sessionId) {
         Long userId = authService.getCurrentUserEntity().getId();
         InterviewSession session = sessionRepository.selectById(sessionId);
-        if (session == null || !session.getUserId().equals(userId)) {
-            throw BusinessException.interviewNotFound();
-        }
+        BusinessException.checkOwnership(session != null && session.getUserId().equals(userId), BusinessException::interviewNotFound);
 
         List<InterviewQuestion> allQuestions = questionRepository.findBySessionId(sessionId);
 
@@ -452,7 +445,6 @@ public class InterviewServiceImpl implements InterviewService {
 
     /**
      * Generate a question via AI using the candidate's resume and target position for context.
-     * Falls back to the stub question bank if the AI service is unavailable.
      */
     private String generateAiQuestion(InterviewSession session, int round, int questionIndex,
         InterviewRound interviewRound) {
@@ -526,46 +518,16 @@ public class InterviewServiceImpl implements InterviewService {
                 log.info("AI 生成面试题成功: sessionId={}, round={}, questionIndex={}", session.getId(), round, questionIndex);
                 return cleaned;
             }
+        } catch (BusinessException e) {
+            log.warn("AI 生成面试题失败: sessionId={}, round={}, questionIndex={}, code={}",
+                session.getId(), round, questionIndex, e.getCode(), e);
+            throw e; // 保留具体业务异常（如余额不足）向上传播
         } catch (Exception e) {
-            log.warn("AI 生成面试题失败，降级使用预设题目: sessionId={}, round={}, questionIndex={}",
+            log.warn("AI 生成面试题失败: sessionId={}, round={}, questionIndex={}",
                 session.getId(), round, questionIndex, e);
         }
 
-        // Fallback to stub question
-        return generateStubQuestion(round, questionIndex, interviewRound.getDescription());
-    }
-
-    private String generateStubQuestion(int round, int questionIndex, String roundDescription) {
-        // Fallback question bank — used only when the AI service is unavailable
-        String[][] questions = {
-            // Round 1: Basic technical ability
-            {"请介绍一下你最熟悉的 Java 技术栈，以及为什么选择它们？", "请解释一下 Spring Boot 自动配置的原理。",
-                "什么是 IOC 和 DI？请用实际例子说明。", "请解释一下 HashMap 的实现原理和扩容机制。",
-                "Java 中的线程池是如何工作的？核心参数有哪些？", "请说明 MySQL 的索引原理，以及如何优化慢查询。",
-                "什么是事务？请解释 ACID 特性。", "请解释一下什么是 RESTful API，以及设计原则。",
-                "JVM 内存模型是怎样的？如何排查内存泄漏？", "请谈谈你对微服务架构的理解，以及它和单体架构的区别。"},
-            // Round 2: Project experience & depth
-            {"请分享一个你主导的最有挑战性的项目，以及你在其中扮演的角色。",
-                "在项目中，你们是如何进行技术选型的？请举例说明。",
-                "请解释一下你在项目中使用的缓存策略，以及如何解决缓存穿透/击穿/雪崩。",
-                "你们项目中的分布式事务是如何处理的？", "请描述一个你遇到过的性能瓶颈，以及你是如何解决的。",
-                "消息队列在你们的项目中是如何使用的？请比较一下常见的 MQ 产品。",
-                "请详细说明你们项目的数据库表设计和分库分表策略。", "你是如何保证代码质量的？请介绍你们的 CI/CD 流程。",
-                "请解释一下你负责的某个核心模块的设计思路。", "在团队协作中，你是如何处理技术债务的？"},
-            // Round 3: System design & comprehensive
-            {"请设计一个高并发秒杀系统，需要考虑哪些关键点？", "如果让你设计一个类似微信的即时通讯系统，你会如何设计架构？",
-                "请设计一个分布式配置中心，需要考虑高可用和一致性。", "如何设计一个支持海量数据的日志收集和分析系统？",
-                "请设计一个短链接生成系统，需要考虑哪些因素？", "如果让你重构一个遗留系统，你会如何规划？",
-                "请设计一个 API 网关，需要考虑哪些功能和非功能需求？", "如何设计一个可靠的分布式定时任务调度系统？",
-                "请谈谈你对 DDD（领域驱动设计）的理解，以及在实际项目中的应用。",
-                "如果系统出现大量 502 错误，请描述你的排查思路。"}};
-
-        int roundIdx = round - 1;
-        int qIdx = questionIndex - 1;
-        if (roundIdx >= 0 && roundIdx < questions.length && qIdx >= 0 && qIdx < questions[roundIdx].length) {
-            return questions[roundIdx][qIdx];
-        }
-        return String.format("【%s】请介绍一下你在相关技术领域的经验（第 %d 题）", roundDescription, questionIndex);
+        throw BusinessException.aiServiceError("AI 生成面试题失败，返回内容为空");
     }
 
     private double parseScore(String text) {

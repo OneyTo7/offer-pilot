@@ -21,14 +21,16 @@ public class KnowledgeAssembler {
         return KnowledgeDocumentVO.builder().id(doc.getId()).title(doc.getTitle())
             .contentType(doc.getContentType().getValue()).fileUrl(doc.getFileUrl()).chunkCount(doc.getChunkCount())
             .status(doc.getStatus().getCode()).statusDesc(doc.getStatus().getDescription())
-            .failReason(doc.getFailReason()).createdAt(doc.getCreatedAt()).updatedAt(doc.getUpdatedAt()).build();
+            .failReason(doc.getFailReason()).scope(doc.getScope())
+            .createdAt(doc.getCreatedAt()).updatedAt(doc.getUpdatedAt()).build();
     }
 
     public KnowledgeDocumentDetailVO toDetailVO(KnowledgeDocument doc) {
         return KnowledgeDocumentDetailVO.builder().id(doc.getId()).title(doc.getTitle()).content(doc.getContent())
             .contentType(doc.getContentType().getValue()).fileUrl(doc.getFileUrl()).chunkCount(doc.getChunkCount())
             .status(doc.getStatus().getCode()).statusDesc(doc.getStatus().getDescription())
-            .failReason(doc.getFailReason()).createdAt(doc.getCreatedAt()).updatedAt(doc.getUpdatedAt()).build();
+            .failReason(doc.getFailReason()).scope(doc.getScope())
+            .createdAt(doc.getCreatedAt()).updatedAt(doc.getUpdatedAt()).build();
     }
 
     public KnowledgeChunkVO toChunkVO(Document doc) {

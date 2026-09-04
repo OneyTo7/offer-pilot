@@ -3,6 +3,7 @@ package com.eyki.offerpilot.interview.service;
 import com.eyki.offerpilot.common.exception.BusinessException;
 import com.eyki.offerpilot.interview.domain.InterviewSession;
 import com.eyki.offerpilot.interview.enums.SessionStatus;
+import com.eyki.offerpilot.interview.repository.InterviewSessionRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ public class InterviewSessionManager {
     private static final int MAX_QUESTIONS_PER_ROUND = 10;
     private static final int EXPIRATION_HOURS = 1;
 
+    private final InterviewSessionRepository sessionRepository;
+
     /**
      * Check if the session can be operated on. Throws appropriate exception if the session is expired or closed.
      */
@@ -30,9 +33,10 @@ public class InterviewSessionManager {
 
         // Check expiration
         if (session.getExpiredAt() != null && LocalDateTime.now().isAfter(session.getExpiredAt())) {
-            // Mark as expired
+            // Mark as expired and persist before throwing
             session.setStatus(SessionStatus.EXPIRED.getCode());
             session.setFinishedAt(LocalDateTime.now());
+            sessionRepository.updateById(session);
             log.info("面试会话已过期: sessionId={}", session.getId());
             throw BusinessException.interviewExpired();
         }
@@ -102,19 +106,20 @@ public class InterviewSessionManager {
      * End the session early.
      */
     public void endSessionEarly(InterviewSession session) {
-        session.setStatus(SessionStatus.COMPLETED.getCode());
-        session.setFinishedAt(LocalDateTime.now());
-        if (session.getStartedAt() != null) {
-            session.setDurationSeconds(
-                (int)java.time.Duration.between(session.getStartedAt(), session.getFinishedAt()).getSeconds());
-        }
-        session.setUpdatedAt(LocalDateTime.now());
+        finishSession(session);
     }
 
     /**
      * Complete the session normally.
      */
     public void completeSession(InterviewSession session) {
+        finishSession(session);
+    }
+
+    /**
+     * Mark session as completed: set status, finished time, duration, and update timestamp.
+     */
+    private void finishSession(InterviewSession session) {
         session.setStatus(SessionStatus.COMPLETED.getCode());
         session.setFinishedAt(LocalDateTime.now());
         if (session.getStartedAt() != null) {

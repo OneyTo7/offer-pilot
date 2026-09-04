@@ -50,8 +50,9 @@ public class KnowledgeController {
      */
     @PostMapping("/upload")
     public ApiResult<KnowledgeDocumentVO> upload(@RequestParam("file") MultipartFile file,
-        @RequestParam(value = "title", required = false) @Size(max = 255, message = "标题长度不能超过 255 字符") String title) {
-        KnowledgeDocumentVO doc = knowledgeService.upload(file, title);
+        @RequestParam(value = "title", required = false) @Size(max = 255, message = "标题长度不能超过 255 字符") String title,
+        @RequestParam(value = "scope", defaultValue = "user") String scope) {
+        KnowledgeDocumentVO doc = knowledgeService.upload(file, title, scope);
         return ApiResult.success("知识文档上传成功", doc);
     }
 
@@ -61,6 +62,15 @@ public class KnowledgeController {
     @GetMapping
     public ApiResult<List<KnowledgeDocumentVO>> listMyDocuments() {
         List<KnowledgeDocumentVO> documents = knowledgeService.listMyDocuments();
+        return ApiResult.success(documents);
+    }
+
+    /**
+     * 获取系统级知识文档列表（管理员）。
+     */
+    @GetMapping("/system")
+    public ApiResult<List<KnowledgeDocumentVO>> listSystemDocuments() {
+        List<KnowledgeDocumentVO> documents = knowledgeService.listSystemDocuments();
         return ApiResult.success(documents);
     }
 

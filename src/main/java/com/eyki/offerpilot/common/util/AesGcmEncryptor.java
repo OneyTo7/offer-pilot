@@ -101,10 +101,7 @@ public class AesGcmEncryptor {
         if (encrypted == null) {
             return null;
         }
-        // 如果明文存储（未加密），直接返回
-        if (!encrypted.startsWith("sk-")) {
-            // 可能是未加密的旧数据，尝试解密，失败则原样返回
-        }
+        // 尝试解密；若未加密（旧数据），解密会失败，在 catch 中原样返回
         try {
             byte[] decoded = Base64.getDecoder().decode(encrypted);
             ByteBuffer buffer = ByteBuffer.wrap(decoded);

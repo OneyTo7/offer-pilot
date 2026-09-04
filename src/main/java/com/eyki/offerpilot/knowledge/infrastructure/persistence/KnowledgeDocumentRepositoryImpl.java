@@ -64,6 +64,23 @@ public class KnowledgeDocumentRepositoryImpl implements KnowledgeDocumentReposit
     }
 
     @Override
+    public List<KnowledgeDocument> findByScope(String scope) {
+        LambdaQueryWrapper<KnowledgeDocumentPO> wrapper =
+            new LambdaQueryWrapper<KnowledgeDocumentPO>().eq(KnowledgeDocumentPO::getScope, scope)
+                .orderByDesc(KnowledgeDocumentPO::getCreatedAt);
+        return mapper.selectList(wrapper).stream().map(converter::toDomain).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<KnowledgeDocument> findByUserIdAndScope(Long userId, String scope) {
+        LambdaQueryWrapper<KnowledgeDocumentPO> wrapper =
+            new LambdaQueryWrapper<KnowledgeDocumentPO>().eq(KnowledgeDocumentPO::getUserId, userId)
+                .eq(KnowledgeDocumentPO::getScope, scope)
+                .orderByDesc(KnowledgeDocumentPO::getCreatedAt);
+        return mapper.selectList(wrapper).stream().map(converter::toDomain).collect(Collectors.toList());
+    }
+
+    @Override
     public void deleteById(Long id) {
         mapper.deleteById(id);
     }

@@ -25,6 +25,7 @@ import org.springframework.ai.chat.client.advisor.api.StreamAdvisorChain;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
+import org.springframework.ai.chat.messages.ToolResponseMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.metadata.ChatResponseMetadata;
 import org.springframework.ai.chat.metadata.DefaultUsage;
@@ -104,7 +105,11 @@ public class ApiKeyRoutingAdvisor implements CallAdvisor, StreamAdvisor {
                 HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
             if (response.statusCode() != 200) {
-                log.error("AI 服务返回异常状态码: status={}, body={}", response.statusCode(), response.body());
+                String errorBody = response.body();
+                log.error("AI 服务返回异常状态码: status={}, body={}", response.statusCode(), errorBody);
+                if (isInsufficientBalance(errorBody)) {
+                    throw BusinessException.apiKeyInsufficientBalance();
+                }
                 throw BusinessException.aiServiceError("AI 服务调用失败，状态码: " + response.statusCode());
             }
 
@@ -164,7 +169,11 @@ public class ApiKeyRoutingAdvisor implements CallAdvisor, StreamAdvisor {
                 if (response.statusCode() != 200) {
                     String errorBody = new String(response.body().readAllBytes(), StandardCharsets.UTF_8);
                     log.error("AI 流式服务返回异常状态码: status={}, body={}", response.statusCode(), errorBody);
-                    emitter.error(BusinessException.aiServiceError("AI 服务调用失败，状态码: " + response.statusCode()));
+                    if (isInsufficientBalance(errorBody)) {
+                        emitter.error(BusinessException.apiKeyInsufficientBalance());
+                    } else {
+                        emitter.error(BusinessException.aiServiceError("AI 服务调用失败，状态码: " + response.statusCode()));
+                    }
                     return;
                 }
 
@@ -245,16 +254,40 @@ public class ApiKeyRoutingAdvisor implements CallAdvisor, StreamAdvisor {
 
             var messages = root.putArray("messages");
             for (Message message : prompt.getInstructions()) {
-                String role = switch (message) {
-                    case SystemMessage ignored -> "system";
-                    case AssistantMessage ignored -> "assistant";
-                    case UserMessage ignored -> "user";
-                    default -> null; // tool 等其他消息不适用
-                };
-                if (role == null || message.getText() == null) {
-                    continue;
+                if (message instanceof ToolResponseMessage toolMsg) {
+                    // Tool response: {"role": "tool", "content": "...", "tool_call_id": "..."}
+                    for (var response : toolMsg.getResponses()) {
+                        messages.addObject()
+                            .put("role", "tool")
+                            .put("content", response.responseData())
+                            .put("tool_call_id", response.id());
+                    }
+                } else if (message instanceof AssistantMessage assistantMsg && assistantMsg.hasToolCalls()) {
+                    // Assistant message with tool_calls: {"role": "assistant", "tool_calls": [...]}
+                    var msgObj = messages.addObject();
+                    msgObj.put("role", "assistant");
+                    msgObj.put("content", message.getText() != null ? message.getText() : "");
+                    var toolCallsArray = msgObj.putArray("tool_calls");
+                    for (var tc : assistantMsg.getToolCalls()) {
+                        var tcObj = toolCallsArray.addObject();
+                        tcObj.put("id", tc.id());
+                        tcObj.put("type", tc.type() != null ? tc.type() : "function");
+                        var funcObj = tcObj.putObject("function");
+                        funcObj.put("name", tc.name());
+                        funcObj.put("arguments", tc.arguments());
+                    }
+                } else {
+                    String role = switch (message) {
+                        case SystemMessage ignored -> "system";
+                        case AssistantMessage ignored -> "assistant";
+                        case UserMessage ignored -> "user";
+                        default -> null;
+                    };
+                    if (role == null || message.getText() == null) {
+                        continue;
+                    }
+                    messages.addObject().put("role", role).put("content", message.getText());
                 }
-                messages.addObject().put("role", role).put("content", message.getText());
             }
 
             return objectMapper.writeValueAsString(root);
@@ -351,5 +384,25 @@ public class ApiKeyRoutingAdvisor implements CallAdvisor, StreamAdvisor {
             log.warn("解析流式 usage chunk 失败: {}", chunkData, e);
         }
         return null;
+    }
+
+    /**
+     * 判断 DeepSeek API 错误响应是否为余额不足。
+     * <p>
+     * DeepSeek 余额不足返回格式：HTTP 401/402，body 含 {@code "code": "insufficient_balance"}。
+     */
+    private boolean isInsufficientBalance(String responseBody) {
+        try {
+            JsonNode root = objectMapper.readTree(responseBody);
+            JsonNode error = root.get("error");
+            if (error != null) {
+                String code = error.has("code") ? error.get("code").asText() : "";
+                String message = error.has("message") ? error.get("message").asText() : "";
+                return "insufficient_balance".equals(code) || message.toLowerCase().contains("insufficient balance");
+            }
+        } catch (Exception e) {
+            log.warn("解析错误响应 JSON 失败: {}", responseBody, e);
+        }
+        return false;
     }
 }
