@@ -11,7 +11,7 @@ and get an AI-generated match assessment + 3-round mock interview (10 questions 
 - **Framework:** Spring Boot 4.1.1 + Spring AI 2.0.1
 - **Language:** Java 21 (Preview features enabled)
 - **Build:** Maven (wrapped at `./mvnw`)
-- **LLM:** DeepSeek (OpenAI-compatible API)
+- **LLM:** DeepSeek (default) / 通义千问 / GLM (OpenAI-compatible API, user-switchable)
 - **Vector DB:** PostgreSQL + pgvector (512-dim, BGE bge-small-zh-v1.5)
 - **Frontend:** Vue 3 + TypeScript + Vite + Element Plus (separate repo: `offer-pilot-ui`)
 - **Auth:** Sa-Token + JWT (dual-token: 2h access + 7d in-memory refresh)
@@ -73,7 +73,7 @@ com.eyki.offerpilot/
    MessageChatMemoryAdvisor(2) → RetrievalAugmentationAdvisor(3) → MyLogAdvisor(4) → ApiKeyRoutingAdvisor(5)
 2. **Dual ChatClient**: `chatClient` (with RAG, for interview/report) and `chatClientNoRag` (without RAG, for resume parsing)
 3. **RAG with user-level isolation:** All vector store entries tagged with `user_id`; search filters by `user_id`
-4. **User API Key routing:** Users can supply their own DeepSeek API key → `ApiKeyRoutingAdvisor` intercepts model call
+4. **User API Key routing:** Users can supply their own API key (DeepSeek/通义千问/GLM) → `ApiKeyRoutingAdvisor` intercepts model call
 5. **Interview state machine:** 3 rounds, 10 Qs each, SSE streaming for answer feedback
 6. **Rate limiting:** Free tier = 3 reports/day + 1 interview/day + 100K tokens/month
 7. **SSE streaming:** Interview answer responses streamed via `text/event-stream`; dedicated virtual-thread executor

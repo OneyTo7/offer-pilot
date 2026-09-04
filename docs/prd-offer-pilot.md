@@ -322,11 +322,12 @@ SSE 流式输出到前端，逐段渲染
 
 #### 3.6.3 Pro 层（用户自配 API Key）
 
-用户在个人设置中填入自己的 DeepSeek API Key：
+用户在个人设置中配置自己的 API Key（支持 DeepSeek / 通义千问 / GLM 等多种服务商）：
 
 | 权限   | 说明                |
 |------|-------------------|
 | 所有功能 | 不限量               |
+| 服务商选择 | 用户可选择 DeepSeek / 通义千问 / GLM 等 |
 | 模型选择 | 用户可自选模型版本         |
 | 费用   | 消耗用户自己的 Key，平台零成本 |
 
@@ -636,9 +637,10 @@ input → SafeValidAdvisor → ReReadingAdvisor
 - 反馈：用户回答后判断质量，给出改进建议
 - 约束：不要直接告诉答案，引导用户思考
 
-### 9.2 OpenAI 兼容性
+### 9.2 多模型服务商支持
 
-使用的 DeepSeek 模型兼容 OpenAI API 格式，如果后续切换到其他模型，只需修改配置，代码无需改动。
+基于 OpenAI 兼容 API 协议，支持 DeepSeek / 通义千问 / GLM 等多种模型服务商。
+用户可在设置页面自由切换，ApiKeyRoutingAdvisor 根据 `api_base_url` 和 `api_model` 动态路由到对应端点。
 
 ---
 

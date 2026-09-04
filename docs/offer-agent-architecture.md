@@ -19,7 +19,7 @@ AI 简历智能平台，面向技术研发岗位求职者，提供简历评估�
 | 包名   | com.eyki.offeragent                      |
 | 语言   | Java 21                                  |
 | 框架   | Spring Boot 4.1.1 + Spring AI 2.0.1      |
-| LLM  | DeepSeek（OpenAI 兼容 API）                  |
+| LLM  | DeepSeek（默认）/ 通义千问 / GLM（OpenAI 兼容 API，用户可切换） |
 | 向量模型 | BGE bge-small-zh-v1.5（512维）              |
 | 构建工具 | Maven                                    |
 | 前端   | Vue 3 + TypeScript + Vite + Element Plus |

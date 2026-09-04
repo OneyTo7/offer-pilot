@@ -29,8 +29,8 @@
 
 | 模式 | 说明 |
 |------|------|
-| 🆓 免费模式 | 使用平台默认 DeepSeek API Key，每月 10 万 Token 限额 |
-| ⚡ Pro 模式 | 配置自己的 DeepSeek API Key，无限制使用 |
+| 🆓 免费模式 | 使用平台默认 API Key，每月 10 万 Token 限额 |
+| ⚡ Pro 模式 | 配置自己的 API Key（支持 DeepSeek/通义千问/GLM），无限制使用 |
 
 ---
 
@@ -44,7 +44,7 @@
 | 🎙️ **模拟面试** | 三面制 AI 面试（基础/深入/综合），每轮 10 题，SSE 流式实时反馈 + 评分，支持中断恢复 |
 | 📚 **知识库（RAG）** | 上传 Markdown/TXT 文档，AI 自动分片向量化，面试时检索增强回答 |
 | 🤖 **AI 小助手** | 通用 AI 对话入口，支持联网搜索（博查 API），RAG 检索知识库，类似 ChatGPT 的交互体验 |
-| 🔑 **API Key 管理** | 支持配置自己的 DeepSeek API Key，用量透明展示（今日/月度/趋势） |
+| 🔑 **API Key 管理** | 支持配置自己的 API Key（DeepSeek/通义千问/GLM），用量透明展示（今日/月度/趋势） |
 
 ---
 
@@ -71,7 +71,7 @@
 | 后端框架 | Spring Boot 4.1.1 + Spring AI 2.0.1 |
 | 运行环境 | JDK 21 + 虚拟线程 |
 | 数据库 | PostgreSQL 16 + pgvector（向量库） |
-| AI 模型 | DeepSeek（OpenAI 兼容 API） |
+| AI 模型 | DeepSeek / 通义千问 / GLM（OpenAI 兼容 API，用户可切换） |
 | 文档解析 | PDFBox + Tess4j OCR + DeepSeek AI |
 | 文件存储 | MinIO 对象存储 |
 | 认证 | Sa-Token + JWT 双 Token（2h Access + 7d Refresh） |
@@ -91,7 +91,7 @@ ReReadingAdvisor(1)           → Prompt 重读优化
 MessageChatMemoryAdvisor(2)   → 对话记忆注入
 RetrievalAugmentationAdvisor(3) → RAG 知识检索
 MyLogAdvisor(4)               → 日志记录
-ApiKeyRoutingAdvisor(5)       → 用户 Key / 平台 Key 路由
+ApiKeyRoutingAdvisor(5)       → 用户 Key / 平台 Key 路由（支持多模型服务商）
 ```
 
 ---
@@ -200,7 +200,9 @@ offer-pilot/
 ## ⭐ 致谢
 
 - [Spring AI](https://docs.spring.io/spring-ai/reference/) — AI 应用框架
-- [DeepSeek](https://platform.deepseek.com/) — 大语言模型
+- [DeepSeek](https://platform.deepseek.com/) — 大语言模型（默认）
+- [通义千问](https://dashscope.aliyun.com/) — 大语言模型（可选）
+- [GLM (智谱)](https://open.bigmodel.cn/) — 大语言模型（可选）
 - [pgvector](https://github.com/pgvector/pgvector) — 向量数据库
 - [Sa-Token](https://sa-token.cc/) — 认证授权框架
 - [Element Plus](https://element-plus.org/) — Vue 3 UI 组件库

@@ -35,7 +35,7 @@
 - 每次对话独立记忆，支持上下文关联
 
 ### 6. API Key 管理
-- 用户可自行配置 DeepSeek API Key
+- 用户可自行配置 API Key（支持 DeepSeek / 通义千问 / GLM 等）
 - 实时查看 Token 用量
 - API Key 通过 AES-256-GCM 加密存储
 
@@ -45,7 +45,7 @@
 - **框架**: Spring Boot 4.1.1 + Spring AI 2.0.1
 - **语言**: Java 21（虚拟线程）
 - **构建工具**: Maven
-- **LLM**: DeepSeek（兼容 OpenAI API）
+- **LLM**: DeepSeek（默认）/ 通义千问 / GLM（兼容 OpenAI API，用户可切换）
 - **向量数据库**: PostgreSQL + pgvector（512 维，BGE bge-small-zh-v1.5 模型）
 - **认证授权**: Sa-Token + JWT（双 Token：2 小时 access + 7 天 refresh）
 - **文件存储**: MinIO（对象存储）

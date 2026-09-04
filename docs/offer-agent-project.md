@@ -11,7 +11,7 @@ AI 简历智能平台，面向技术研发岗位求职者。产品名"面壁"，
 
 **核心功能：** 上传简历 → AI 诊断 + 模拟面试三轮（每轮 10 题）
 
-**技术栈：** Spring Boot 4.1.1 + Spring AI 2.0.1 + DeepSeek + pgvector + Vue3 + Element Plus
+**技术栈：** Spring Boot 4.1.1 + Spring AI 2.0.1 + DeepSeek/通义千问/GLM + pgvector + Vue3 + Element Plus
 
 **关键决策：**
 

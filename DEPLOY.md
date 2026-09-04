@@ -43,14 +43,14 @@ JAVA_HOME=/path/to/jdk-21 ./mvnw package -DskipTests -B
 java -jar /opt/offer-pilot/offer-pilot.jar \
   --spring.profiles.active=prod \
   --server.port=8080 \
-  -Dspring.ai.deepseek.api-key=${DEEPSEEK_API_KEY}
+  -Dspring.ai.openai.api-key=${DEEPSEEK_API_KEY}
 ```
 
 7. **环境变量**（在宝塔 Java 项目设置中配置）：
 
 | 变量名 | 说明 | 示例值 |
 |--------|------|--------|
-| `DEEPSEEK_API_KEY` | DeepSeek API Key | `sk-xxxx` |
+| `DEEPSEEK_API_KEY` | 平台默认 AI API Key | `sk-xxxx` |
 | `POSTGRES_PASSWORD` | PostgreSQL 密码 | `pgpass` |
 | `MINIO_ACCESS_KEY` | MinIO 访问密钥 | `minio` |
 | `MINIO_SECRET_KEY` | MinIO 密钥 | `xxxx` |
