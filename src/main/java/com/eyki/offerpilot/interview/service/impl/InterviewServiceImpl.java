@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -92,11 +93,11 @@ public class InterviewServiceImpl implements InterviewService {
         if (!hasOwnApiKey) {
             if (!rateLimitService.canStartInterview(userId)) {
                 throw BusinessException.of(429, "今日面试次数已用完（免费版每日限 " + RateLimitService.DAILY_INTERVIEW_LIMIT + " 次）"
-                    + "，可配置自己的 DeepSeek API Key 解锁无限使用");
+                    + "，可配置自己的 API Key 解锁无限使用");
             }
             if (!tokenUsageService.checkRemaining(userId)) {
                 throw BusinessException.of(429, "本月 Token 额度已用完（免费版每月限 "
-                    + "100K tokens），可配置自己的 DeepSeek API Key 解锁无限使用");
+                    + "100K tokens），可配置自己的 API Key 解锁无限使用");
             }
         }
 
@@ -180,10 +181,13 @@ public class InterviewServiceImpl implements InterviewService {
 
     @Override
     public SseEmitter answer(AnswerRequest request) {
-        Long userId = authService.getCurrentUserEntity().getId();
+        User user = authService.getCurrentUserEntity();
+        Long userId = user.getId();
 
-        // Capture user's API key before the async block (Sa-Token ThreadLocal is not available in async threads)
-        String userApiKey = authService.getCurrentUserEntity().getApiKey();
+        // Capture user's API config before the async block (Sa-Token ThreadLocal is not available in async threads)
+        String userApiKey = user.getApiKey();
+        String userApiBaseUrl = user.getApiBaseUrl();
+        String userApiModel = user.getApiModel();
 
         // Phase 1: Save answer and advance to next question (synchronous, in transaction)
         AnswerContext ctx = transactionTemplate.execute(status -> saveAnswerAndAdvance(request, userId));
@@ -199,11 +203,17 @@ public class InterviewServiceImpl implements InterviewService {
 
         // RAG + 记忆策略（统一路径）：RetrievalAugmentationAdvisor 自动检索知识库（user_id 过滤隔离），
         // MessageChatMemoryAdvisor 按 conversation_id 注入前序问答，使反馈评分连贯；
-        // 两种 key 配置行为一致（用户自备 key 时由 ApiKeyRoutingAdvisor 拦截模型调用）
-        Map<String, Object> context = Map.of(
-            "vector_store_filter_expression", ragService.buildUserFilter(userId),
-            "chat_memory_conversation_id", ctx.session.getId().toString(),
-            "user_id", userId);
+        // 三种 key 配置行为一致（用户自备 key 时由 ApiKeyRoutingAdvisor 拦截模型调用）
+        Map<String, Object> context = new HashMap<>();
+        context.put("vector_store_filter_expression", ragService.buildUserFilter(userId));
+        context.put("chat_memory_conversation_id", ctx.session.getId().toString());
+        context.put("user_id", userId);
+        if (userApiBaseUrl != null) {
+            context.put("api_base_url", userApiBaseUrl);
+        }
+        if (userApiModel != null) {
+            context.put("api_model", userApiModel);
+        }
 
         CompletableFuture.runAsync(() -> {
             try {
@@ -488,16 +498,25 @@ public class InterviewServiceImpl implements InterviewService {
             // Add previous questions context to avoid repetition
             String fullPrompt = userPrompt + "\n\n已提出的问题（请勿重复）:\n" + previousQuestionsText;
 
-            // Use user's own API key if configured
-            String userApiKey = authService.getCurrentUserEntity().getApiKey();
+            // Use user's own API config if configured
+            User user = authService.getCurrentUserEntity();
+            String userApiKey = user.getApiKey();
+            String userApiBaseUrl = user.getApiBaseUrl();
+            String userApiModel = user.getApiModel();
 
             // RAG 策略（统一路径）：RetrievalAugmentationAdvisor 自动检索知识库（user_id 过滤隔离），
             // 根据简历技能栈+职位+轮次生成更有针对性的面试题；
-            // 两种 key 配置行为一致（用户自备 key 时由 ApiKeyRoutingAdvisor 拦截模型调用）
-            Map<String, Object> context = Map.of(
-                "chat_memory_conversation_id", "interview-q-" + session.getId(),
-                "vector_store_filter_expression", ragService.buildUserFilter(session.getUserId()),
-                "user_id", session.getUserId());
+            // 三种 key 配置行为一致（用户自备 key 时由 ApiKeyRoutingAdvisor 拦截模型调用）
+            Map<String, Object> context = new HashMap<>();
+            context.put("chat_memory_conversation_id", "interview-q-" + session.getId());
+            context.put("vector_store_filter_expression", ragService.buildUserFilter(session.getUserId()));
+            context.put("user_id", session.getUserId());
+            if (userApiBaseUrl != null) {
+                context.put("api_base_url", userApiBaseUrl);
+            }
+            if (userApiModel != null) {
+                context.put("api_model", userApiModel);
+            }
 
             String response = aiService.chat(InterviewPrompt.SYSTEM_PROMPT, fullPrompt, userApiKey, context);
             if (response != null && !response.isBlank()) {

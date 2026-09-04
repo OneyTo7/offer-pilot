@@ -34,12 +34,20 @@ import org.springframework.ai.chat.model.Generation;
 import reactor.core.publisher.Flux;
 
 /**
- * 用户自备 API Key 的路由 Advisor — 把直连 DeepSeek 的逻辑下沉到 advisor 链内，
+ * 用户自备 API Key 的路由 Advisor — 把直连第三方 API 的逻辑下沉到 advisor 链内，
  * 使用户 key 路径与平台 key 路径共享同一套编排（安全校验、记忆注入、RAG、日志、用量控制）。
+ *
+ * <p>支持多模型服务商（DeepSeek/通义千问/GLM 等），通过 context 参数动态切换：
+ * <ul>
+ *   <li>{@code api_key} — API Key（必选，触发拦截拦截）</li>
+ *   <li>{@code api_base_url} — API 基础地址（可选，默认 {@code https://api.deepseek.com/v1}）</li>
+ *   <li>{@code api_model} — 模型名（可选，默认 {@code deepseek-chat}）</li>
+ * </ul>
+ * 最终请求地址为 {@code {api_base_url}/chat/completions}。</p>
  *
  * <p><b>拦截条件</b>：advisor context 含 {@code api_key} 时，本 advisor 不走
  * {@code ChatModelCallAdvisor}（平台 ChatModel 绑定的是平台 key），而是直连
- * DeepSeek OpenAI 兼容接口并构造响应；未传 api_key 时 {@code chain.nextCall()} 透传。</p>
+ * 第三方 OpenAI 兼容接口并构造响应；未传 api_key 时 {@code chain.nextCall()} 透传。</p>
  *
  * <p><b>执行位置</b>：order=5，位于 MyLogAdvisor(4) 之后、ChatModelCallAdvisor(MAX) 之前——
  * 前序 advisor（ReReading、记忆注入、RAG 增强）已把最终 prompt 准备好，此处拿到的
@@ -54,9 +62,12 @@ public class ApiKeyRoutingAdvisor implements CallAdvisor, StreamAdvisor {
 
     private static final int ORDER = 5;
     private static final String CTX_API_KEY = "api_key";
+    private static final String CTX_API_BASE_URL = "api_base_url";
+    private static final String CTX_API_MODEL = "api_model";
 
-    private static final String DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
-    private static final String DEEPSEEK_MODEL = "deepseek-chat";
+    private static final String DEFAULT_BASE_URL = "https://api.deepseek.com/v1";
+    private static final String DEFAULT_MODEL = "deepseek-chat";
+    private static final String CHAT_COMPLETIONS_PATH = "/chat/completions";
     private static final Duration HTTP_TIMEOUT = Duration.ofSeconds(60);
     private static final Duration STREAM_TIMEOUT = Duration.ofMinutes(5);
 
@@ -90,11 +101,13 @@ public class ApiKeyRoutingAdvisor implements CallAdvisor, StreamAdvisor {
             // 平台 key：交给默认 ChatModel
             return chain.nextCall(request);
         }
-        // 用户 key：拦截模型调用，直连 DeepSeek
+        // 用户 key：拦截模型调用，直连第三方 API
+        String apiBaseUrl = extractApiBaseUrl(request);
+        String apiModel = extractApiModel(request);
         try {
-            String jsonBody = buildRequestBody(request.prompt());
+            String jsonBody = buildRequestBody(request.prompt(), apiModel);
             HttpRequest httpRequest = HttpRequest.newBuilder()
-                .uri(URI.create(DEEPSEEK_API_URL))
+                .uri(URI.create(apiBaseUrl + CHAT_COMPLETIONS_PATH))
                 .header("Authorization", "Bearer " + apiKey)
                 .header("Content-Type", "application/json")
                 .timeout(HTTP_TIMEOUT)
@@ -135,7 +148,9 @@ public class ApiKeyRoutingAdvisor implements CallAdvisor, StreamAdvisor {
             // 平台 key：交给默认 ChatModel
             return chain.nextStream(request);
         }
-        // 用户 key：直连 DeepSeek 流式接口，SSE 逐 chunk 转发
+        // 用户 key：直连第三方 API 流式接口，SSE 逐 chunk 转发
+        String apiBaseUrl = extractApiBaseUrl(request);
+        String apiModel = extractApiModel(request);
         return Flux.create(emitter -> {
             // 使用数组持有 response 引用，以便在取消时关闭连接
             final HttpResponse<InputStream>[] responseRef = new HttpResponse[1];
@@ -153,9 +168,9 @@ public class ApiKeyRoutingAdvisor implements CallAdvisor, StreamAdvisor {
             });
 
             try {
-                String jsonBody = buildRequestBody(request.prompt(), true);
+                String jsonBody = buildRequestBody(request.prompt(), true, apiModel);
                 HttpRequest httpRequest = HttpRequest.newBuilder()
-                    .uri(URI.create(DEEPSEEK_API_URL))
+                    .uri(URI.create(apiBaseUrl + CHAT_COMPLETIONS_PATH))
                     .header("Authorization", "Bearer " + apiKey)
                     .header("Content-Type", "application/json")
                     .timeout(STREAM_TIMEOUT)
@@ -239,17 +254,39 @@ public class ApiKeyRoutingAdvisor implements CallAdvisor, StreamAdvisor {
     }
 
     /**
+     * 从 advisor context 提取自定义 API base URL；未传时返回默认值。
+     */
+    private String extractApiBaseUrl(ChatClientRequest request) {
+        Object url = request.context().get(CTX_API_BASE_URL);
+        if (url instanceof String s && !s.isBlank()) {
+            return s.trim();
+        }
+        return DEFAULT_BASE_URL;
+    }
+
+    /**
+     * 从 advisor context 提取自定义模型名；未传时返回默认值。
+     */
+    private String extractApiModel(ChatClientRequest request) {
+        Object model = request.context().get(CTX_API_MODEL);
+        if (model instanceof String s && !s.isBlank()) {
+            return s.trim();
+        }
+        return DEFAULT_MODEL;
+    }
+
+    /**
      * 将增强后的 Prompt 消息列表构建为 OpenAI 兼容的 messages 数组。
      * MemoryAdvisor 注入的历史消息（user/assistant 交替）也会完整透传。
      */
-    private String buildRequestBody(org.springframework.ai.chat.prompt.Prompt prompt) {
-        return buildRequestBody(prompt, false);
+    private String buildRequestBody(org.springframework.ai.chat.prompt.Prompt prompt, String apiModel) {
+        return buildRequestBody(prompt, false, apiModel);
     }
 
-    private String buildRequestBody(org.springframework.ai.chat.prompt.Prompt prompt, boolean stream) {
+    private String buildRequestBody(org.springframework.ai.chat.prompt.Prompt prompt, boolean stream, String apiModel) {
         try {
             var root = objectMapper.createObjectNode();
-            root.put("model", DEEPSEEK_MODEL);
+            root.put("model", apiModel);
             root.put("stream", stream);
 
             var messages = root.putArray("messages");

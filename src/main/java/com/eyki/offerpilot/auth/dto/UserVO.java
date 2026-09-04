@@ -28,6 +28,14 @@ public class UserVO {
     @JsonProperty("has_api_key")
     private boolean hasApiKey;
 
+    /** User's API provider base URL (null = use platform default). */
+    @JsonProperty("api_base_url")
+    private String apiBaseUrl;
+
+    /** User's model name (null = use platform default). */
+    @JsonProperty("api_model")
+    private String apiModel;
+
     private Integer status;
 
     @JsonProperty("last_login_at")

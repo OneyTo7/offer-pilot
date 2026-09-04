@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -69,7 +70,7 @@ public class ReportServiceImpl implements ReportService {
         if (!hasOwnApiKey) {
             if (!rateLimitService.canGenerateReport(userId)) {
                 throw BusinessException.of(429, "今日报告生成次数已用完（免费版每日限 " + RateLimitService.DAILY_REPORT_LIMIT + " 次）"
-                    + "，可配置自己的 DeepSeek API Key 解锁无限使用");
+                    + "，可配置自己的 API Key 解锁无限使用");
             }
             tokenUsageService.checkRemainingOrThrow(userId);
         }
@@ -95,12 +96,14 @@ public class ReportServiceImpl implements ReportService {
         }
 
         // Generate report asynchronously
-        // Capture API key before async block (Sa-Token ThreadLocal not available in CompletableFuture)
+        // Capture API config before async block (Sa-Token ThreadLocal not available in CompletableFuture)
         String capturedApiKey = user.getApiKey();
+        String capturedApiBaseUrl = user.getApiBaseUrl();
+        String capturedApiModel = user.getApiModel();
         Report finalReport = report;
         CompletableFuture.runAsync(() -> {
             try {
-                generateAiReport(finalReport, resume, position, capturedApiKey);
+                generateAiReport(finalReport, resume, position, capturedApiKey, capturedApiBaseUrl, capturedApiModel);
             } catch (Exception e) {
                 log.error("报告 AI 生成失败: reportId={}", finalReport.getId(), e);
                 finalReport.setStatus(2); // FAILED
@@ -173,9 +176,12 @@ public class ReportServiceImpl implements ReportService {
      * Generate the report content via AI using resume and position context.
      * Runs asynchronously after the initial report creation response.
      *
-     * @param userApiKey the user's DeepSeek API key (may be null/blank, falls back to platform key)
+     * @param userApiKey     the user's API key (may be null/blank, falls back to platform key)
+     * @param userApiBaseUrl the user's API base URL (null → default)
+     * @param userApiModel   the user's model name (null → default)
      */
-    private void generateAiReport(Report report, Resume resume, TargetPosition position, String userApiKey) {
+    private void generateAiReport(Report report, Resume resume, TargetPosition position, String userApiKey,
+        String userApiBaseUrl, String userApiModel) {
         // Build prompt from resume and position data
         String name = resume.getName() != null ? resume.getName() : "未知";
         String techStack = resume.getSkills() != null ? resume.getSkills() : (resume.getSummary() != null ? resume.getSummary() : "未提供");
@@ -193,13 +199,18 @@ public class ReportServiceImpl implements ReportService {
             positionTitle, company, positionDesc);
 
         // RAG 策略（统一路径）：RetrievalAugmentationAdvisor 自动检索知识库并注入行业标准参考，
-        // 通过 context 传 user_id 过滤表达式实现用户级隔离；两种 key 配置行为一致
+        // 通过 context 传 user_id 过滤表达式实现用户级隔离；三种 key 配置行为一致
         // （用户自备 key 时由 ApiKeyRoutingAdvisor 拦截模型调用，RAG/记忆增强在路由前已完成）
-        Map<String, Object> context = Map.of(
-            "chat_memory_conversation_id", "report-" + report.getId(),
-            "vector_store_filter_expression", ragService.buildUserFilter(report.getUserId()),
-            "user_id", report.getUserId()
-        );
+        Map<String, Object> context = new HashMap<>();
+        context.put("chat_memory_conversation_id", "report-" + report.getId());
+        context.put("vector_store_filter_expression", ragService.buildUserFilter(report.getUserId()));
+        context.put("user_id", report.getUserId());
+        if (userApiBaseUrl != null) {
+            context.put("api_base_url", userApiBaseUrl);
+        }
+        if (userApiModel != null) {
+            context.put("api_model", userApiModel);
+        }
 
         // Call AI with structured output via BeanOutputConverter (auto JSON Schema + markdown stripping)
         ReportAnalysisData data = aiService.chatWithEntity(

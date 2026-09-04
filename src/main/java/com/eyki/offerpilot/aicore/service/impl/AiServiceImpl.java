@@ -14,11 +14,12 @@ import reactor.core.publisher.Flux;
 
 /**
  * AI service implementation. Wraps Spring AI's ChatClient to provide synchronous
- * and streaming LLM invocations. Uses DeepSeek via OpenAI-compatible API.
+ * and streaming LLM invocations. Supports multiple model providers via OpenAI-compatible API.
  *
  * <p>统一走 ChatClient + advisor 链：用户自备 API Key 时通过 context 的 {@code api_key}
- * 激活 {@code ApiKeyRoutingAdvisor} 拦截模型调用并直连 DeepSeek；平台 key 时透传给
- * 默认 ChatModel。两条路径共享安全校验、记忆注入、RAG、日志与用量控制。</p>
+ * 激活 {@code ApiKeyRoutingAdvisor} 拦截模型调用并直连第三方 API（支持 DeepSeek/通义千问/GLM
+ * 等，通过 {@code api_base_url} 和 {@code api_model} 切换）；平台 key 时透传给默认 ChatModel。
+ * 三条路径共享安全校验、记忆注入、RAG、日志与用量控制。</p>
  */
 @Service
 public class AiServiceImpl implements AiService {

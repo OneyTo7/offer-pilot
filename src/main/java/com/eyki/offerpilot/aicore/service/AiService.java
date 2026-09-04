@@ -8,9 +8,15 @@ import reactor.core.publisher.Flux;
  *
  * <p><b>统一路径设计：</b>所有调用都走 ChatClient + advisor 链。apiKey 非空时，
  * 由 {@code AiServiceImpl} 将 {@code api_key} 并入 context，激活
- * {@code ApiKeyRoutingAdvisor} 拦截模型调用直连 DeepSeek；apiKey 为 null/blank 时
+ * {@code ApiKeyRoutingAdvisor} 拦截模型调用直连第三方 API；apiKey 为 null/blank 时
  * 透传给默认 ChatModel（平台 key）。两条路径共享安全校验、重读指令、对话记忆、
  * 自动 RAG、日志与 token 用量控制。</p>
+ *
+ * <p>context 支持以下键用于控制多模型服务商路由（由 ApiKeyRoutingAdvisor 读取）：
+ * <ul>
+ *   <li>{@code "api_base_url"} — API 基础地址（可选，默认 DeepSeek）</li>
+ *   <li>{@code "api_model"} — 模型名（可选，默认 deepseek-chat）</li>
+ * </ul></p>
  */
 public interface AiService {
 
@@ -22,9 +28,11 @@ public interface AiService {
      *   <li>{@code "chat_memory_conversation_id"} — MessageChatMemoryAdvisor 注入/保存对话历史</li>
      *   <li>{@code "vector_store_filter_expression"} — RetrievalAugmentationAdvisor 的用户级 RAG 隔离</li>
      *   <li>{@code "user_id"} — TokenUsageAdvisor 的前置额度校验与后置用量累计</li>
+     *   <li>{@code "api_base_url"} — API 基础地址（可选，默认 DeepSeek）</li>
+     *   <li>{@code "api_model"} — 模型名（可选，默认 deepseek-chat）</li>
      * </ul>
      *
-     * @param apiKey  用户的 DeepSeek API key（null/blank → 平台 key）
+     * @param apiKey  用户的 API key（null/blank → 平台 key）
      * @param context advisor context 参数
      */
     String chat(String systemPrompt, String userPrompt, String apiKey, Map<String, Object> context);

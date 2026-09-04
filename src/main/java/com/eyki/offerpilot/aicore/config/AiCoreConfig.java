@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Configuration;
  * MessageChatMemoryAdvisor (order=2) → 对话记忆自动注入
  * RetrievalAugmentationAdvisor (order=3) → 自动 RAG 检索+增强（当 pgvector 可用时）
  * MyLogAdvisor (order=4) → 请求耗时日志
- * ApiKeyRoutingAdvisor (order=5) → 用户自备 key 时拦截模型调用、直连 DeepSeek（其余透传）
+ * ApiKeyRoutingAdvisor (order=5) → 用户自备 key 时拦截模型调用、直连第三方 API（DeepSeek/通义千问/GLM，其余透传）
  * </pre>
  */
 @Configuration

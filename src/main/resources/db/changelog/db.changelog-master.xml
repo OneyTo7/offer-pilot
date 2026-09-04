@@ -17,5 +17,6 @@
   <include file="db/changelog/010-add-user-role.sql"/>
   <include file="db/changelog/011-create-user_token_usage.sql"/>
   <include file="db/changelog/012-add-knowledge-scope.sql"/>
+  <include file="db/changelog/013-add-user-api-config.sql"/>
 
 </databaseChangeLog>

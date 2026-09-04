@@ -138,9 +138,17 @@ public class AuthServiceImpl implements AuthService {
     public UserVO updateApiKey(UpdateApiKeyRequest request) {
         User user = getCurrentUserEntity();
         user.setApiKey(encryptor.encrypt(request.getApiKey()));
+        // Update provider config if provided (null = keep existing, empty string = clear)
+        if (request.getApiBaseUrl() != null) {
+            user.setApiBaseUrl(request.getApiBaseUrl().isBlank() ? null : request.getApiBaseUrl().trim());
+        }
+        if (request.getApiModel() != null) {
+            user.setApiModel(request.getApiModel().isBlank() ? null : request.getApiModel().trim());
+        }
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.updateById(user);
-        log.info("用户 API Key 已更新（加密存储）: userId={}", user.getId());
+        log.info("用户 API Key 已更新（加密存储）: userId={}, apiBaseUrl={}, apiModel={}",
+            user.getId(), user.getApiBaseUrl(), user.getApiModel());
         return toUserVO(user);
     }
 
@@ -149,6 +157,8 @@ public class AuthServiceImpl implements AuthService {
     public UserVO clearApiKey() {
         User user = getCurrentUserEntity();
         user.setApiKey(null);
+        user.setApiBaseUrl(null);
+        user.setApiModel(null);
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.updateById(user);
         log.info("用户 API Key 已清除: userId={}", user.getId());

@@ -30,7 +30,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.deepseek.DeepSeekChatOptions;
+import org.springframework.ai.openai.OpenAiChatOptions;
 import reactor.core.publisher.Flux;
 
 /**
@@ -63,7 +63,7 @@ class ApiKeyRoutingAdvisorTest {
         tokenUsageService = mock(UserTokenUsageService.class);
         chatModel = mock(ChatModel.class);
         httpClient = mock(HttpClient.class);
-        when(chatModel.getOptions()).thenReturn(DeepSeekChatOptions.builder().build());
+        when(chatModel.getOptions()).thenReturn(OpenAiChatOptions.builder().build());
 
         chatClient = ChatClient.builder(chatModel)
             .defaultAdvisors(new TokenUsageAdvisor(tokenUsageService),

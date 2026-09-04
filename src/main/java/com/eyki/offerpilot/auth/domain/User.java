@@ -23,6 +23,12 @@ public class User {
     @TableField("api_key")
     private String apiKey;
 
+    @TableField("api_base_url")
+    private String apiBaseUrl;
+
+    @TableField("api_model")
+    private String apiModel;
+
     private Integer status;
 
     private String role;

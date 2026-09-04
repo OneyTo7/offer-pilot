@@ -6,9 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(properties = {
-    // Use a dummy API key so the context loads without a real DeepSeek key in CI.
-    // The DeepSeekChatModel validates the key is non-empty at construction time.
-    "spring.ai.deepseek.api-key=dummy-test-key",
+    // Use a dummy API key so the context loads without a real API key in CI.
+    // The OpenAiChatModel validates the key is non-empty at construction time.
+    "spring.ai.openai.api-key=dummy-test-key",
     // Re-ranker model files point at nonexistent local paths: initModel() fails fast
     // (no network in CI/test environments) and the re-ranker degrades to original order.
     "spring.ai.rag.reranker.model-uri=file:/nonexistent/reranker/model.onnx",
