@@ -1,6 +1,7 @@
 package com.eyki.offerpilot.resume.service.impl;
 
 import cn.hutool.json.JSONUtil;
+import com.eyki.offerpilot.auth.domain.User;
 import com.eyki.offerpilot.auth.service.AuthService;
 import com.eyki.offerpilot.common.exception.BusinessException;
 import com.eyki.offerpilot.common.model.ErrorCode;
@@ -47,7 +48,8 @@ public class ResumeServiceImpl implements ResumeService {
     @Override
     @Transactional
     public ResumeVO upload(MultipartFile file, String name) {
-        Long userId = authService.getCurrentUserEntity().getId();
+        User user = authService.getCurrentUserEntity();
+        Long userId = user.getId();
 
         // 仅允许 PDF 格式
         String fileName = name != null ? name : file.getOriginalFilename();
@@ -73,11 +75,17 @@ public class ResumeServiceImpl implements ResumeService {
         resume.setUpdatedAt(LocalDateTime.now());
         resumeRepository.insert(resume);
 
+        // 捕获用户 API Key 配置（异步解析时传递以绕过 Token 额度检查）
+        String userApiKey = user.getApiKey();
+        String userApiBaseUrl = user.getApiBaseUrl();
+        String userApiModel = user.getApiModel();
+
         // 异步解析
         Long resumeId = resume.getId();
         CompletableFuture.runAsync(() -> {
             try {
-                Resume parsed = resumeParseService.parse(resumeRepository.selectById(resumeId));
+                Resume parsed = resumeParseService.parse(resumeRepository.selectById(resumeId),
+                    userApiKey, userApiBaseUrl, userApiModel);
                 resumeRepository.updateById(parsed);
                 log.info("简历异步解析完成: resumeId={}", resumeId);
             } catch (Exception e) {

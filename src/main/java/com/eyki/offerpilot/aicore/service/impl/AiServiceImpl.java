@@ -119,7 +119,9 @@ public class AiServiceImpl implements AiService {
         // Uses the dedicated no-RAG ChatClient (SafeValid → TokenUsage → ReReading → Log → ApiKeyRouting)
         // context 需传 "user_id" 以激活 TokenUsageAdvisor 的额度校验与用量累计
         try {
-            var spec = chatClientNoRag.prompt().system(systemPrompt).user(userPrompt);
+            BeanOutputConverter<T> converter = new BeanOutputConverter<>(entityClass);
+            String fullSystemPrompt = systemPrompt + "\n\n" + converter.getFormat();
+            var spec = chatClientNoRag.prompt().system(fullSystemPrompt).user(userPrompt);
             if (context != null && !context.isEmpty()) {
                 spec.advisors(advisor -> context.forEach(advisor::param));
             }
@@ -128,7 +130,6 @@ public class AiServiceImpl implements AiService {
             if (content == null) {
                 throw BusinessException.aiServiceError("AI 结构化输出返回为空");
             }
-            BeanOutputConverter<T> converter = new BeanOutputConverter<>(entityClass);
             return converter.convert(content);
         } catch (BusinessException e) {
             throw e;

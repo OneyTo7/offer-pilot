@@ -16,7 +16,10 @@ public class ResumeParsePrompt {
         2. 无法提取的字段设为 null，不要编造
         3. 工作年限（workYears）以年为单位，保留一位小数
         4. 时间格式统一为 "YYYY-MM" 或 "YYYY-MM-DD"
-        5. 技能标签按类别分组，如 "后端开发：Java、Spring Boot"
+        5. 技能（skills）必须是一个 JSON 数组，每个元素包含 category（分类名）和 skills（技能名数组），如：
+           [{"category": "后端开发", "skills": ["Java", "Spring Boot"]}]
+           不要使用对象格式，即使是单个分类也要用数组
+        6. 所有字段名严格按 JSON Schema 定义，不要自己发明字段
         """;
 
     private static final String USER_PROMPT_TEMPLATE = """

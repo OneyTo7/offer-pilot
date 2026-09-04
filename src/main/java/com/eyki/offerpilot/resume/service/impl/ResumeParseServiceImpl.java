@@ -39,7 +39,7 @@ public class ResumeParseServiceImpl implements ResumeParseService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public Resume parse(Resume resume) {
+    public Resume parse(Resume resume, String apiKey, String apiBaseUrl, String apiModel) {
         String filePath = resume.getFileUrl();
         if (filePath == null || filePath.isBlank()) {
             resume.setStatus(2);
@@ -85,11 +85,41 @@ public class ResumeParseServiceImpl implements ResumeParseService {
             //    走无 RAG 的 ChatClient：简历解析是纯提取场景，知识库内容注入会污染解析结果
             //    （chatWithEntity 会经 RetrievalAugmentationAdvisor 自动检索知识库）
             //    context 传 user_id 激活 TokenUsageAdvisor：前置额度校验 + 后置用量累计
-            ResumeParseResult result = aiService.chatWithEntityNoRag(
-                ResumeParsePrompt.getSystemPrompt(),
-                ResumeParsePrompt.buildUserPrompt(rawText),
-                ResumeParseResult.class,
-                Map.of("user_id", resume.getUserId()));
+            //    如果用户配置了自有 API Key，一并传入以使 TokenUsageAdvisor 跳过额度检查
+            ResumeParseResult result;
+            Map<String, Object> context = new java.util.HashMap<>();
+            context.put("user_id", resume.getUserId());
+            if (apiKey != null && !apiKey.isBlank()) {
+                context.put("api_key", apiKey);
+            }
+            if (apiBaseUrl != null && !apiBaseUrl.isBlank()) {
+                context.put("api_base_url", apiBaseUrl);
+            }
+            if (apiModel != null && !apiModel.isBlank()) {
+                context.put("api_model", apiModel);
+            }
+            try {
+                result = aiService.chatWithEntityNoRag(
+                    ResumeParsePrompt.getSystemPrompt(),
+                    ResumeParsePrompt.buildUserPrompt(rawText),
+                    ResumeParseResult.class,
+                    context);
+            } catch (Exception e) {
+                // 如果 AI 返回的 JSON 格式不匹配（如 skills 字段为对象而非数组），
+                // 重试一次，并在 system prompt 尾部追加更严格的格式说明
+                if (e.getMessage() != null && e.getMessage().contains("skills")) {
+                    log.warn("AI 解析 skills 字段格式异常，将重试: {}", e.getMessage());
+                    result = aiService.chatWithEntityNoRag(
+                        ResumeParsePrompt.getSystemPrompt()
+                            + "\n\n⚠️ 重要：skills 必须是 JSON 数组，每个元素包含 category 和 skills 数组。"
+                            + " 即使只有一个分类也要用数组格式，不要用对象格式。",
+                        ResumeParsePrompt.buildUserPrompt(rawText),
+                        ResumeParseResult.class,
+                        context);
+                } else {
+                    throw e;
+                }
+            }
 
             // 4. 将解析结果回写到 Resume 实体
             parseAiResponse(resume, result);
